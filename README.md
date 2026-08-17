@@ -18,29 +18,33 @@ npm run build
 `npm run storybook` serves on <http://localhost:6006>. Published on every push
 to `main`: <https://jamesabhevey.github.io/mothership-ui/>
 
-The sidebar has two roots:
+The sidebar has three roots:
 
-- **Foundations** — Colour, Typography, Spacing & Sizing, Radius/Border/
-  Elevation, and Iconography. Reference pages for the token layer.
-- **Components** — Form Elements, Content Presentation, Navigation, Assets and
-  Blocks, one page per component with a story per variant. Order within each
-  group is set explicitly in `preview.ts`, matching the Figma library rather
-  than falling back to alphabetical.
+- **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
+  Elevation. Reference pages for the token layer.
+- **Assets** — Iconography (the full set) and the `Icon` component's API.
+- **Components** — Form Elements, Content Presentation, Navigation and Blocks,
+  one page per component with a story per variant. Order within each group is
+  set explicitly in `preview.ts`, matching the Figma library rather than falling
+  back to alphabetical.
 
 The sidebar brand is the logo mark plus the title at 18px, 12px apart, styled in
-[.storybook/manager-head.html](.storybook/manager-head.html). The mark loads
-`public/mothership-logo.svg` as a `background-image` rather than an `<img>`, so a
-missing file leaves the title readable instead of showing a broken-image icon.
+[.storybook/manager-head.html](.storybook/manager-head.html). The mark is a
+`background-image` rather than an `<img>`, so a missing file leaves the title
+readable instead of showing a broken-image icon. It declares two layers —
+`mothership-logo.svg` then `mothership-logo.png` — so whichever of the two sits
+in `public/` is the one that paints. Sidebar hover uses `color/border/subtle`
+rather than Storybook's default brand tint, scoped away from the selected row.
 
-Foundations pages use the same layout and type as the generated Component docs
-pages — 64px vertical and 40px horizontal padding, content capped at 1000px and
-left aligned, `h1` at 32/36/700 — measured off a docs page rather than guessed,
-so the two sections read as one document. Those are Storybook's docs
+Foundations and Assets pages use the same layout and type as the generated
+Component docs pages — 64px vertical and 40px horizontal padding, content capped
+at 1000px and centred, `h1` at 32/36/700 — measured off a docs page rather than
+guessed, so every section reads as one document. Those are Storybook's docs
 typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
 (28/36) and `type/body/sm` (14/20).
 
-Foundations pages **resolve their values live** from the CSS custom properties
-via `getComputedStyle` rather than restating them ([src/foundations/parts.tsx](src/foundations/parts.tsx)).
+These pages **resolve their values live** from the CSS custom properties
+via `getComputedStyle` rather than restating them ([src/docs/parts.tsx](src/docs/parts.tsx)).
 Change a token in `styles/index.css` and those pages follow — they document
 what the tokens are right now and cannot drift out of date.
 
@@ -91,10 +95,12 @@ Grouped as the Figma library groups them:
 | Group | Components |
 | --- | --- |
 | Form Elements | `Button`, `IconButton`, `FieldLabel`, `FieldHelperText`, `TextField`, `Checkbox`, `Select`, `Radio`, `Switch` |
-| Content Presentation | `Badge`, `Avatar`, `Card`, `ListItem`, `Banner`, `Tooltip`, `Modal`, `Divider`, `Spinner`, `Icon` |
+| Content Presentation | `Badge`, `Avatar`, `Card`, `ListItem`, `Banner`, `Tooltip`, `Modal`, `Divider`, `Spinner` |
 | Navigation | `Tabs`, `Tab`, `AppBar`, `Menu`, `MenuItem` |
-| Assets | `Icon` |
 | Blocks | `PageHeader`, `FormSection`, `SettingsRowGroup`, `EmptyState`, `CardGrid`, `NavShell` |
+
+`Icon` sits under the top-level **Assets** root alongside Iconography, not under
+Components.
 
 `FieldLabel` and `FieldHelperText` sit under a **Field Text** folder, and `Tab`
 and `MenuItem` under their parent, mirroring the Figma pages that hold them.

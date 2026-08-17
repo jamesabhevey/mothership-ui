@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Icon, iconNames } from './icons'
 
 const meta = {
-  title: 'Components/Assets/Icon',
+  title: 'Assets/Icon',
   component: Icon,
   args: { name: 'search', size: 24 },
   argTypes: {

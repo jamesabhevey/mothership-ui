@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Icon, iconNames } from '../components/icons'
-import { Group, Page } from './parts'
+import { Group, Page } from '../docs/parts'
 
 const meta = {
-  title: 'Foundations/Iconography',
+  title: 'Assets/Iconography',
   tags: ['!autodocs'],
   parameters: { controls: { disable: true }, layout: 'fullscreen', options: { showPanel: false } },
 } satisfies Meta

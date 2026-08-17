@@ -96,8 +96,7 @@ export function Swatch({ figma, css }: { figma: string; css: string }) {
   )
 }
 
+/** One swatch per row, full width of the content column. */
 export function SwatchGrid({ children }: { children: ReactNode }) {
-  return (
-    <ul className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3">{children}</ul>
-  )
+  return <ul className="flex flex-col gap-2">{children}</ul>
 }

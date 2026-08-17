@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, Page, Swatch, SwatchGrid } from './parts'
+import { Group, Page, Swatch, SwatchGrid } from '../docs/parts'
 
 const meta = {
   title: 'Foundations/Colour',

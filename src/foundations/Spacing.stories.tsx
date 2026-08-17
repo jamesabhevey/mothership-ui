@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, Page, useToken } from './parts'
+import { Group, Page, useToken } from '../docs/parts'
 
 const meta = {
   title: 'Foundations/Spacing & Sizing',

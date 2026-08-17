@@ -62,9 +62,32 @@
     flex: 0 0 auto;
     width: 24px;
     height: 24px;
-    background-image: url('./mothership-logo.svg');
+    /*
+      Two layers so either file format works: whichever of the two exists is
+      painted, and a 404 on one layer simply contributes nothing. Drop the mark
+      into public/ as mothership-logo.svg (preferred — crisp at any size) or
+      mothership-logo.png.
+    */
+    background-image: url('./mothership-logo.svg'), url('./mothership-logo.png');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
+  }
+
+  /*
+    Sidebar hover.
+
+    Storybook's default is the brand colour at 14% opacity, which over a white
+    sidebar reads as a pale lilac. This replaces it with color/border/subtle.
+    Scoped away from the selected row so that keeps its solid brand fill, and
+    written against the structural attributes rather than the generated Emotion
+    classes, which change between builds.
+  */
+  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover,
+  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover > a,
+  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover > button,
+  #storybook-explorer-tree button[data-action='collapse-root']:hover,
+  #storybook-explorer-tree button.sidebar-subheading-action:hover {
+    background-color: #e8eaec;
   }
 </style>

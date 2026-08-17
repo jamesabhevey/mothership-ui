@@ -40,7 +40,9 @@ const preview: Preview = {
         // than alphabetically, matching the Figma library's own ordering.
         order: [
           'Foundations',
-          ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation', 'Iconography'],
+          ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation'],
+          'Assets',
+          ['Iconography', 'Icon'],
           'Components',
           [
             'Form Elements',
@@ -67,7 +69,6 @@ const preview: Preview = {
               'Menu',
               ['Menu', 'Menu Item'],
             ],
-            'Assets',
             'Blocks',
             ['Page Header', 'Form Section', 'Settings Row Group', 'Empty State', 'Card Grid', 'Nav Shell'],
           ],
