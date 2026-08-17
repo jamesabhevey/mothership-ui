@@ -19,6 +19,27 @@ export function useToken(name: string): string {
   return value
 }
 
+/**
+ * Layout and type to match the Component pages.
+ *
+ * These values are measured from a generated autodocs page rather than
+ * guessed, so Foundations and Components read as one document:
+ *
+ *   wrapper padding   64px top and bottom, 40px left and right
+ *   content width     max 1000px, left aligned within the padding
+ *   h1                32px / 36px / 700
+ *   section heading   20px / 30px / 700
+ *   body              14px / 24px / 400
+ *
+ * They are Storybook's docs typography, not Mothership type tokens — the
+ * nearest tokens are type/heading/lg (28/36) and type/body/sm (14/20). Matching
+ * the docs pages is deliberate: the alternative is Foundations looking like a
+ * different site to the component pages sitting next to it. Dense token
+ * metadata below still uses the caption tokens, since it is data, not prose.
+ */
+const shell = 'px-10 py-16'
+const content = 'w-full max-w-[1000px]'
+
 export function Page({
   title,
   intro,
@@ -29,12 +50,14 @@ export function Page({
   children: ReactNode
 }) {
   return (
-    <div className="flex max-w-4xl flex-col gap-10 p-2">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-heading-lg text-text-primary">{title}</h1>
-        {intro ? <p className="max-w-prose text-body-md text-text-secondary">{intro}</p> : null}
-      </header>
-      {children}
+    <div className={shell}>
+      <div className={`${content} flex flex-col gap-12`}>
+        <header className="flex flex-col gap-4">
+          <h1 className="text-[32px]/9 font-bold text-text-primary">{title}</h1>
+          {intro ? <div className="max-w-[80ch] text-[14px]/6 text-text-primary">{intro}</div> : null}
+        </header>
+        {children}
+      </div>
     </div>
   )
 }
@@ -42,7 +65,7 @@ export function Page({
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-heading-sm text-text-primary">{name}</h2>
+      <h2 className="text-[20px]/[30px] font-bold text-text-primary">{name}</h2>
       {children}
     </section>
   )

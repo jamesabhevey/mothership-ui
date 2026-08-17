@@ -6,7 +6,7 @@ import { Tab, Tabs } from './Tabs'
 import { Plus } from './icons'
 
 const meta = {
-  title: 'Components/Layout/PageHeader',
+  title: 'Components/Blocks/Page Header',
   component: PageHeader,
   args: { title: 'Page title' },
   decorators: [

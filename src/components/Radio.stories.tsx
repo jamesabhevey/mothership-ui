@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Radio } from './Radio'
 
 const meta = {
-  title: 'Components/Forms/Radio',
+  title: 'Components/Form Elements/Radio',
   component: Radio,
   args: { name: 'plan', children: 'Monthly' },
 } satisfies Meta<typeof Radio>

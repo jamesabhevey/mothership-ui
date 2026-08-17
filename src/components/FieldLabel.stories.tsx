@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { FieldLabel } from './FieldLabel'
 
 const meta = {
-  title: 'Components/Forms/FieldLabel',
+  title: 'Components/Form Elements/Field Text/Field Label',
   component: FieldLabel,
   args: { label: 'Full name' },
 } satisfies Meta<typeof FieldLabel>

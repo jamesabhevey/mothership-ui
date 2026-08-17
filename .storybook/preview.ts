@@ -36,12 +36,40 @@ const preview: Preview = {
     options: {
       storySort: {
         // Foundations first — the tokens everything else is built from — then
-        // the components, ordered from smallest building block outwards.
+        // the components. Within each group the order is set explicitly rather
+        // than alphabetically, matching the Figma library's own ordering.
         order: [
           'Foundations',
           ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation', 'Iconography'],
           'Components',
-          ['Primitives', 'Forms', 'Surfaces', 'Layout'],
+          [
+            'Form Elements',
+            [
+              'Button',
+              'Icon Button',
+              // The Figma "Field Text" page holds both, label before helper.
+              'Field Text',
+              ['Field Label', 'Field Helper Text'],
+              'Text Field',
+              'Checkbox',
+              'Select',
+              'Radio',
+              'Switch',
+            ],
+            'Content Presentation',
+            ['Badge', 'Avatar', 'Card', 'List Item', 'Banner', 'Tooltip', 'Modal', 'Divider', 'Spinner', 'Icon'],
+            'Navigation',
+            [
+              // Container first, then the item it holds.
+              'Tabs',
+              ['Tabs', 'Tab'],
+              'App Bar',
+              'Menu',
+              ['Menu', 'Menu Item'],
+            ],
+            'Blocks',
+            ['Page Header', 'Form Section', 'Settings Row Group', 'Empty State', 'Card Grid', 'Nav Shell'],
+          ],
         ],
       },
     },

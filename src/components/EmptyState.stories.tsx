@@ -4,7 +4,7 @@ import { Button } from './Button'
 import { Search } from './icons'
 
 const meta = {
-  title: 'Components/Surfaces/EmptyState',
+  title: 'Components/Blocks/Empty State',
   component: EmptyState,
   args: { title: 'Nothing here yet' },
   decorators: [

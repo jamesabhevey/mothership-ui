@@ -3,7 +3,7 @@ import { Button } from './Button'
 import { ChevronRight, Plus } from './icons'
 
 const meta = {
-  title: 'Components/Primitives/Button',
+  title: 'Components/Form Elements/Button',
   component: Button,
   args: { children: 'Button' },
   argTypes: {

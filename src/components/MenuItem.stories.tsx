@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Menu, MenuItem } from './Menu'
 
 const meta = {
-  title: 'Components/Surfaces/MenuItem',
+  title: 'Components/Navigation/Menu/Menu Item',
   component: MenuItem,
   args: { children: 'Quarterly' },
   decorators: [

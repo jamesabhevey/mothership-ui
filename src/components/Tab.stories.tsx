@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Tab, Tabs } from './Tabs'
 
 const meta = {
-  title: 'Components/Layout/Tab',
+  title: 'Components/Navigation/Tabs/Tab',
   component: Tab,
   args: { children: 'Overview' },
   decorators: [

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Menu, MenuItem } from './Menu'
 
 const meta = {
-  title: 'Components/Surfaces/Menu',
+  title: 'Components/Navigation/Menu/Menu',
   component: Menu,
 } satisfies Meta<typeof Menu>
 

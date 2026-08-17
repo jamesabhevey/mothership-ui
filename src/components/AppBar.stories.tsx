@@ -4,7 +4,7 @@ import { IconButton } from './IconButton'
 import { ChevronLeft, EllipsisVertical } from './icons'
 
 const meta = {
-  title: 'Components/Layout/AppBar',
+  title: 'Components/Navigation/App Bar',
   component: AppBar,
   args: {
     title: 'Screen title',

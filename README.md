@@ -22,8 +22,17 @@ The sidebar has two roots:
 
 - **Foundations** — Colour, Typography, Spacing & Sizing, Radius/Border/
   Elevation, and Iconography. Reference pages for the token layer.
-- **Components** — Primitives, Forms, Surfaces and Layout, one page per
-  component with a story per variant.
+- **Components** — Form Elements, Content Presentation, Navigation and Blocks,
+  one page per component with a story per variant. Order within each group is
+  set explicitly in `preview.ts`, matching the Figma library rather than falling
+  back to alphabetical.
+
+Foundations pages use the same layout and type as the generated Component docs
+pages — 64px vertical and 40px horizontal padding, content capped at 1000px and
+left aligned, `h1` at 32/36/700 — measured off a docs page rather than guessed,
+so the two sections read as one document. Those are Storybook's docs
+typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
+(28/36) and `type/body/sm` (14/20).
 
 Foundations pages **resolve their values live** from the CSS custom properties
 via `getComputedStyle` rather than restating them ([src/foundations/parts.tsx](src/foundations/parts.tsx)).
@@ -72,12 +81,19 @@ the story file has one story. `npm run build-storybook` outputs a static site to
 
 ## What's here
 
+Grouped as the Figma library groups them:
+
 | Group | Components |
 | --- | --- |
-| Primitives | `Button`, `IconButton`, `Badge`, `Avatar`, `Spinner`, `Divider`, `Tooltip`, `Icon` |
-| Forms | `TextField`, `Select`, `Checkbox`, `Radio`, `Switch`, `FieldLabel`, `FieldHelperText`, `FormSection` |
-| Collections and surfaces | `Card`, `CardGrid`, `ListItem`, `Menu`, `MenuItem`, `SettingsRowGroup`, `Banner`, `Modal`, `EmptyState` |
-| Navigation and layout | `Tabs`, `Tab`, `AppBar`, `PageHeader`, `NavShell` |
+| Form Elements | `Button`, `IconButton`, `FieldLabel`, `FieldHelperText`, `TextField`, `Checkbox`, `Select`, `Radio`, `Switch` |
+| Content Presentation | `Badge`, `Avatar`, `Card`, `ListItem`, `Banner`, `Tooltip`, `Modal`, `Divider`, `Spinner`, `Icon` |
+| Navigation | `Tabs`, `Tab`, `AppBar`, `Menu`, `MenuItem` |
+| Blocks | `PageHeader`, `FormSection`, `SettingsRowGroup`, `EmptyState`, `CardGrid`, `NavShell` |
+
+`FieldLabel` and `FieldHelperText` sit under a **Field Text** folder, and `Tab`
+and `MenuItem` under their parent, mirroring the Figma pages that hold them.
+**Blocks** covers the composed components — the ones built out of the others —
+and takes its name from the Figma page of the same name.
 
 `src/App.tsx` renders all of them, which doubles as the visual reference.
 

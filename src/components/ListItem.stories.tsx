@@ -5,7 +5,7 @@ import { Switch } from './Switch'
 import { ChevronRight, User } from './icons'
 
 const meta = {
-  title: 'Components/Surfaces/ListItem',
+  title: 'Components/Content Presentation/List Item',
   component: ListItem,
   args: {
     title: 'Haircut and finish',

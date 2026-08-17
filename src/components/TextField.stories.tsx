@@ -3,7 +3,7 @@ import { TextField } from './TextField'
 import { Search } from './icons'
 
 const meta = {
-  title: 'Components/Forms/TextField',
+  title: 'Components/Form Elements/Text Field',
   component: TextField,
   args: { label: 'Full name', placeholder: 'Placeholder' },
   argTypes: {

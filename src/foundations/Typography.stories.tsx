@@ -96,7 +96,7 @@ export const Typography: Story = {
       ))}
 
       <Group name="Not yet defined">
-        <p className="max-w-prose text-body-sm text-text-secondary">
+        <p className="max-w-[80ch] text-[14px]/6 text-text-primary">
           <code>type/display/md</code> and <code>type/display/sm</code> exist in the Figma
           Typography collection, but only their tracking is bound to a variable — no readable node
           binds their size or line height, so they are deliberately absent here rather than

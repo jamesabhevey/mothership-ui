@@ -3,7 +3,7 @@ import { IconButton } from './IconButton'
 import { Bell, EllipsisVertical, Plus, Settings, Trash2 } from './icons'
 
 const meta = {
-  title: 'Components/Primitives/IconButton',
+  title: 'Components/Form Elements/Icon Button',
   component: IconButton,
   args: { label: 'Add', icon: <Plus size={16} strokeWidth={2} /> },
   argTypes: {

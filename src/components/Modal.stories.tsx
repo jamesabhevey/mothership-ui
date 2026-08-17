@@ -4,7 +4,7 @@ import { Modal } from './Modal'
 import { Button } from './Button'
 
 const meta = {
-  title: 'Components/Surfaces/Modal',
+  title: 'Components/Content Presentation/Modal',
   component: Modal,
   args: { open: true, onClose: () => {}, title: 'Modal title' },
   argTypes: {

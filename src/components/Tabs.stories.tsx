@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Tab, Tabs } from './Tabs'
 
 const meta = {
-  title: 'Components/Layout/Tabs',
+  title: 'Components/Navigation/Tabs/Tabs',
   component: Tabs,
   args: { label: 'Booking views' },
   decorators: [
