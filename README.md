@@ -22,10 +22,15 @@ The sidebar has two roots:
 
 - **Foundations** — Colour, Typography, Spacing & Sizing, Radius/Border/
   Elevation, and Iconography. Reference pages for the token layer.
-- **Components** — Form Elements, Content Presentation, Navigation and Blocks,
-  one page per component with a story per variant. Order within each group is
-  set explicitly in `preview.ts`, matching the Figma library rather than falling
-  back to alphabetical.
+- **Components** — Form Elements, Content Presentation, Navigation, Assets and
+  Blocks, one page per component with a story per variant. Order within each
+  group is set explicitly in `preview.ts`, matching the Figma library rather
+  than falling back to alphabetical.
+
+The sidebar brand is the logo mark plus the title at 18px, 12px apart, styled in
+[.storybook/manager-head.html](.storybook/manager-head.html). The mark loads
+`public/mothership-logo.svg` as a `background-image` rather than an `<img>`, so a
+missing file leaves the title readable instead of showing a broken-image icon.
 
 Foundations pages use the same layout and type as the generated Component docs
 pages — 64px vertical and 40px horizontal padding, content capped at 1000px and
@@ -88,6 +93,7 @@ Grouped as the Figma library groups them:
 | Form Elements | `Button`, `IconButton`, `FieldLabel`, `FieldHelperText`, `TextField`, `Checkbox`, `Select`, `Radio`, `Switch` |
 | Content Presentation | `Badge`, `Avatar`, `Card`, `ListItem`, `Banner`, `Tooltip`, `Modal`, `Divider`, `Spinner`, `Icon` |
 | Navigation | `Tabs`, `Tab`, `AppBar`, `Menu`, `MenuItem` |
+| Assets | `Icon` |
 | Blocks | `PageHeader`, `FormSection`, `SettingsRowGroup`, `EmptyState`, `CardGrid`, `NavShell` |
 
 `FieldLabel` and `FieldHelperText` sit under a **Field Text** folder, and `Tab`

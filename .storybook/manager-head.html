@@ -36,9 +36,35 @@
     src: url('./fonts/inter-latin-700-normal.woff2') format('woff2');
   }
 
-  /* The sidebar brand, styled as a label rather than Storybook's default. */
-  .sidebar-header a[title='Mothership UI'] {
+  /*
+    The sidebar brand: logo mark, then the title at 18px, 12px apart.
+
+    Targeted structurally rather than by class — Storybook's brand link carries
+    a generated Emotion class that changes between builds. The skip link is a
+    direct child of .sidebar-header; the brand sits one level deeper.
+
+    The mark is a background-image rather than an <img> so that if
+    public/mothership-logo.svg is missing the title still renders on its own,
+    instead of showing a broken-image icon.
+  */
+  .sidebar-header > div > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    line-height: 24px;
     font-weight: 600;
     letter-spacing: -0.2px;
+  }
+
+  .sidebar-header > div > a::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    background-image: url('./mothership-logo.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 </style>

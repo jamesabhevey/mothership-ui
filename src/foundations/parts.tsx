@@ -26,7 +26,7 @@ export function useToken(name: string): string {
  * guessed, so Foundations and Components read as one document:
  *
  *   wrapper padding   64px top and bottom, 40px left and right
- *   content width     max 1000px, left aligned within the padding
+ *   content width     max 1000px, centred within the padding
  *   h1                32px / 36px / 700
  *   section heading   20px / 30px / 700
  *   body              14px / 24px / 400
@@ -38,7 +38,7 @@ export function useToken(name: string): string {
  * metadata below still uses the caption tokens, since it is data, not prose.
  */
 const shell = 'px-10 py-16'
-const content = 'w-full max-w-[1000px]'
+const content = 'mx-auto w-full max-w-[1000px]'
 
 export function Page({
   title,

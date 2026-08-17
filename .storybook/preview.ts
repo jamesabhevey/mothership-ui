@@ -57,7 +57,7 @@ const preview: Preview = {
               'Switch',
             ],
             'Content Presentation',
-            ['Badge', 'Avatar', 'Card', 'List Item', 'Banner', 'Tooltip', 'Modal', 'Divider', 'Spinner', 'Icon'],
+            ['Badge', 'Avatar', 'Card', 'List Item', 'Banner', 'Tooltip', 'Modal', 'Divider', 'Spinner'],
             'Navigation',
             [
               // Container first, then the item it holds.
@@ -67,6 +67,7 @@ const preview: Preview = {
               'Menu',
               ['Menu', 'Menu Item'],
             ],
+            'Assets',
             'Blocks',
             ['Page Header', 'Form Section', 'Settings Row Group', 'Empty State', 'Card Grid', 'Nav Shell'],
           ],
