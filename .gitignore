@@ -1,0 +1,16 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+storybook-static
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS
+.DS_Store
+*.log

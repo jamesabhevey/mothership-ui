@@ -1,0 +1,38 @@
+import type { Preview } from '@storybook/react-vite'
+
+// Inter, in the four weights the type scale uses (400 body, 500 label/caption,
+// 600 heading, 700 display). Without these the metrics are wrong even though
+// the sizes are right.
+import '@fontsource/inter/400.css'
+import '@fontsource/inter/500.css'
+import '@fontsource/inter/600.css'
+import '@fontsource/inter/700.css'
+
+// The global stylesheet. This is the whole token layer — the Tailwind v4
+// `@theme` block holding every colour, radius, shadow and type step read from
+// the Figma variable collections, plus the `:root` spacing/sizing variables and
+// the base layer that sets the page background and font family. Components are
+// styled entirely from these tokens, so nothing renders correctly without it.
+import '../src/styles/index.css'
+
+const preview: Preview = {
+  // Enabled globally rather than per-file, so every story file gets an
+  // autodocs page from its meta and prop types without repeating the tag.
+  tags: ['autodocs'],
+
+  parameters: {
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    options: {
+      storySort: {
+        order: ['Primitives', 'Forms', 'Surfaces', 'Layout'],
+      },
+    },
+  },
+}
+
+export default preview
