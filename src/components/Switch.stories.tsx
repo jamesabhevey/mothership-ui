@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Switch } from './Switch'
 
 const meta = {
-  title: 'Forms/Switch',
+  title: 'Components/Forms/Switch',
   component: Switch,
   args: { children: 'Push notifications' },
 } satisfies Meta<typeof Switch>

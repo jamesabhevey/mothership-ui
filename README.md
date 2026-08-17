@@ -15,8 +15,20 @@ npm run build
 
 ## Storybook
 
-`npm run storybook` serves on <http://localhost:6006>. 30 story files, 95
-stories, one autodocs page per component.
+`npm run storybook` serves on <http://localhost:6006>. Published on every push
+to `main`: <https://jamesabhevey.github.io/mothership-ui/>
+
+The sidebar has two roots:
+
+- **Foundations** — Colour, Typography, Spacing & Sizing, Radius/Border/
+  Elevation, and Iconography. Reference pages for the token layer.
+- **Components** — Primitives, Forms, Surfaces and Layout, one page per
+  component with a story per variant.
+
+Foundations pages **resolve their values live** from the CSS custom properties
+via `getComputedStyle` rather than restating them ([src/foundations/parts.tsx](src/foundations/parts.tsx)).
+Change a token in `styles/index.css` and those pages follow — they document
+what the tokens are right now and cannot drift out of date.
 
 Stories live beside the component they document (`Button.tsx` /
 `Button.stories.tsx`) in CSF3 format. Autodocs is enabled globally by
@@ -24,6 +36,26 @@ Stories live beside the component they document (`Button.tsx` /
 than per file, so every component gets a docs page without repeating the tag.
 Those pages are generated from the component's own doc comment and prop types —
 the guidance carried over from the Figma descriptions is the documentation.
+Foundations pages opt out with `tags: ['!autodocs']`, since the page is the doc.
+
+### Theming Storybook itself
+
+Storybook's own chrome uses the library's tokens: brand purple for selection
+and controls, the grey ramp for surfaces and text, Inter throughout.
+
+The manager is a separate React app from the preview iframe, so it cannot read
+the `@theme` block — [.storybook/theme.ts](.storybook/theme.ts) hands the same
+values over as literals, annotated with the token each one comes from. That
+theme is applied in two places: `manager.ts` for the chrome, and
+`parameters.docs.theme` in `preview.ts` for the autodocs pages, which render
+inside the preview iframe.
+
+Inter is loaded twice for the same reason — through `@fontsource` imports in
+`preview.ts` for stories, and via `@font-face` in
+[.storybook/manager-head.html](.storybook/manager-head.html) for the chrome.
+The four weights live in `public/fonts` (96KB) rather than mapping the whole
+`@fontsource` package (4.4MB across 252 files), and are referenced relatively
+so the built site works under the `/mothership-ui/` path Pages serves it from.
 
 `preview.ts` imports Inter in the four weights the type scale uses, then
 `src/styles/index.css`. That stylesheet is the whole token layer, so without

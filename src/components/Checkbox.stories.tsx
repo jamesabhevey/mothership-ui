@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Checkbox } from './Checkbox'
 
 const meta = {
-  title: 'Forms/Checkbox',
+  title: 'Components/Forms/Checkbox',
   component: Checkbox,
   args: { children: 'Email me about releases' },
 } satisfies Meta<typeof Checkbox>

@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
+import { mothershipTheme } from './theme'
 
 // Inter, in the four weights the type scale uses (400 body, 500 label/caption,
 // 600 heading, 700 display). Without these the metrics are wrong even though
@@ -21,6 +22,11 @@ const preview: Preview = {
   tags: ['autodocs'],
 
   parameters: {
+    // Autodocs pages render inside the preview iframe, so they need the theme
+    // handed to them separately from the manager chrome.
+    docs: {
+      theme: mothershipTheme,
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -29,7 +35,14 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Primitives', 'Forms', 'Surfaces', 'Layout'],
+        // Foundations first — the tokens everything else is built from — then
+        // the components, ordered from smallest building block outwards.
+        order: [
+          'Foundations',
+          ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation', 'Iconography'],
+          'Components',
+          ['Primitives', 'Forms', 'Surfaces', 'Layout'],
+        ],
       },
     },
   },

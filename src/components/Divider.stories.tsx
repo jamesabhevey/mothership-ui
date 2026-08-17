@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Divider } from './Divider'
 
 const meta = {
-  title: 'Primitives/Divider',
+  title: 'Components/Primitives/Divider',
   component: Divider,
   argTypes: {
     orientation: { control: 'inline-radio', options: ['horizontal', 'vertical'] },

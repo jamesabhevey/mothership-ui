@@ -8,6 +8,9 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
+  // Serves public/fonts, which holds the four Inter weights the manager chrome
+  // needs. The preview iframe gets Inter through preview.ts instead.
+  staticDirs: ['../public'],
   // Storybook reuses the project's vite.config.ts, so the Tailwind v4 plugin
   // that compiles the @theme token block runs here too.
   typescript: {

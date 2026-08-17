@@ -4,7 +4,7 @@ import { Card } from './Card'
 import { Button } from './Button'
 
 const meta = {
-  title: 'Surfaces/CardGrid',
+  title: 'Components/Surfaces/CardGrid',
   component: CardGrid,
 } satisfies Meta<typeof CardGrid>
 

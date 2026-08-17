@@ -5,7 +5,7 @@ import { IconButton } from './IconButton'
 import { Mail } from './icons'
 
 const meta = {
-  title: 'Primitives/Tooltip',
+  title: 'Components/Primitives/Tooltip',
   component: Tooltip,
   args: { label: 'Archive this record', children: <Button variant="secondary">Hover me</Button> },
   argTypes: {

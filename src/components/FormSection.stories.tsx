@@ -3,7 +3,7 @@ import { FormSection } from './FormSection'
 import { TextField } from './TextField'
 
 const meta = {
-  title: 'Forms/FormSection',
+  title: 'Components/Forms/FormSection',
   component: FormSection,
   args: { title: 'Contact details', children: null },
   decorators: [

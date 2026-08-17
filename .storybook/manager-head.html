@@ -1,0 +1,44 @@
+<!--
+  Inter for Storybook's own chrome.
+
+  The manager is a separate document from the preview iframe, so it does not
+  get the @fontsource imports in preview.ts. The four weights are served from
+  public/fonts via staticDirs, and referenced relatively so the built site
+  works under the /mothership-ui/ path GitHub Pages serves it from.
+-->
+<style>
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('./fonts/inter-latin-400-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('./fonts/inter-latin-500-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('./fonts/inter-latin-600-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('./fonts/inter-latin-700-normal.woff2') format('woff2');
+  }
+
+  /* The sidebar brand, styled as a label rather than Storybook's default. */
+  .sidebar-header a[title='Mothership UI'] {
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+</style>

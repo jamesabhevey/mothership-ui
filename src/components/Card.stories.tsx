@@ -3,7 +3,7 @@ import { Card } from './Card'
 import { Button } from './Button'
 
 const meta = {
-  title: 'Surfaces/Card',
+  title: 'Components/Surfaces/Card',
   component: Card,
   args: {
     title: 'Card title',

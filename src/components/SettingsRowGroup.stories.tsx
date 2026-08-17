@@ -5,7 +5,7 @@ import { Switch } from './Switch'
 import { ChevronRight } from './icons'
 
 const meta = {
-  title: 'Surfaces/SettingsRowGroup',
+  title: 'Components/Surfaces/SettingsRowGroup',
   component: SettingsRowGroup,
   args: { label: 'Notifications', children: null },
   decorators: [

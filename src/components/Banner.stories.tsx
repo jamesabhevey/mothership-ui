@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Banner } from './Banner'
 
 const meta = {
-  title: 'Surfaces/Banner',
+  title: 'Components/Surfaces/Banner',
   component: Banner,
   args: {
     title: 'Banner title',

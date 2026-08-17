@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Spinner } from './Spinner'
 
 const meta = {
-  title: 'Primitives/Spinner',
+  title: 'Components/Primitives/Spinner',
   component: Spinner,
   argTypes: {
     size: { control: 'inline-radio', options: ['sm', 'md', 'lg'] },

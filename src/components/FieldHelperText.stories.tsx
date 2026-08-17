@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { FieldHelperText } from './FieldHelperText'
 
 const meta = {
-  title: 'Forms/FieldHelperText',
+  title: 'Components/Forms/FieldHelperText',
   component: FieldHelperText,
   args: { children: 'As it appears on your passport' },
 } satisfies Meta<typeof FieldHelperText>

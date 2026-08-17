@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Select } from './Select'
 
 const meta = {
-  title: 'Forms/Select',
+  title: 'Components/Forms/Select',
   component: Select,
   args: {
     label: 'Billing period',

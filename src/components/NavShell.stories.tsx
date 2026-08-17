@@ -9,7 +9,7 @@ import { ListItem } from './ListItem'
 import { ChevronLeft, ChevronRight, EllipsisVertical } from './icons'
 
 const meta = {
-  title: 'Layout/NavShell',
+  title: 'Components/Layout/NavShell',
   component: NavShell,
   args: { children: null },
   parameters: { layout: 'centered' },
