@@ -1,0 +1,92 @@
+name: Deploy Storybook to Pages
+
+on:
+  # Every push to main, as asked.
+  push:
+    branches: [main]
+  # Lets you re-run a deploy from the Actions tab without an empty commit,
+  # which is useful when a deploy fails for an environment reason rather than
+  # a code one.
+  workflow_dispatch:
+
+# The default GITHUB_TOKEN is read-only for contents. Pages deployment needs
+# two extra grants, and nothing else:
+#   pages: write     — publish the site
+#   id-token: write  — mint the OIDC token deploy-pages uses to prove the
+#                      artifact came from this workflow run
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. cancel-in-progress is deliberately false: cancelling a
+# half-finished Pages deploy can leave the site in a broken state, so queue
+# instead of interrupting.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # Build and deploy are separate jobs so a build failure never reaches the
+  # deploy step, and so the deploy job holds the github-pages environment for
+  # the shortest possible time.
+  build:
+    name: Build Storybook
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Storybook 10 requires Node ^20.19 or >=22.12. 22 is the current LTS.
+          node-version: '22'
+          # Caches ~/.npm keyed on package-lock.json, so unchanged
+          # dependencies are restored rather than re-downloaded.
+          cache: 'npm'
+
+      - name: Install dependencies
+        # ci, not install: installs exactly what package-lock.json pins and
+        # fails if the lockfile and package.json have drifted, so CI can never
+        # silently build against different versions than local.
+        run: npm ci
+
+      - name: Type-check
+        # The build below does not type-check on its own, and a story that
+        # references a prop that no longer exists should fail loudly here
+        # rather than ship a broken docs page.
+        run: npm run typecheck
+
+      - name: Build Storybook
+        # Outputs a self-contained static site to storybook-static/.
+        # All asset paths are relative, so it works under the
+        # /mothership-ui/ subpath Pages serves it from.
+        run: npm run build-storybook
+        env:
+          # No telemetry from CI builds.
+          STORYBOOK_DISABLE_TELEMETRY: '1'
+
+      - name: Configure Pages
+        # Reads the repository's Pages settings and exposes them to later
+        # steps. Requires Pages to be enabled with "GitHub Actions" as source.
+        uses: actions/configure-pages@v5
+
+      - name: Upload the built site as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: storybook-static
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    # Declaring the environment is what makes the deployed URL show up on the
+    # repo home page and in the Actions run summary.
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy the artifact
+        id: deployment
+        uses: actions/deploy-pages@v4
