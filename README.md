@@ -150,31 +150,54 @@ npm run tokens:sync   # read Figma, report drift (needs credentials, see below)
 checked byte for byte against the previous hand-written stylesheet: identical,
 so the change carried no visual risk.
 
-[.github/workflows/token-sync.yml](.github/workflows/token-sync.yml) runs the
-sync on demand. If Figma has drifted it applies the change, regenerates the
-stylesheet, type-checks, builds, and opens a pull request with the diff in the
-description. Nothing lands without review.
+There are two mechanisms, because Figma's plan tiers force the issue.
 
-**Currently dormant.** Reading variables over the REST API needs a Figma
-Enterprise plan and this organisation is on Org, so the endpoint returns 403.
-Confirmed by running it: the script exits cleanly and changes nothing. The
-weekly schedule is commented out so it does not collect a failure every Monday.
-Uncomment it if the plan ever changes — everything else is in place and tested.
+### Drift check — active, runs weekly
 
-Two repository secrets are required:
+[.github/workflows/token-drift.yml](.github/workflows/token-drift.yml) runs every
+Monday and on demand. It reads the ordinary file endpoint, which works on any
+Figma plan, and compares the colours the components actually paint against
+`tokens.json`. On a change it updates the token, regenerates the stylesheet,
+type-checks, builds and opens a pull request. Nothing lands unreviewed.
 
-| Secret | What it is |
-| --- | --- |
-| `FIGMA_TOKEN` | Figma personal access token with file read scope |
-| `FIGMA_FILE_KEY` | the library file key |
+`tokens/figma-probes.json` records where each colour is observable, as
+`nodeId#property`. It is generated, not hand-written — run the workflow in
+**calibrate** mode and commit the result. Do that again after restructuring the
+Figma file, since probes are tied to node IDs.
 
-The file key is a secret rather than a plain value because this repository is
-public and the key identifies an internal design file.
+Current coverage: 25 probes over 52 of the 53 colour tokens. 13 map to a single
+token and apply automatically. The rest are groups — seven tokens are `#ffffff`,
+so a change there cannot be attributed to one of them, and the check reports the
+group and asks rather than guessing. `color/shadow/default` is invisible to this
+method, being a shadow rather than a fill.
 
-One further caveat: typography variables are reported rather than written,
-because Figma stores size, line height and tracking as separate variables while
-the code pairs them into one step — that mapping is not one to one, so it stays
-a human decision.
+**Colours only, deliberately.** An earlier version probed numbers too and
+produced nonsense: it paired `radius/sm` with a 4px auto-layout gap and
+`size/control/min-target` with an unrelated 44px gap, because small integers
+recur everywhere. Either would have raised a false alarm the moment a gap
+changed. Hex values are distinctive enough for the technique to hold; numbers
+are not.
+
+The workflow also has a **diagnose** mode, which prints HTTP status codes and
+secret lengths — never values — for when credentials misbehave.
+
+### Variables sync — dormant, needs Enterprise
+
+[.github/workflows/token-sync.yml](.github/workflows/token-sync.yml) reads the
+variables REST API, which returns the variable definitions rather than inferring
+values from usage. That is the better source: it would cover spacing, sizing and
+typography as well as colour, with no probes and no ambiguity.
+
+It is limited to Enterprise plans and this organisation is on Org, so the
+endpoint returns 403. Confirmed by running it against a valid token: the file
+endpoints return 200 while `/variables/local` returns 403. The schedule is
+commented out so it does not collect a weekly failure; uncomment it if the plan
+ever changes, and everything else is already in place.
+
+One caveat that applies to that path too: typography variables are reported
+rather than written, because Figma stores size, line height and tracking
+separately while the code pairs them into one step — not a one-to-one mapping,
+so it stays a human decision.
 
 ### Code Connect
 
