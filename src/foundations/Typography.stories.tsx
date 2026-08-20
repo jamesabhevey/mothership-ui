@@ -14,7 +14,11 @@ const scale: Array<[string, Array<[string, string, string]>]> = [
   // [group, [figma name, tailwind class, css var stem]]
   [
     'Display',
-    [['type/display/lg', 'text-display-lg', '--text-display-lg']],
+    [
+      ['type/display/lg', 'text-display-lg', '--text-display-lg'],
+      ['type/display/md', 'text-display-md', '--text-display-md'],
+      ['type/display/sm', 'text-display-sm', '--text-display-sm'],
+    ],
   ],
   [
     'Heading',
@@ -45,6 +49,7 @@ const scale: Array<[string, Array<[string, string, string]>]> = [
     [
       ['type/caption/lg', 'text-caption-lg', '--text-caption-lg'],
       ['type/caption/md', 'text-caption-md', '--text-caption-md'],
+      ['type/caption/sm', 'text-caption-sm', '--text-caption-sm'],
     ],
   ],
 ]
@@ -95,12 +100,13 @@ export const Typography: Story = {
         </Group>
       ))}
 
-      <Group name="Not yet defined">
+      <Group name="Using the display tier">
         <p className="max-w-[80ch] text-[14px]/6 text-text-primary">
-          <code>type/display/md</code> and <code>type/display/sm</code> exist in the Figma
-          Typography collection, but only their tracking is bound to a variable — no readable node
-          binds their size or line height, so they are deliberately absent here rather than
-          invented. <code>type/display/lg</code> is measured from the cover frame.
+          Per the notes on the Figma styles: <code>display/lg</code> is for marketing heroes and
+          empty state headlines, never dense UI. <code>display/md</code> is for page level hero
+          headings. <code>display/sm</code> is the smallest display size, for screen titles on wide
+          layouts. <code>caption/sm</code> fails comfortable reading at small sizes, so use it
+          sparingly.
         </p>
       </Group>
     </Page>

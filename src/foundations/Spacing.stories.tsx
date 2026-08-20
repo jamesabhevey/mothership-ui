@@ -19,6 +19,7 @@ const space: Array<[string, string, string]> = [
   ['space/16', '--space-16', 'p-4 / gap-4'],
   ['space/20', '--space-20', 'p-5 / gap-5'],
   ['space/24', '--space-24', 'p-6 / gap-6'],
+  ['space/32', '--space-32', 'p-8 / gap-8'],
   ['space/40', '--space-40', 'p-10 / gap-10'],
   ['space/48', '--space-48', 'p-12 / gap-12'],
   ['space/64', '--space-64', 'p-16 / gap-16'],
