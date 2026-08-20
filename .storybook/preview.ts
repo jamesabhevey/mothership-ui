@@ -42,9 +42,9 @@ const preview: Preview = {
           'Foundations',
           ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation'],
           'Assets',
-          // Icon sits inside the Iconography folder, the component first and
-          // the full set beneath it.
-          ['Iconography', ['Icon', 'Iconography']],
+          // Inside the Iconography folder: the component's API, then the set
+          // of glyphs itself. Named apart so neither is just "Iconography".
+          ['Iconography', ['Icon', 'Glyphs']],
           'Components',
           [
             'Form Elements',

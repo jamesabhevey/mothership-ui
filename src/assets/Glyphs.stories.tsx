@@ -3,7 +3,7 @@ import { Icon, iconNames } from '../components/icons'
 import { Group, Page } from '../docs/parts'
 
 const meta = {
-  title: 'Assets/Iconography/Iconography',
+  title: 'Assets/Iconography/Glyphs',
   tags: ['!autodocs'],
   parameters: { controls: { disable: true }, layout: 'fullscreen', options: { showPanel: false } },
 } satisfies Meta
@@ -11,10 +11,10 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Iconography: Story = {
+export const Glyphs: Story = {
   render: () => (
     <Page
-      title="Iconography"
+      title="Glyphs"
       intro={
         <>
           The set is Lucide, drawn on a 24px grid with a 2px round stroke — the same artwork the

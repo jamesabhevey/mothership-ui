@@ -30,8 +30,9 @@ export const mothershipTheme = create({
   colorPrimary: '#8429cc',
   colorSecondary: '#8429cc',
 
-  // App frame
-  appBg: '#f5f6f7',
+  // App frame. The sidebar sits on appBg; white rather than the sunken grey,
+  // with appBorderColor carrying the separation from the canvas.
+  appBg: '#ffffff',
   appContentBg: '#ffffff',
   appPreviewBg: '#ffffff',
   appBorderColor: '#e8eaec',

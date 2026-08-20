@@ -22,8 +22,8 @@ The sidebar has three roots:
 
 - **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
   Elevation. Reference pages for the token layer.
-- **Assets** — Iconography, holding the full icon set and the `Icon` component's
-  own API.
+- **Assets** — Iconography, holding `Icon` (the component and its controls) and
+  Glyphs (the full set). Named apart so neither page is just "Iconography".
 - **Components** — Form Elements, Content Presentation, Navigation and Blocks,
   one page per component with a story per variant. Order within each group is
   set explicitly in `preview.ts`, matching the Figma library rather than falling
