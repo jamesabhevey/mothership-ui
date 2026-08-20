@@ -1,219 +1,24 @@
 @import 'tailwindcss';
 
 /*
- * Mothership UI — design tokens
- * Every value below is read from the Figma variable collections
- * (Semantic / Dimension / Typography).
- * Figma variable name -> CSS custom property is a 1:1 mapping:
- *   color/action/primary/default -> --color-action-primary-default
- *   space/16                     -> --space-16   (see spacing note below)
- *   type/label/md                -> --text-label-md
+ * Tailwind scans the whole project for class names. tokens.json and the token
+ * scripts contain strings like `shadow/default` (a Figma variable path), which
+ * it would otherwise mistake for utility classes and generate dead CSS for.
  */
-
-@theme {
-  /* ---- Colour: background ---- */
-  --color-bg-default: #ffffff;
-  --color-bg-subtle: #f5f6f7;
-  --color-bg-selected: #faf3ff;
-  --color-bg-inverse: #1f2429;
-  --color-bg-transparent: rgb(0 0 0 / 0);
-
-  /* ---- Colour: surface ---- */
-  --color-surface-default: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-sunken: #f5f6f7;
-  --color-surface-media: #edd6ff;
-  --color-surface-overlay: rgb(11 13 15 / 0.4);
-
-  /* ---- Colour: text ---- */
-  --color-text-primary: #1f2429;
-  --color-text-secondary: #4a5259;
-  --color-text-muted: #666f78;
-  --color-text-inverse: #ffffff;
-  --color-text-on-brand: #ffffff;
-  --color-text-link: #8429cc;
-
-  /* ---- Colour: icon ---- */
-  --color-icon-default: #4a5259;
-  --color-icon-muted: #868e96;
-  --color-icon-inverse: #ffffff;
-  --color-icon-link: #8429cc;
-
-  /* ---- Colour: border ---- */
-  --color-border-default: #d3d7db;
-  --color-border-subtle: #e8eaec;
-  --color-border-strong: #666f78;
-
-  /* ---- Colour: action ---- */
-  --color-action-primary-default: #8429cc;
-  --color-action-primary-hover: #631f99;
-  --color-action-primary-pressed: #421466;
-  --color-action-primary-disabled: #e8eaec;
-
-  --color-action-secondary-default: #ffffff;
-  --color-action-secondary-hover: #f5f6f7;
-  --color-action-secondary-pressed: #e8eaec;
-  --color-action-secondary-disabled: #f5f6f7;
-
-  --color-action-tertiary-default: rgb(0 0 0 / 0);
-  --color-action-tertiary-hover: #f5f6f7;
-  --color-action-tertiary-pressed: #e8eaec;
-  --color-action-tertiary-disabled: rgb(0 0 0 / 0);
-
-  --color-action-destructive-default: #d92d20;
-  --color-action-destructive-hover: #b42318;
-  --color-action-destructive-pressed: #7a271a;
-  --color-action-destructive-disabled: #e8eaec;
-
-  /* ---- Colour: feedback ---- */
-  --color-feedback-info-surface: #eff6ff;
-  --color-feedback-info-border: #1d4ed8;
-  --color-feedback-info-text: #1d4ed8;
-
-  --color-feedback-success-surface: #ecfdf3;
-  --color-feedback-success-border: #027a48;
-  --color-feedback-success-text: #027a48;
-
-  --color-feedback-warning-surface: #fffaeb;
-  --color-feedback-warning-border: #b54708;
-  --color-feedback-warning-text: #b54708;
-
-  --color-feedback-danger-surface: #fef3f2;
-  --color-feedback-danger-border: #b42318;
-  --color-feedback-danger-text: #b42318;
-
-  /* ---- Colour: focus + shadow ---- */
-  --color-focus-ring: #8429cc;
-  --color-shadow-default: rgb(11 13 15 / 0.16);
-
-  /* ---- Radius ---- */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  /* ---- Elevation ---- */
-  --shadow-elevation-sm: 0 1px 2px 0 var(--color-shadow-default);
-  --shadow-elevation-md: 0 4px 8px -1px var(--color-shadow-default);
-  --shadow-elevation-lg: 0 12px 24px -4px var(--color-shadow-default);
-
-  /* ---- Type ---- */
-  --font-sans:
-    Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-
-  /* display/lg is measured from the cover frame (39:50); the Figma variable
-     binds weight + tracking only, so size/line-height come from the render.
-     display/md and display/sm exist in the Typography collection but no node
-     in the readable page binds their size, so they are deliberately omitted
-     rather than invented. */
-  --text-display-lg: 64px;
-  --text-display-lg--line-height: 80px;
-  --text-display-lg--letter-spacing: -1px;
-  --text-display-lg--font-weight: 700;
-
-  --text-heading-lg: 28px;
-  --text-heading-lg--line-height: 36px;
-  --text-heading-lg--letter-spacing: -0.4px;
-  --text-heading-lg--font-weight: 600;
-
-  --text-heading-md: 24px;
-  --text-heading-md--line-height: 32px;
-  --text-heading-md--letter-spacing: -0.3px;
-  --text-heading-md--font-weight: 600;
-
-  --text-heading-sm: 20px;
-  --text-heading-sm--line-height: 28px;
-  --text-heading-sm--letter-spacing: -0.2px;
-  --text-heading-sm--font-weight: 600;
-
-  --text-body-lg: 18px;
-  --text-body-lg--line-height: 28px;
-  --text-body-lg--letter-spacing: 0px;
-  --text-body-lg--font-weight: 400;
-
-  --text-body-md: 16px;
-  --text-body-md--line-height: 24px;
-  --text-body-md--letter-spacing: 0px;
-  --text-body-md--font-weight: 400;
-
-  --text-body-sm: 14px;
-  --text-body-sm--line-height: 20px;
-  --text-body-sm--letter-spacing: 0px;
-  --text-body-sm--font-weight: 400;
-
-  --text-label-lg: 16px;
-  --text-label-lg--line-height: 20px;
-  --text-label-lg--letter-spacing: 0px;
-  --text-label-lg--font-weight: 500;
-
-  --text-label-md: 14px;
-  --text-label-md--line-height: 18px;
-  --text-label-md--letter-spacing: 0px;
-  --text-label-md--font-weight: 500;
-
-  --text-label-sm: 12px;
-  --text-label-sm--line-height: 16px;
-  --text-label-sm--letter-spacing: 0.1px;
-  --text-label-sm--font-weight: 500;
-
-  --text-caption-lg: 13px;
-  --text-caption-lg--line-height: 18px;
-  --text-caption-lg--letter-spacing: 0.1px;
-  --text-caption-lg--font-weight: 500;
-
-  --text-caption-md: 12px;
-  --text-caption-md--line-height: 16px;
-  --text-caption-md--letter-spacing: 0.2px;
-  --text-caption-md--font-weight: 500;
-}
+@source not '../../tokens';
+@source not '../../scripts';
 
 /*
- * Spacing and sizing.
+ * Design tokens.
  *
- * Figma's space/N tokens are pixel-named (space/16 = 16px) and every step on
- * the scale already lands on Tailwind's default 4px grid, so the components
- * use stock utilities (p-4 = 16px = space/16) rather than a parallel set of
- * classes. The raw variables are published here so non-Tailwind consumers,
- * and anyone cross-checking against Figma, can use the tokens by name.
+ * tokens.css is generated from tokens/tokens.json, which mirrors the Figma
+ * variable collections. Change a value in tokens.json and run `npm run tokens`;
+ * never edit tokens.css by hand.
  *
- *   space/4  = 4px   -> 1      space/24 = 24px  -> 6
- *   space/8  = 8px   -> 2      space/40 = 40px  -> 10
- *   space/12 = 12px  -> 3      space/48 = 48px  -> 12
- *   space/16 = 16px  -> 4      space/64 = 64px  -> 16
- *   space/20 = 20px  -> 5
+ * Nothing in this library hard-codes a colour, radius, shadow or type step.
+ * Everything refers to these names, so re-theming is a single file.
  */
-:root {
-  --space-0: 0px;
-  --space-4: 4px;
-  --space-8: 8px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-40: 40px;
-  --space-48: 48px;
-  --space-64: 64px;
-
-  --border-width-sm: 1px;
-  --border-width-md: 2px;
-
-  --size-control-sm: 32px;
-  --size-control-md: 40px;
-  --size-control-lg: 48px;
-  --size-control-min-target: 44px;
-
-  --size-icon-16: 16px;
-  --size-icon-20: 20px;
-  --size-icon-24: 24px;
-  --size-icon-32: 32px;
-
-  --size-appbar: 64px;
-
-  --size-button-min-width-sm: 80px;
-  --size-button-min-width-md: 96px;
-  --size-button-min-width-lg: 112px;
-}
+@import './tokens.css';
 
 @layer base {
   html {

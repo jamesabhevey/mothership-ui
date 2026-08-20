@@ -1,0 +1,90 @@
+name: Sync design tokens from Figma
+
+on:
+  # Monday mornings, and on demand from the Actions tab.
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+# Needs to push a branch and open a pull request. Nothing else.
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: token-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Check Figma for token changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Read Figma variables and apply any changes
+        id: sync
+        env:
+          # Both are repository secrets. The file key is a secret rather than a
+          # plain value because this repository is public and the key identifies
+          # an internal design file.
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
+        run: |
+          set -o pipefail
+          node scripts/sync-figma-tokens.mjs --write | tee sync-report.txt
+
+      - name: Regenerate the stylesheet from the tokens
+        run: npm run tokens
+
+      - name: Check the library still builds with the new values
+        run: npm run typecheck && npm run build
+
+      - name: Open a pull request if anything changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- tokens/tokens.json src/styles/tokens.css; then
+            echo "No token changes. Nothing to open."
+            exit 0
+          fi
+
+          BRANCH="tokens/figma-sync-$(date -u +%Y%m%d-%H%M)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add tokens/tokens.json src/styles/tokens.css
+          git commit -m "Sync design tokens from Figma"
+          git push -u origin "$BRANCH"
+
+          {
+            echo "Figma variables have changed. This updates \`tokens/tokens.json\` and the generated stylesheet."
+            echo
+            echo "Every component refers to these tokens by name, so no component code changes."
+            echo "Type-check and build passed before this was opened."
+            echo
+            echo '```'
+            cat sync-report.txt
+            echo '```'
+          } > pr-body.md
+
+          gh pr create \
+            --title "Sync design tokens from Figma" \
+            --body-file pr-body.md \
+            --base main \
+            --head "$BRANCH"
+
+      - name: Keep the report as a build artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: token-sync-report
+          path: sync-report.txt
+          if-no-files-found: ignore

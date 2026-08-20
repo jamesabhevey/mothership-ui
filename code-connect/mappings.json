@@ -1,0 +1,54 @@
+{
+  "$comment": [
+    "Record of the Code Connect mappings published to the Figma library.",
+    "The live mapping lives in Figma; this file exists so the node IDs are",
+    "recoverable and the mapping is reviewable in version control.",
+    "Node IDs are component-set nodes; Figma propagates the mapping to each",
+    "variant underneath automatically."
+  ],
+  "fileKey": "set FIGMA_FILE_KEY — deliberately not committed, this repo is public",
+  "label": "React",
+  "sourceBase": "https://github.com/jamesabhevey/mothership-ui/blob/main/",
+  "components": {
+    "18:197": { "name": "Button", "source": "src/components/Button.tsx" },
+    "23:147": { "name": "IconButton", "source": "src/components/IconButton.tsx" },
+    "51:15": { "name": "FieldLabel", "source": "src/components/FieldLabel.tsx" },
+    "51:30": { "name": "FieldHelperText", "source": "src/components/FieldHelperText.tsx" },
+    "25:94": { "name": "TextField", "source": "src/components/TextField.tsx" },
+    "26:87": { "name": "Select", "source": "src/components/Select.tsx" },
+    "24:29": { "name": "Checkbox", "source": "src/components/Checkbox.tsx" },
+    "24:45": { "name": "Radio", "source": "src/components/Radio.tsx" },
+    "24:58": { "name": "Switch", "source": "src/components/Switch.tsx" },
+    "22:32": { "name": "Badge", "source": "src/components/Badge.tsx" },
+    "22:73": { "name": "Avatar", "source": "src/components/Avatar.tsx" },
+    "28:34": { "name": "Card", "source": "src/components/Card.tsx" },
+    "27:76": { "name": "ListItem", "source": "src/components/ListItem.tsx" },
+    "27:39": { "name": "Banner", "source": "src/components/Banner.tsx" },
+    "26:104": { "name": "Tooltip", "source": "src/components/Tooltip.tsx" },
+    "30:60": { "name": "Modal", "source": "src/components/Modal.tsx" },
+    "21:21": { "name": "Divider", "source": "src/components/Divider.tsx" },
+    "21:31": { "name": "Spinner", "source": "src/components/Spinner.tsx" },
+    "28:69": { "name": "Tabs", "source": "src/components/Tabs.tsx" },
+    "28:55": { "name": "Tab", "source": "src/components/Tabs.tsx" },
+    "29:25": { "name": "AppBar", "source": "src/components/AppBar.tsx" },
+    "29:57": { "name": "Menu", "source": "src/components/Menu.tsx" },
+    "29:46": { "name": "MenuItem", "source": "src/components/Menu.tsx" },
+    "224:36": { "name": "PageHeader", "source": "src/components/PageHeader.tsx" },
+    "224:80": { "name": "FormSection", "source": "src/components/FormSection.tsx" },
+    "225:75": { "name": "SettingsRowGroup", "source": "src/components/SettingsRowGroup.tsx" },
+    "225:86": { "name": "EmptyState", "source": "src/components/EmptyState.tsx" },
+    "225:131": { "name": "CardGrid", "source": "src/components/CardGrid.tsx" },
+    "225:162": { "name": "NavShell", "source": "src/components/NavShell.tsx" }
+  },
+  "icons": {
+    "$comment": "All 26 glyphs map to the single Icon component.",
+    "source": "src/components/icons.tsx",
+    "name": "Icon",
+    "nodeIds": [
+      "17:5", "17:8", "17:11", "17:14", "17:17", "17:20", "17:23", "17:26",
+      "17:29", "17:32", "17:35", "31:35", "31:39", "31:43", "31:49", "31:52",
+      "31:55", "31:60", "31:65", "31:69", "31:73", "31:77", "31:81", "31:85",
+      "31:89", "31:92"
+    ]
+  }
+}

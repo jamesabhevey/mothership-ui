@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "tokens": "node scripts/build-tokens.mjs",
+    "tokens:sync": "node scripts/sync-figma-tokens.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.1.0",

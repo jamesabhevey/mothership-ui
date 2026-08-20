@@ -45,7 +45,7 @@ typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
 
 These pages **resolve their values live** from the CSS custom properties
 via `getComputedStyle` rather than restating them ([src/docs/parts.tsx](src/docs/parts.tsx)).
-Change a token in `styles/index.css` and those pages follow — they document
+Change a token and those pages follow — they document
 what the tokens are right now and cannot drift out of date.
 
 Stories live beside the component they document (`Button.tsx` /
@@ -76,8 +76,8 @@ The four weights live in `public/fonts` (96KB) rather than mapping the whole
 so the built site works under the `/mothership-ui/` path Pages serves it from.
 
 `preview.ts` imports Inter in the four weights the type scale uses, then
-`src/styles/index.css`. That stylesheet is the whole token layer, so without
-that import components render unstyled. Storybook reuses the project's
+`src/styles/index.css`, which pulls in the generated token layer. Without that
+import components render unstyled. Storybook reuses the project's
 `vite.config.ts`, so the Tailwind v4 plugin that compiles the `@theme` block
 runs in the Storybook pipeline too — there is no second Tailwind config to keep
 in sync.
@@ -111,8 +111,9 @@ and takes its name from the Figma page of the same name.
 
 ## Tokens
 
-`src/styles/index.css` holds the whole token layer in a Tailwind v4 `@theme`
-block. The Figma variable name maps straight onto the CSS custom property:
+The token layer lives in `tokens/tokens.json` and is generated into
+`src/styles/tokens.css` as a Tailwind v4 `@theme` block. The Figma variable name
+maps straight onto the CSS custom property:
 
 | Figma | CSS | Tailwind |
 | --- | --- | --- |
@@ -128,7 +129,56 @@ use stock utilities — `p-4` *is* `space/16` — and the raw `--space-*` variab
 are published in `:root` for anyone cross-checking against the file or
 consuming the tokens outside Tailwind.
 
-To retheme, change the values in the `@theme` block. Nothing hard-codes a hex.
+To retheme, change the values in `tokens/tokens.json` and run `npm run tokens`.
+Nothing in the library hard-codes a hex.
+
+## Keeping in sync with Figma
+
+### Design tokens
+
+`tokens/tokens.json` is the source of truth. Its keys are the Figma variable
+paths, so `action/primary/default` in the colour section is Figma's
+`color/action/primary/default`.
+
+```bash
+npm run tokens        # regenerate src/styles/tokens.css from tokens.json
+npm run tokens:sync   # read Figma, report drift (needs credentials, see below)
+```
+
+`src/styles/tokens.css` is generated. Never edit it by hand — change
+`tokens.json` and regenerate. When this was introduced the compiled CSS was
+checked byte for byte against the previous hand-written stylesheet: identical,
+so the change carried no visual risk.
+
+[.github/workflows/token-sync.yml](.github/workflows/token-sync.yml) runs the
+sync every Monday and on demand. If Figma has drifted it applies the change,
+regenerates the stylesheet, type-checks, builds, and opens a pull request with
+the diff in the description. Nothing lands without review.
+
+Two repository secrets are required:
+
+| Secret | What it is |
+| --- | --- |
+| `FIGMA_TOKEN` | Figma personal access token with file read scope |
+| `FIGMA_FILE_KEY` | the library file key |
+
+The file key is a secret rather than a plain value because this repository is
+public and the key identifies an internal design file.
+
+Two caveats worth knowing. Figma's variables REST endpoint is limited to
+Enterprise plans; on anything less the sync exits with a clear message and
+changes nothing. And typography variables are reported rather than written,
+because Figma stores size, line height and tracking as separate variables while
+the code pairs them into one step — that mapping is not one to one, so it stays
+a human decision.
+
+### Code Connect
+
+All 29 components and all 26 icons are mapped, so inspecting a component in
+Figma's Dev Mode shows the real code component and links to its source.
+[code-connect/mappings.json](code-connect/mappings.json) records what is mapped
+to what; the live mapping lives in Figma. Mapping a component set propagates to
+every variant underneath it automatically.
 
 ## Where the code departs from the Figma file, and why
 
