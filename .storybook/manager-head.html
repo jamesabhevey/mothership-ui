@@ -113,13 +113,33 @@
   }
 
   /*
-    Root group headings — FOUNDATIONS, ASSETS, COMPONENTS. Storybook sets these
-    small, wide and muted; these are the library's own heading treatment
-    instead. Uppercasing is Storybook's and is left alone.
+    Root group headings — Foundations, Assets, Components.
+
+    Storybook styles these as small, wide, muted, uppercase labels. They are
+    instead treated as headings that sit in the same rhythm as the rows beneath
+    them: same 14px size, same line height, same 4px radius, and padding
+    mirroring a sidebar row apart from the indent, which roots do not have.
+    Height was already 28px on both.
+
+    Casing and tracking come off, so the labels read as written rather than
+    shouted.
   */
   #storybook-explorer-tree button[data-action='collapse-root'] {
     font-size: 14px;
     font-weight: 600;
+    line-height: normal;
     color: #1f2429;
+    text-transform: none;
+    letter-spacing: 0;
+    border-radius: 4px;
+    padding: 5px 6px 4px 8px;
+  }
+
+  /*
+    Space between groups. Storybook uses 16px; this widens it to 24px. Scoped
+    away from the first heading, which sits flush against the search field.
+  */
+  #storybook-explorer-tree .sidebar-subheading:not(:first-child) {
+    margin-top: 24px;
   }
 </style>
