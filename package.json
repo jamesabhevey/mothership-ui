@@ -12,7 +12,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "tokens": "node scripts/build-tokens.mjs",
-    "tokens:sync": "node scripts/sync-figma-tokens.mjs"
+    "tokens:sync": "node scripts/sync-figma-tokens.mjs",
+    "tokens:drift": "node scripts/check-figma-drift.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.1.0",

@@ -1,0 +1,110 @@
+name: Check Figma token drift
+
+on:
+  # Monday mornings, and on demand.
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'check = report drift and open a PR; calibrate = rebuild the probe table'
+        type: choice
+        default: check
+        options: [check, calibrate]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: token-drift
+  cancel-in-progress: false
+
+jobs:
+  drift:
+    name: Compare Figma against the committed tokens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Reads the ordinary file endpoint, which works on any Figma plan, and
+      # compares the values components actually paint against tokens.json.
+      - name: Run the drift check
+        id: drift
+        continue-on-error: true
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
+          MODE: ${{ inputs.mode || 'check' }}
+        run: |
+          set -o pipefail
+          if [ "$MODE" = "calibrate" ]; then
+            node scripts/check-figma-drift.mjs --calibrate | tee drift-report.txt
+          else
+            node scripts/check-figma-drift.mjs --write | tee drift-report.txt
+          fi
+
+      # The report always comes out, so a failed or empty run is still readable.
+      - name: Upload the report and probe table
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: figma-drift
+          path: |
+            drift-report.txt
+            tokens/figma-probes.json
+            tokens/tokens.json
+          if-no-files-found: warn
+
+      - name: Regenerate the stylesheet if tokens changed
+        if: ${{ (inputs.mode || 'check') == 'check' }}
+        run: npm run tokens
+
+      - name: Check the library still builds
+        if: ${{ (inputs.mode || 'check') == 'check' }}
+        run: npm run typecheck && npm run build
+
+      - name: Open a pull request if anything drifted
+        if: ${{ (inputs.mode || 'check') == 'check' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git diff --quiet -- tokens/tokens.json src/styles/tokens.css; then
+            echo "No drift. Nothing to open."
+            exit 0
+          fi
+
+          BRANCH="tokens/figma-drift-$(date -u +%Y%m%d-%H%M)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add tokens/tokens.json src/styles/tokens.css
+          git commit -m "Update design tokens to match Figma"
+          git push -u origin "$BRANCH"
+
+          {
+            echo "Figma and the code disagree on the tokens below. This brings the code into line."
+            echo
+            echo "Detected by reading the values the Figma components actually paint, not the"
+            echo "variable definitions — the variables API needs an Enterprise plan."
+            echo
+            echo "Every component refers to these tokens by name, so no component code changes."
+            echo "Type-check and build passed before this was opened."
+            echo
+            echo '```'
+            cat drift-report.txt
+            echo '```'
+          } > pr-body.md
+
+          gh pr create \
+            --title "Update design tokens to match Figma" \
+            --body-file pr-body.md \
+            --base main \
+            --head "$BRANCH"
