@@ -22,7 +22,8 @@ The sidebar has three roots:
 
 - **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
   Elevation. Reference pages for the token layer.
-- **Assets** — Iconography (the full set) and the `Icon` component's API.
+- **Assets** — Iconography, holding the full icon set and the `Icon` component's
+  own API.
 - **Components** — Form Elements, Content Presentation, Navigation and Blocks,
   one page per component with a story per variant. Order within each group is
   set explicitly in `preview.ts`, matching the Figma library rather than falling
@@ -33,8 +34,19 @@ The sidebar brand is the logo mark plus the title at 18px, 12px apart, styled in
 `background-image` rather than an `<img>`, so a missing file leaves the title
 readable instead of showing a broken-image icon. It declares two layers —
 `mothership-logo.svg` then `mothership-logo.png` — so whichever of the two sits
-in `public/` is the one that paints. Sidebar hover uses `color/border/subtle`
-rather than Storybook's default brand tint, scoped away from the selected row.
+in `public/` is the one that paints. The same file is the browser tab icon.
+
+Storybook's own controls use neutral hover and pressed colours rather than its
+defaults, which are the brand at 14% opacity for hover and a hardcoded `#dbecff`
+for pressed. Both are replaced with `color/border/subtle` and
+`color/border/default`, one step apart, so the section collapse buttons, the
+settings cog, the toolbar icons, Show code, Copy code and the args-table
+controls all behave the same. The manager rules live in `manager-head.html`; the
+docs pages render in the preview iframe, which the manager theme cannot reach,
+so [.storybook/preview-head.html](.storybook/preview-head.html) covers those
+separately. Both are scoped tightly enough to leave the library's own
+components alone: on a Button docs page the rules match 29 chrome controls and
+none of the 13 Buttons.
 
 Foundations and Assets pages use the same layout and type as the generated
 Component docs pages — 64px vertical and 40px horizontal padding, content capped

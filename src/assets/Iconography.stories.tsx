@@ -3,7 +3,7 @@ import { Icon, iconNames } from '../components/icons'
 import { Group, Page } from '../docs/parts'
 
 const meta = {
-  title: 'Assets/Iconography',
+  title: 'Assets/Iconography/Iconography',
   tags: ['!autodocs'],
   parameters: { controls: { disable: true }, layout: 'fullscreen', options: { showPanel: false } },
 } satisfies Meta

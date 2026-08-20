@@ -1,0 +1,30 @@
+<!--
+  Injected into the preview iframe, which is where the generated docs pages
+  render. The manager theme cannot reach in here, so Storybook's own controls
+  on those pages — Show code, Copy code, the story toolbar and the args table —
+  need the same hover and pressed treatment applied separately.
+
+  Scoped deliberately tightly to Storybook's chrome. A blanket `.sbdocs button`
+  would also catch the library's own Buttons rendered inside a docs page and
+  turn them grey on hover.
+
+  Selectors are deliberately one level deeper than Storybook's own. Its rules
+  are a single class plus a pseudo-class, and Emotion injects them at runtime,
+  after this block — on an equal-specificity tie the later rule wins, so these
+  need to out-specify rather than merely match.
+-->
+<style>
+  .sbdocs-preview-actions .docblock-code-toggle:hover,
+  .sbdocs-preview-actions button:hover,
+  .docblock-argstable button:hover,
+  .sb-bar button:hover {
+    background-color: #e8eaec;
+  }
+
+  .sbdocs-preview-actions .docblock-code-toggle:active,
+  .sbdocs-preview-actions button:active,
+  .docblock-argstable button:active,
+  .sb-bar button:active {
+    background-color: #d3d7db;
+  }
+</style>

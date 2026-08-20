@@ -82,19 +82,32 @@
   }
 
   /*
-    Sidebar hover.
+    Chrome controls: hover and pressed.
 
-    Storybook's default is the brand colour at 14% opacity, which over a white
-    sidebar reads as a pale lilac. This replaces it with color/border/subtle.
-    Scoped away from the selected row so that keeps its solid brand fill, and
-    written against the structural attributes rather than the generated Emotion
-    classes, which change between builds.
+    Storybook's defaults are the brand colour at 14% opacity for hover, which
+    over a white sidebar reads as pale lilac, and a hardcoded #dbecff for
+    pressed, which is a blue from its own palette rather than ours. Both are
+    replaced with neutrals from the token set, one step apart.
+
+    Applied across the whole sidebar region and the toolbar so that the section
+    collapse buttons, the settings cog, the search filters and the toolbar
+    icons all behave identically. Written against structural hooks rather than
+    the generated Emotion classes, which change between builds.
+
+    The selected row is excluded so it keeps its solid brand fill.
   */
-  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover,
-  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover > a,
-  #storybook-explorer-tree .sidebar-item:not([data-selected='true']):hover > button,
-  #storybook-explorer-tree button[data-action='collapse-root']:hover,
-  #storybook-explorer-tree button.sidebar-subheading-action:hover {
+  #storybook-sidebar-region button:hover,
+  .sb-bar button:hover,
+  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover,
+  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover > a {
     background-color: #e8eaec;
   }
+
+  #storybook-sidebar-region button:active,
+  .sb-bar button:active,
+  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active,
+  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active > a {
+    background-color: #d3d7db;
+  }
+
 </style>
