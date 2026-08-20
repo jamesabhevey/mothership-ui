@@ -1,9 +1,16 @@
 name: Sync design tokens from Figma
 
 on:
-  # Monday mornings, and on demand from the Actions tab.
-  schedule:
-    - cron: '0 7 * * 1'
+  # Manual only, for now.
+  #
+  # The weekly schedule is commented out deliberately. Reading Figma variables
+  # over the REST API needs an Enterprise plan; this organisation is on Org, so
+  # the endpoint returns 403 and a scheduled run would just collect a failure
+  # every Monday. The script and workflow are correct and tested against that
+  # failure path — uncomment the schedule if the plan ever changes.
+  #
+  # schedule:
+  #   - cron: '0 7 * * 1'
   workflow_dispatch:
 
 # Needs to push a branch and open a pull request. Nothing else.

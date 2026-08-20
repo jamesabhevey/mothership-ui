@@ -151,9 +151,15 @@ checked byte for byte against the previous hand-written stylesheet: identical,
 so the change carried no visual risk.
 
 [.github/workflows/token-sync.yml](.github/workflows/token-sync.yml) runs the
-sync every Monday and on demand. If Figma has drifted it applies the change,
-regenerates the stylesheet, type-checks, builds, and opens a pull request with
-the diff in the description. Nothing lands without review.
+sync on demand. If Figma has drifted it applies the change, regenerates the
+stylesheet, type-checks, builds, and opens a pull request with the diff in the
+description. Nothing lands without review.
+
+**Currently dormant.** Reading variables over the REST API needs a Figma
+Enterprise plan and this organisation is on Org, so the endpoint returns 403.
+Confirmed by running it: the script exits cleanly and changes nothing. The
+weekly schedule is commented out so it does not collect a failure every Monday.
+Uncomment it if the plan ever changes — everything else is in place and tested.
 
 Two repository secrets are required:
 
@@ -165,9 +171,7 @@ Two repository secrets are required:
 The file key is a secret rather than a plain value because this repository is
 public and the key identifies an internal design file.
 
-Two caveats worth knowing. Figma's variables REST endpoint is limited to
-Enterprise plans; on anything less the sync exits with a clear message and
-changes nothing. And typography variables are reported rather than written,
+One further caveat: typography variables are reported rather than written,
 because Figma stores size, line height and tracking as separate variables while
 the code pairs them into one step — that mapping is not one to one, so it stays
 a human decision.
