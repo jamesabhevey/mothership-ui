@@ -42,9 +42,9 @@ const preview: Preview = {
           'Foundations',
           ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation'],
           'Assets',
-          // Icon sits inside the Iconography folder: the set first, then the
-          // component's own API.
-          ['Iconography', ['Iconography', 'Icon']],
+          // Icon sits inside the Iconography folder, the component first and
+          // the full set beneath it.
+          ['Iconography', ['Icon', 'Iconography']],
           'Components',
           [
             'Form Elements',

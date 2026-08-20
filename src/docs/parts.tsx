@@ -31,11 +31,19 @@ export function useToken(name: string): string {
  *   section heading   20px / 30px / 700
  *   body              14px / 24px / 400
  *
- * They are Storybook's docs typography, not Mothership type tokens — the
- * nearest tokens are type/heading/lg (28/36) and type/body/sm (14/20). Matching
- * the docs pages is deliberate: the alternative is Foundations looking like a
- * different site to the component pages sitting next to it. Dense token
- * metadata below still uses the caption tokens, since it is data, not prose.
+ * Letter spacing is the one place these pages deliberately diverge from
+ * Storybook's docs, which set it to `normal`. Sizes on our scale carry their
+ * own tracking, so the 32px heading takes display/sm's -0.6px and the 20px
+ * section heading takes heading/sm's -0.2px, read from the tokens rather than
+ * restated so they follow any change to the scale.
+ *
+ * So the sizes come from Storybook's docs and the tracking comes from ours.
+ * Matching the docs sizes is deliberate — the alternative is Foundations
+ * looking like a different site to the component pages beside it — but there is
+ * no reason to inherit its letter spacing when our scale has an opinion at
+ * every size. For reference, the nearest tokens by size are type/heading/lg
+ * (28/36) and type/body/sm (14/20). Dense token metadata below still uses the
+ * caption tokens outright, since it is data rather than prose.
  */
 const shell = 'px-10 py-16'
 const content = 'mx-auto w-full max-w-[1000px]'
@@ -53,7 +61,9 @@ export function Page({
     <div className={shell}>
       <div className={`${content} flex flex-col gap-12`}>
         <header className="flex flex-col gap-4">
-          <h1 className="text-[32px]/9 font-bold text-text-primary">{title}</h1>
+          <h1 className="text-[32px]/9 font-bold tracking-[var(--text-display-sm--letter-spacing)] text-text-primary">
+            {title}
+          </h1>
           {intro ? <div className="max-w-[80ch] text-[14px]/6 text-text-primary">{intro}</div> : null}
         </header>
         {children}
@@ -65,7 +75,9 @@ export function Page({
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-[20px]/[30px] font-bold text-text-primary">{name}</h2>
+      <h2 className="text-[20px]/[30px] font-bold tracking-[var(--text-heading-sm--letter-spacing)] text-text-primary">
+        {name}
+      </h2>
       {children}
     </section>
   )
