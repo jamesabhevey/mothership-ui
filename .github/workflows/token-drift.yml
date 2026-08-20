@@ -10,7 +10,7 @@ on:
         description: 'check = report drift and open a PR; calibrate = rebuild the probe table'
         type: choice
         default: check
-        options: [check, calibrate]
+        options: [check, calibrate, diagnose]
 
 permissions:
   contents: write
@@ -34,10 +34,34 @@ jobs:
 
       - run: npm ci
 
+      # Prints HTTP status codes only — never a secret value. Lengths are shown
+      # so a truncated or newline-mangled secret is visible without revealing it.
+      - name: Diagnose Figma access
+        if: ${{ inputs.mode == 'diagnose' }}
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
+        run: |
+          echo "token length:    ${#FIGMA_TOKEN}   (Figma tokens are ~40+ chars and start figd_)"
+          echo "file key length: ${#FIGMA_FILE_KEY}   (expected 22)"
+          case "$FIGMA_TOKEN" in
+            figd_*) echo "token prefix:    looks like a Figma token" ;;
+            *)      echo "token prefix:    NOT figd_ — wrong value?" ;;
+          esac
+          echo
+          code() { curl -s -o /dev/null -w "%{http_code}" -H "X-Figma-Token: $FIGMA_TOKEN" "$1"; }
+          echo "GET /v1/me                     -> $(code https://api.figma.com/v1/me)   (tests the token alone)"
+          echo "GET /v1/files/KEY              -> $(code https://api.figma.com/v1/files/$FIGMA_FILE_KEY)   (tests token + file access)"
+          echo "GET /v1/files/KEY/nodes        -> $(code "https://api.figma.com/v1/files/$FIGMA_FILE_KEY/nodes?ids=18:197")"
+          echo "GET /v1/files/KEY/variables    -> $(code https://api.figma.com/v1/files/$FIGMA_FILE_KEY/variables/local)   (Enterprise only)"
+          echo
+          echo "200 = fine | 403 = token or scope problem | 404 = wrong file key"
+
       # Reads the ordinary file endpoint, which works on any Figma plan, and
       # compares the values components actually paint against tokens.json.
       - name: Run the drift check
         id: drift
+        if: ${{ inputs.mode != 'diagnose' }}
         continue-on-error: true
         env:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
