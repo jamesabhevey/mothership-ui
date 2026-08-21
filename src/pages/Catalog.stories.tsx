@@ -30,7 +30,7 @@ import {
   Tooltip,
 } from '../components'
 import { ChevronLeft, ChevronRight, EllipsisVertical, Plus, Search, User } from '../components/icons'
-import { Page } from '../docs/parts'
+import { Page, storyHref, toStoryId } from '../docs/parts'
 
 const meta = {
   title: 'Catalog',
@@ -40,14 +40,6 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
-
-/**
- * Storybook derives a story id from the title by lower-casing and replacing
- * runs of non-alphanumerics with a dash. Deriving it here rather than hardcoding
- * means renaming a component's title cannot leave a dead link behind.
- */
-const toId = (title: string) =>
-  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
 
 type Entry = { name: string; title: string; description: string; preview: ReactNode }
 
@@ -403,9 +395,14 @@ function Entry({ entry }: { entry: Entry }) {
         */}
         <div
           inert
-          className="grid min-h-[176px] place-items-center overflow-hidden rounded-lg border border-border-subtle bg-surface-default p-6 transition-colors group-hover:bg-bg-subtle"
+          className="flex min-h-[176px] items-center justify-center overflow-hidden rounded-lg border border-border-subtle bg-surface-default p-6 transition-colors group-hover:bg-bg-subtle"
         >
-          <div className="w-full max-w-[240px]">{entry.preview}</div>
+          {/*
+            The frame centres on both axes. The inner box caps the width so
+            full-width components like TextField and Card still read correctly,
+            and is centred rather than stretched.
+          */}
+          <div className="w-full max-w-[248px]">{entry.preview}</div>
         </div>
 
         {/*
@@ -416,7 +413,7 @@ function Entry({ entry }: { entry: Entry }) {
           content inside an anchor.
         */}
         <a
-          href={`/?path=/docs/${toId(entry.title)}--docs`}
+          href={storyHref(`${toStoryId(entry.title)}--docs`)}
           target="_top"
           className="text-label-lg font-semibold text-text-link after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >

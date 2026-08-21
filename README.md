@@ -18,15 +18,22 @@ npm run build
 `npm run storybook` serves on <http://localhost:6006>. Published on every push
 to `main`: <https://jamesabhevey.github.io/mothership-ui/>
 
-The sidebar opens with two flat pages, then three sections.
+The sidebar opens with three flat pages, then three sections.
 
-- **Get started** — what the library is, how to install it, the font setup, and
-  the conventions that catch people out.
+- **Welcome** — what the system is, where to go next, and what it is opinionated
+  about.
+- **Get started** — how to install it, the font setup, and the conventions that
+  catch people out.
 - **Catalog** — every component with a live preview, searchable, each linking to
   its page.
 
-Both are single-story files with autodocs off, which is what makes them render
-as plain links rather than collapsible groups.
+All three are single-story files with autodocs off, which is what makes them
+render as plain links rather than collapsible groups.
+
+Links between pages go through `storyHref` in [src/docs/parts.tsx](src/docs/parts.tsx),
+which builds a **relative** URL. A root-absolute `/?path=…` appears to work in
+development at the domain root and 404s on the deployed site, which is served
+from a subdirectory.
 
 The three sections:
 

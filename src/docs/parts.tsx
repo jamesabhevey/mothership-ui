@@ -108,6 +108,27 @@ export function Swatch({ figma, css }: { figma: string; css: string }) {
   )
 }
 
+/**
+ * Storybook derives a story id from a title by lower-casing and replacing runs
+ * of non-alphanumerics with a dash. Deriving it rather than hardcoding means
+ * renaming a title cannot leave a dead link behind.
+ */
+export const toStoryId = (title: string) =>
+  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+
+/**
+ * A link to another page of this Storybook, from inside the preview iframe.
+ *
+ * Relative, deliberately. The built site is served from a subdirectory on
+ * GitHub Pages, so a root-absolute `/?path=…` leaves the Storybook altogether
+ * and 404s — it only appears to work when developing at the domain root.
+ *
+ * Pair with target="_top" so the click navigates the whole Storybook, sidebar
+ * included, rather than replacing the canvas with a nested copy.
+ */
+export const storyHref = (id: string, view: 'story' | 'docs' = 'docs') =>
+  `./?path=/${view}/${id}`
+
 /** A code sample. Wide lines scroll inside the block, never the page. */
 export function Code({ children }: { children: string }) {
   return (

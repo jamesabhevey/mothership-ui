@@ -42,6 +42,7 @@ const preview: Preview = {
           // Two flat entries first, then the reference sections. Both are
           // single-story files with autodocs off, which is what makes them
           // render as plain links rather than collapsible groups.
+          'Welcome',
           'Get started',
           'Catalog',
           'Foundations',
