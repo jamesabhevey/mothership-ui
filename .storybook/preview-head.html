@@ -37,3 +37,32 @@
     max-width: 960px;
   }
 </style>
+
+<style>
+  /*
+    Section headings on the generated docs pages.
+
+    A component page nests its headings page title → "Stories" → one per story.
+    Storybook sets the middle one as a 13px uppercase label with 4.5px of
+    tracking, which is the one piece of shouted type left in here and reads as a
+    divider rather than the section heading it actually is.
+
+    It is brought onto our scale at type/heading/md — 24/32, -0.3px — matching
+    the section headings on the Welcome, Get started, Catalog, Foundations and
+    Assets pages, so a section heading is one size wherever it appears. Casing
+    and tracking come off for the same reason they did in the sidebar.
+
+    Story names below it stay at Storybook's 20/30, a step down, so the nesting
+    still reads. Weight and the surrounding margins are left alone.
+
+    Targeted structurally — the class on the element is a generated Emotion one
+    that changes between builds — and with enough specificity to win against it.
+  */
+  .sbdocs-wrapper .sbdocs-content h2 {
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.3px;
+    text-transform: none;
+    color: #1f2429;
+  }
+</style>

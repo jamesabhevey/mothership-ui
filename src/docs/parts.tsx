@@ -28,25 +28,27 @@ export function useToken(name: string): string {
  *   wrapper padding   64px top and bottom, 40px left and right
  *   content width     max 960px, centred within the padding
  *   h1                32px / 36px / 700
- *   section heading   20px / 30px / 700
+ *   section heading   24px / 32px / 700
  *   body              14px / 24px / 400
  *
- * Two deliberate departures from those measurements. The content column is
+ * Three deliberate departures from those measurements. The content column is
  * 960px rather than the 1000px the docs pages use, and Storybook's own docs
  * container is narrowed to match in preview-head.html so the two still line up.
  *
- * The second is letter spacing, which Storybook's docs set to `normal`. Sizes on our scale carry their
- * own tracking, so the 32px heading takes display/sm's -0.6px and the 20px
- * section heading takes heading/sm's -0.2px, read from the tokens rather than
- * restated so they follow any change to the scale.
+ * The section heading is 24/32 rather than the 20/30 the docs pages use for a
+ * story name, which is type/heading/md exactly. Storybook's own docs headings
+ * are moved to match in preview-head.html, so a section heading is one size
+ * wherever it appears and story names sit a step below it.
  *
- * So the sizes come from Storybook's docs and the tracking comes from ours.
- * Matching the docs sizes is deliberate — the alternative is Foundations
- * looking like a different site to the component pages beside it — but there is
- * no reason to inherit its letter spacing when our scale has an opinion at
- * every size. For reference, the nearest tokens by size are type/heading/lg
- * (28/36) and type/body/sm (14/20). Dense token metadata below still uses the
- * caption tokens outright, since it is data rather than prose.
+ * The third is letter spacing, which Storybook's docs set to `normal`. Sizes on
+ * our scale carry their own tracking, so the 32px heading takes display/sm's
+ * -0.6px and the 24px section heading takes heading/md's -0.3px, read from the
+ * tokens rather than restated so they follow any change to the scale.
+ *
+ * Weight stays at 700 throughout. The scale sets heading/md at 600, but these
+ * are page furniture rather than component type, and 700 keeps them level with
+ * the h1 above. Dense token metadata below uses the caption tokens outright,
+ * since it is data rather than prose.
  */
 const shell = 'px-10 py-16'
 const content = 'mx-auto w-full max-w-[960px]'
@@ -78,7 +80,7 @@ export function Page({
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-[20px]/[30px] font-bold tracking-[var(--text-heading-sm--letter-spacing)] text-text-primary">
+      <h2 className="text-[24px]/8 font-bold tracking-[var(--text-heading-md--letter-spacing)] text-text-primary">
         {name}
       </h2>
       {children}

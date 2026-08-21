@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Group, P, Page, storyHref } from '../docs/parts'
-import { Icon, iconNames, type IconName } from '../components/icons'
+import { iconNames } from '../components/icons'
 
 const meta = {
   title: 'Welcome',
@@ -13,12 +13,10 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 function NavCard({
-  icon,
   name,
   href,
   children,
 }: {
-  icon: IconName
   name: string
   href: string
   children: ReactNode
@@ -26,9 +24,6 @@ function NavCard({
   return (
     <li className="group relative">
       <div className="flex h-full flex-col gap-2 rounded-lg border border-border-subtle bg-surface-default p-5 transition-colors group-hover:bg-bg-subtle">
-        <span className="grid size-8 place-items-center rounded-md bg-bg-subtle text-icon-default" aria-hidden>
-          <Icon name={icon} size={20} />
-        </span>
         <a
           href={href}
           target="_top"
@@ -70,19 +65,20 @@ export const Welcome: Story = {
         </>
       }
     >
+      {/*
+        The three reference sections, in sidebar order. Get started and Catalog
+        are deliberately not repeated here — they sit directly above this page in
+        the sidebar, and the intro already points at them.
+      */}
       <Group name="Start here">
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <NavCard icon="download" name="Get started" href={storyHref('get-started--get-started', 'story')}>
-            Installing, the font setup, your first component, and the three conventions that catch
-            people out.
-          </NavCard>
-          <NavCard icon="search" name="Catalog" href={storyHref('catalog--catalog', 'story')}>
-            Every component with a live preview, searchable, each linking through to its own page.
-          </NavCard>
-          <NavCard icon="star" name="Foundations" href={storyHref('foundations-colour--colour', 'story')}>
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <NavCard name="Foundations" href={storyHref('foundations-colour--colour', 'story')}>
             Colour, typography, spacing and elevation, with values read live from the code.
           </NavCard>
-          <NavCard icon="settings" name="Components" href={storyHref('components-form-elements-button--docs')}>
+          <NavCard name="Assets" href={storyHref('assets-iconography-icon--docs')}>
+            The icon component and the full glyph set, with the name to pass for each one.
+          </NavCard>
+          <NavCard name="Components" href={storyHref('components-form-elements-button--docs')}>
             One page per component, showing every variant alongside the usage notes from Figma.
           </NavCard>
         </ul>
@@ -90,9 +86,10 @@ export const Welcome: Story = {
 
       <Group name="What is in it">
         {/*
-          Four across on a wide canvas, two then one as it narrows. Pinned
-          rather than auto-filled because both sets hold exactly four items, and
-          auto-fill would drop the fourth onto a row of its own.
+          Four across on a wide canvas, two then one as it narrows. Pinned to
+          the item count rather than auto-filled, which would drop the fourth
+          onto a row of its own at common widths. The cards above pin to three
+          for the same reason.
 
           The icon count derives itself. The other three are counted from the
           built story index and tokens.json — 29 component pages, 93 stories
