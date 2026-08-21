@@ -14,11 +14,20 @@
   need to out-specify rather than merely match.
 -->
 <style>
+  /*
+    Colour as well as background. Storybook's rule for these buttons is
+    `color: #8429cc; background: rgba(132,41,204,.14)` on hover, and replacing
+    only the background left the label and its icon turning brand purple against
+    a neutral fill. Both now go to text/primary, one step darker than the
+    text/muted they sit at when idle, so hover reads as the label coming forward
+    rather than changing meaning. The icons are currentColor, so they follow.
+  */
   .sbdocs-preview-actions .docblock-code-toggle:hover,
   .sbdocs-preview-actions button:hover,
   .docblock-argstable button:hover,
   .sb-bar button:hover {
     background-color: #e8eaec;
+    color: #1f2429;
   }
 
   .sbdocs-preview-actions .docblock-code-toggle:active,
@@ -26,6 +35,7 @@
   .docblock-argstable button:active,
   .sb-bar button:active {
     background-color: #d3d7db;
+    color: #1f2429;
   }
 
   /*
@@ -36,9 +46,7 @@
   .sbdocs-wrapper .sbdocs-content {
     max-width: 960px;
   }
-</style>
 
-<style>
   /*
     Section headings on the generated docs pages.
 
