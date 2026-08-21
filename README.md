@@ -18,7 +18,17 @@ npm run build
 `npm run storybook` serves on <http://localhost:6006>. Published on every push
 to `main`: <https://jamesabhevey.github.io/mothership-ui/>
 
-The sidebar has three roots:
+The sidebar opens with two flat pages, then three sections.
+
+- **Get started** — what the library is, how to install it, the font setup, and
+  the conventions that catch people out.
+- **Catalog** — every component with a live preview, searchable, each linking to
+  its page.
+
+Both are single-story files with autodocs off, which is what makes them render
+as plain links rather than collapsible groups.
+
+The three sections:
 
 - **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
   Elevation. Reference pages for the token layer.

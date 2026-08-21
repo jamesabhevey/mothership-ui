@@ -108,6 +108,20 @@ export function Swatch({ figma, css }: { figma: string; css: string }) {
   )
 }
 
+/** A code sample. Wide lines scroll inside the block, never the page. */
+export function Code({ children }: { children: string }) {
+  return (
+    <pre className="overflow-x-auto rounded-md border border-border-subtle bg-bg-subtle p-4">
+      <code className="whitespace-pre font-mono text-caption-lg text-text-primary">{children}</code>
+    </pre>
+  )
+}
+
+/** A body paragraph at the docs measure. */
+export function P({ children }: { children: ReactNode }) {
+  return <p className="max-w-[80ch] text-[14px]/6 text-text-primary">{children}</p>
+}
+
 /** One swatch per row, full width of the content column. */
 export function SwatchGrid({ children }: { children: ReactNode }) {
   return <ul className="flex flex-col gap-2">{children}</ul>
