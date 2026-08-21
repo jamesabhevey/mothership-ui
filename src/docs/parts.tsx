@@ -26,13 +26,16 @@ export function useToken(name: string): string {
  * guessed, so Foundations and Components read as one document:
  *
  *   wrapper padding   64px top and bottom, 40px left and right
- *   content width     max 1000px, centred within the padding
+ *   content width     max 960px, centred within the padding
  *   h1                32px / 36px / 700
  *   section heading   20px / 30px / 700
  *   body              14px / 24px / 400
  *
- * Letter spacing is the one place these pages deliberately diverge from
- * Storybook's docs, which set it to `normal`. Sizes on our scale carry their
+ * Two deliberate departures from those measurements. The content column is
+ * 960px rather than the 1000px the docs pages use, and Storybook's own docs
+ * container is narrowed to match in preview-head.html so the two still line up.
+ *
+ * The second is letter spacing, which Storybook's docs set to `normal`. Sizes on our scale carry their
  * own tracking, so the 32px heading takes display/sm's -0.6px and the 20px
  * section heading takes heading/sm's -0.2px, read from the tokens rather than
  * restated so they follow any change to the scale.
@@ -46,7 +49,7 @@ export function useToken(name: string): string {
  * caption tokens outright, since it is data rather than prose.
  */
 const shell = 'px-10 py-16'
-const content = 'mx-auto w-full max-w-[1000px]'
+const content = 'mx-auto w-full max-w-[960px]'
 
 export function Page({
   title,

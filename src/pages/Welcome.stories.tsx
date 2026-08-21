@@ -26,13 +26,13 @@ function NavCard({
   return (
     <li className="group relative">
       <div className="flex h-full flex-col gap-2 rounded-lg border border-border-subtle bg-surface-default p-5 transition-colors group-hover:bg-bg-subtle">
-        <span className="grid size-8 place-items-center rounded-md bg-bg-selected text-icon-link" aria-hidden>
+        <span className="grid size-8 place-items-center rounded-md bg-bg-subtle text-icon-default" aria-hidden>
           <Icon name={icon} size={20} />
         </span>
         <a
           href={href}
           target="_top"
-          className="text-label-lg font-semibold text-text-link after:absolute after:inset-0 after:content-[''] hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+          className="text-label-lg font-semibold text-text-primary after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           {name}
         </a>
@@ -71,7 +71,7 @@ export const Welcome: Story = {
       }
     >
       <Group name="Start here">
-        <ul className="grid grid-cols-[repeat(auto-fill,minmax(224px,1fr))] gap-4">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <NavCard icon="download" name="Get started" href={storyHref('get-started--get-started', 'story')}>
             Installing, the font setup, your first component, and the three conventions that catch
             people out.
@@ -90,12 +90,16 @@ export const Welcome: Story = {
 
       <Group name="What is in it">
         {/*
+          Four across on a wide canvas, two then one as it narrows. Pinned
+          rather than auto-filled because both sets hold exactly four items, and
+          auto-fill would drop the fourth onto a row of its own.
+
           The icon count derives itself. The other three are counted from the
           built story index and tokens.json — 29 component pages, 93 stories
           under Components, and every entry across the token file — so they need
           updating when the library grows.
         */}
-        <ul className="grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4">
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Stat value="29" label="components" />
           <Stat value={String(iconNames.length)} label="icons" />
           <Stat value="102" label="design tokens" />

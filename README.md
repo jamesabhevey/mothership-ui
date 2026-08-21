@@ -67,10 +67,12 @@ none of the 13 Buttons.
 
 Foundations and Assets pages use the same layout and type as the generated
 Component docs pages — 64px vertical and 40px horizontal padding, content capped
-at 1000px and centred, `h1` at 32/36/700 — measured off a docs page rather than
+at 960px and centred, `h1` at 32/36/700 — measured off a docs page rather than
 guessed, so every section reads as one document. Those are Storybook's docs
 typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
-(28/36) and `type/body/sm` (14/20).
+(28/36) and `type/body/sm` (14/20). The content width departs from Storybook's
+1000px default, so `preview-head.html` narrows the generated docs container to
+960px as well and the sections stay aligned.
 
 These pages **resolve their values live** from the CSS custom properties
 via `getComputedStyle` rather than restating them ([src/docs/parts.tsx](src/docs/parts.tsx)).
