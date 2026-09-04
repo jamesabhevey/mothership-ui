@@ -44,6 +44,24 @@
   }
 
   /*
+    The sidebar column: brand header, search field, filter row, explorer tree.
+
+    Storybook pads this 16px 12px 20px and spaces the four blocks 16px apart.
+    The horizontal padding is squared up to 16px so the column sits on the same
+    inset as the rows inside it, the bottom matches the top rather than running
+    4px deeper, and the blocks are given 24px of air so the search field reads
+    as separate from the brand above it and the tree below.
+
+    Targeted through the explorer menu's stable id rather than the column's own
+    generated Emotion class, which changes between builds. It is the only
+    element with #storybook-explorer-menu as a direct child.
+  */
+  #storybook-sidebar-region div:has(> #storybook-explorer-menu) {
+    padding: 16px;
+    row-gap: 24px;
+  }
+
+  /*
     The sidebar brand: logo mark, then the title at 18px, 12px apart.
 
     Targeted structurally rather than by class — Storybook's brand link carries
