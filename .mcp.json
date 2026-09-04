@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "design-mode": {
+      "type": "http",
+      "url": "https://mcp.designmode.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${DESIGN_MODE_TOKEN}"
+      }
+    }
+  }
+}
