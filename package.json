@@ -13,7 +13,8 @@
     "build-storybook": "storybook build",
     "tokens": "node scripts/build-tokens.mjs",
     "tokens:sync": "node scripts/sync-figma-tokens.mjs",
-    "tokens:drift": "node scripts/check-figma-drift.mjs"
+    "tokens:drift": "node scripts/check-figma-drift.mjs",
+    "check": "node scripts/check-contracts.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.1.0",

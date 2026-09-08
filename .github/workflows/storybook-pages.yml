@@ -1,8 +1,13 @@
-name: Deploy Storybook to Pages
+name: Check and deploy Storybook
 
 on:
   # Every push to main, as asked.
   push:
+    branches: [main]
+  # Pull requests get the type-check, the build and the contract checks, but
+  # never the deploy. Nothing enforces PRs today, so this does nothing until
+  # somebody opens one — at which point it is already there.
+  pull_request:
     branches: [main]
   # Lets you re-run a deploy from the Actions tab without an empty commit,
   # which is useful when a deploy fails for an environment reason rather than
@@ -31,7 +36,7 @@ jobs:
   # deploy step, and so the deploy job holds the github-pages environment for
   # the shortest possible time.
   build:
-    name: Build Storybook
+    name: Build and check Storybook
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
@@ -67,12 +72,22 @@ jobs:
           # No telemetry from CI builds.
           STORYBOOK_DISABLE_TELEMETRY: '1'
 
+      - name: Contract checks
+        # The assumptions this Storybook makes that nothing else would catch —
+        # dead internal links, a hand-edited generated stylesheet, a hard-coded
+        # hex, a stale headline count, and CSS overrides pointing at Storybook
+        # internals that an upgrade has renamed. Each of those fails silently,
+        # so this runs before the upload and blocks the deploy.
+        run: npm run check
+
       - name: Configure Pages
+        if: github.event_name != 'pull_request'
         # Reads the repository's Pages settings and exposes them to later
         # steps. Requires Pages to be enabled with "GitHub Actions" as source.
         uses: actions/configure-pages@v6
 
       - name: Upload the built site as a Pages artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5
         with:
           path: storybook-static
@@ -80,6 +95,7 @@ jobs:
   deploy:
     name: Deploy to Pages
     needs: build
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     # Declaring the environment is what makes the deployed URL show up on the
     # repo home page and in the Actions run summary.

@@ -238,6 +238,32 @@ Figma's Dev Mode shows the real code component and links to its source.
 to what; the live mapping lives in Figma. Mapping a component set propagates to
 every variant underneath it automatically.
 
+## Contract checks
+
+`npm run check`, after a `npm run build-storybook`. Every push and pull request
+runs it, and a failure blocks the deploy.
+
+Type-checking and the build catch code that cannot compile. These catch the
+things that fail silently, each of which has either happened here or could
+happen without anyone noticing:
+
+| Check | What it catches |
+| --- | --- |
+| Generated tokens are current | `src/styles/tokens.css` edited by hand, or left stale after a change to `tokens/tokens.json` |
+| Components use tokens, not colour literals | a hard-coded hex or `rgb()` anywhere in `src/components` |
+| Internal links resolve | a link to a story whose title has been renamed, which renders as a blank page rather than an error |
+| Welcome page counts are current | the component, token and variant counts stated as fact on the Welcome page drifting as the library grows |
+| CSS overrides still target real Storybook markup | a Storybook upgrade renaming an internal that `manager-head.html` or `preview-head.html` hangs a rule off, so the rule silently stops applying |
+
+The last one is the important one. The sidebar and docs chrome are restyled by
+targeting Storybook's own markup, which is not a public API, and when one of
+those hooks disappears the styling simply reverts to Storybook's defaults with
+no error anywhere.
+
+What none of them cover is the *value* a rule resolves to — whether a hover is
+our grey or Storybook's purple. That needs a real browser measuring computed
+styles, which would mean adding Playwright.
+
 ## Where the code departs from the Figma file, and why
 
 Figma models everything as variants. Some of those axes are states the browser
