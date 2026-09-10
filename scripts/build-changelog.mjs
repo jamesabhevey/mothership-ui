@@ -73,6 +73,34 @@ const commits = log
     return { short, full, date, author, subject, body: paragraphs(body) }
   })
 
+/**
+ * Version names.
+ *
+ * Every commit that lands on main is deployed and is what anyone pulling the
+ * library gets, so every commit is a version. There is no release step to hang
+ * a number on.
+ *
+ * The name is the day it landed plus which change of that day it was, counted
+ * from the first — 2026.09.10.2 is the second change that day. Dates rather
+ * than 2.1.0 because nothing here is published as a package: there is no
+ * install to pin, so a number counting breaking changes would be describing a
+ * thing that does not exist.
+ *
+ * The day is taken from the commit's own timezone offset, which is the day the
+ * author saw when they made it.
+ */
+const dayKey = (iso) => iso.slice(0, 10).replace(/-/g, '.')
+
+const seen = new Map()
+// git log is newest first, so count from the oldest to number them in the order
+// they actually happened.
+for (const commit of [...commits].reverse()) {
+  const day = dayKey(commit.date)
+  const n = (seen.get(day) ?? 0) + 1
+  seen.set(day, n)
+  commit.version = `${day}.${n}`
+}
+
 const out = { repo, generated: new Date().toISOString(), commits }
 writeFileSync('src/changelog.json', JSON.stringify(out, null, 2) + '\n')
 console.log(`src/changelog.json written — ${commits.length} commit(s)${repo ? ` from ${repo}` : ''}`)

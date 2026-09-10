@@ -18,8 +18,9 @@ const { repo, commits } = changelog
 const commitUrl = (hash: string) => (repo ? `https://github.com/${repo}/commit/${hash}` : null)
 
 /**
- * Commits carry an ISO timestamp; the page groups by the day they landed, since
- * this library has no versions to group by. Dates are formatted in en-GB
+ * Every change is its own version, so the days are headings rather than
+ * versions in their own right — they just give the list some rhythm and say in
+ * words what the version names say in digits. Dates are formatted in en-GB
  * explicitly rather than left to the reader's locale, so the page reads the
  * same for everyone looking at it together.
  */
@@ -53,8 +54,10 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
   const url = commitUrl(commit.full)
   return (
     <li className="flex flex-col gap-2 border-b border-border-subtle pb-5 last:border-0 last:pb-0">
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="text-label-lg font-semibold text-text-primary">{commit.subject}</span>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="rounded-sm bg-bg-subtle px-1.5 py-0.5 font-mono text-caption-md text-text-primary">
+          {commit.version}
+        </span>
         {url ? (
           <a
             href={url}
@@ -68,6 +71,7 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
           <span className="font-mono text-caption-md text-text-muted">{commit.short}</span>
         )}
       </div>
+      <span className="text-label-lg font-semibold text-text-primary">{commit.subject}</span>
       {commit.body.map((paragraph, i) => (
         <p key={i} className="max-w-[80ch] text-body-sm text-text-secondary">
           {withCode(paragraph)}
@@ -88,9 +92,17 @@ export const Changelog: Story = {
           links to its commit, where you can see exactly what changed and why.
           <br />
           <br />
-          There are no version numbers to group by: this is an internal library consumed from source
-          rather than a published package, so changes land on <code>main</code> and reach the
-          Storybook on the next deploy. The entries are grouped by the day they landed instead.
+          <strong>What counts as a version.</strong> Every change that lands is one. There is no
+          release step to wait for — a change reaches <code>main</code>, this Storybook redeploys,
+          and that is what you get when you pull the library — so there is no gap between a change
+          being made and it being live to gather several of them into a release.
+          <br />
+          <br />
+          The name is the day it landed and which change of that day it was, so{' '}
+          <code>2026.09.10.2</code> is the second change that day. Dates rather than numbers like{' '}
+          <code>2.1.0</code> because nothing here is published as a package: there is no install to
+          pin to, so a number counting breaking changes would be describing something that does not
+          exist.
         </>
       }
     >
@@ -113,7 +125,7 @@ export const Changelog: Story = {
 
           {repo ? (
             <P>
-              Showing the {commits.length} most recent commits.{' '}
+              Showing the {commits.length} most recent versions.{' '}
               <a
                 href={`https://github.com/${repo}/commits/main`}
                 target="_blank"
