@@ -330,6 +330,19 @@
   }
 
   /*
+    The status badge Storybook puts on a newly added story. Its fill is the
+    light-mode brand literal, so in dark it was one purple on another with a
+    near-black glyph — about 3.4:1. On the token pair it is 5.8:1 in light and
+    7.4:1 in dark. On the selected row it needs no separate rule: the row's fill
+    is the same token, so the badge blends into it and only its glyph shows,
+    which is the on-brand colour it already has.
+  */
+  [data-theme] #storybook-sidebar-region [aria-label^='Change status'] {
+    background-color: var(--color-action-primary-default);
+    color: var(--color-text-on-brand);
+  }
+
+  /*
     The search field.
 
     Storybook draws it as a 1px inset ring rather than a border, and left to

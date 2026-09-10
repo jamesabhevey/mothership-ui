@@ -14,3 +14,7 @@ storybook-static
 # Editor and OS
 .DS_Store
 *.log
+
+# Generated from the git history at build time by scripts/build-changelog.mjs.
+# Not committed: it would be one commit out of date the moment it was.
+src/changelog.json

@@ -80,12 +80,13 @@ const preview: Preview = {
         // the components. Within each group the order is set explicitly rather
         // than alphabetically, matching the Figma library's own ordering.
         order: [
-          // Two flat entries first, then the reference sections. Both are
-          // single-story files with autodocs off, which is what makes them
+          // The flat entries first, then the reference sections. Each is a
+          // single-story file with autodocs off, which is what makes them
           // render as plain links rather than collapsible groups.
           'Welcome',
           'Get started',
           'Catalog',
+          'Changelog',
           'Foundations',
           ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation'],
           'Assets',

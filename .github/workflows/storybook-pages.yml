@@ -41,6 +41,11 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v7
+        with:
+          # The Changelog page is built from the commit history, and the default
+          # checkout fetches only the tip. Without this the page would come out
+          # with a single entry on it.
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v7

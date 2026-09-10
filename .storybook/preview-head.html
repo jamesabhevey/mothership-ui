@@ -232,3 +232,41 @@
     box-shadow: inset 0 0 0 1px var(--color-border-default);
   }
 </style>
+
+<style>
+  /*
+    The props table's corners.
+    ------------------------------------------------------------------
+    The component preview above it is an 8px card — radius/md — and the table
+    below was a hard rectangle, so the two blocks on every component page did
+    not agree.
+
+    The table's outer edge is not a border on the table: it is drawn by the
+    outer cells, and the header row sits outside it, so the rounded box is the
+    tbody. With border-collapse: collapse a radius on either the table or its
+    cells is ignored, so the table is switched to the separate model with no
+    spacing — which changes nothing visually here, because no two adjacent cells
+    both carry a border to double up — and the four corner cells take the
+    radius.
+  */
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr:first-child > td:first-child {
+    border-top-left-radius: var(--radius-md);
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr:first-child > td:last-child {
+    border-top-right-radius: var(--radius-md);
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr:last-child > td:first-child {
+    border-bottom-left-radius: var(--radius-md);
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr:last-child > td:last-child {
+    border-bottom-right-radius: var(--radius-md);
+  }
+</style>
