@@ -43,20 +43,52 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 // look fine.
 // ---------------------------------------------------------------------------
 {
-  const path = 'src/styles/tokens.css'
-  const before = readFileSync(path, 'utf8')
+  // Two files now: the components' stylesheet and the copy the Storybook
+  // manager loads, which carries the same colour tokens in both modes.
+  const paths = ['src/styles/tokens.css', 'public/manager-tokens.css']
+  const before = paths.map((p) => readFileSync(p, 'utf8'))
   execFileSync('node', ['scripts/build-tokens.mjs'], { stdio: 'pipe' })
-  const after = readFileSync(path, 'utf8')
-  if (before !== after) {
-    writeFileSync(path, before)
+  const stale = paths.filter((p, i) => readFileSync(p, 'utf8') !== before[i])
+  if (stale.length) {
+    paths.forEach((p, i) => writeFileSync(p, before[i]))
     fail(
       'generated tokens are current',
-      `${path} is not what tokens/tokens.json generates. Run \`npm run tokens\` and commit the result` +
-        ' (this check restored your copy rather than leaving the tree dirty).',
+      `not what tokens/tokens.json generates: ${stale.join(', ')}. Run \`npm run tokens\` and commit` +
+        ' the result (this check restored your copy rather than leaving the tree dirty).',
     )
   } else {
-    pass('generated tokens are current', path)
+    pass('generated tokens are current', paths.join(', '))
   }
+}
+
+// ---------------------------------------------------------------------------
+// 1b. Every colour token has both modes, and every one is documented.
+//
+// Colour is the only collection with modes. A token added with just a light
+// value would fall back to its light value in dark mode — which renders, looks
+// deliberate, and is wrong. Two tokens were also sitting in the Figma file
+// undocumented on the Colour page before this check existed.
+// ---------------------------------------------------------------------------
+{
+  const tokens = JSON.parse(readFileSync('tokens/tokens.json', 'utf8'))
+  const oneMode = Object.entries(tokens.color)
+    .filter(([, v]) => !v || typeof v !== 'object' || !v.light || !v.dark)
+    .map(([k]) => k)
+
+  if (oneMode.length) fail('every colour token has both modes', oneMode.join(', '))
+  else pass('every colour token has both modes', `${Object.keys(tokens.color).length} tokens`)
+
+  // A fully transparent token has nothing to show, so it is deliberately not
+  // given a swatch.
+  const undocumented = ['bg/transparent']
+  const page = readFileSync('src/foundations/Colour.stories.tsx', 'utf8')
+  const listed = new Set([...page.matchAll(/'--color-([a-z0-9-]+)'/g)].map((m) => m[1]))
+  const absent = Object.keys(tokens.color)
+    .filter((k) => !undocumented.includes(k))
+    .filter((k) => !listed.has(k.replace(/\//g, '-')))
+
+  if (absent.length) fail('every colour token is on the Colour page', absent.join(', '))
+  else pass('every colour token is on the Colour page')
 }
 
 // ---------------------------------------------------------------------------
@@ -142,9 +174,12 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 
   const actual = {
     components: entries.filter((e) => e.type === 'docs' && e.title.startsWith('Components/')).length,
+    // A colour token counts once however many modes it has, the same way a type
+    // step counts once however many properties it carries. `surface/default` is
+    // one token to a designer, not two because it has a light and a dark value.
     'design tokens': Object.entries(tokens)
-      .filter(([k]) => k !== 'type')
-      .reduce((a, [, v]) => a + countLeaves(v), 0) + typeSteps,
+      .filter(([k]) => k !== 'type' && k !== 'color')
+      .reduce((a, [, v]) => a + countLeaves(v), 0) + typeSteps + Object.keys(tokens.color).length,
     'documented variants': entries.filter((e) => e.type === 'story' && e.title.startsWith('Components/')).length,
   }
 

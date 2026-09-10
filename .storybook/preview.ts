@@ -21,6 +21,47 @@ const preview: Preview = {
   // autodocs page from its meta and prop types without repeating the tag.
   tags: ['autodocs'],
 
+  // Light / Dark, in the toolbar above the canvas.
+  //
+  // Colour is the only Figma collection with modes, and every colour token
+  // carries both values, so switching is a single attribute on <html>: the
+  // custom properties are redeclared under [data-theme='dark'] and every
+  // Tailwind colour utility, which compiles to var(--color-…), follows.
+  //
+  // Nothing in the components knows about this. There is not one `dark:`
+  // variant in the library — a component asks for surface/default and gets
+  // whichever value the current mode defines.
+  globalTypes: {
+    theme: {
+      description: 'Colour mode',
+      toolbar: {
+        title: 'Theme',
+        icon: 'contrast',
+        items: [
+          { value: 'light', title: 'Light', icon: 'sun' },
+          { value: 'dark', title: 'Dark', icon: 'moon' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+
+  initialGlobals: { theme: 'light' },
+
+  decorators: [
+    (Story, context) => {
+      // Set on the iframe's root element rather than a wrapper, so the page
+      // background, the docs chrome and anything portalled to <body> — modals,
+      // tooltips, menus — are all inside the same mode.
+      // Always set, never removed. tokens.css declares a light block as well as
+      // a dark one, so an explicit value means a subtree can be pinned to the
+      // other mode — which is how the Colour page shows both values at once.
+      const theme = context.globals.theme === 'dark' ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', theme)
+      return Story()
+    },
+  ],
+
   parameters: {
     // Autodocs pages render inside the preview iframe, so they need the theme
     // handed to them separately from the manager chrome.

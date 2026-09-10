@@ -12,10 +12,53 @@ export function readToken(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim()
 }
 
-/** Same, but re-reads after mount so the first paint has the stylesheet applied. */
+/**
+ * Same, but re-reads after mount so the first paint has the stylesheet applied,
+ * and again whenever the colour mode changes.
+ *
+ * The mode is an attribute on <html>, and switching it does not necessarily
+ * remount anything, so without watching for it these pages would go on
+ * reporting the values they read when they first rendered. A page that claims
+ * to read the tokens live has to actually do so.
+ */
 export function useToken(name: string): string {
   const [value, setValue] = useState('')
-  useEffect(() => setValue(readToken(name)), [name])
+  useEffect(() => {
+    const read = () => setValue(readToken(name))
+    read()
+    const observer = new MutationObserver(read)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [name])
+  return value
+}
+
+/**
+ * Both values of a colour token at once, whichever mode the page is in.
+ *
+ * Two throwaway probes, each pinned to a mode with the same data-theme
+ * attribute the toolbar sets. Custom properties inherit, and tokens.css
+ * declares light and dark blocks, so a probe marked light reports light values
+ * even inside a dark page.
+ *
+ * Read out of the CSS rather than imported from tokens.json on purpose: it
+ * keeps the promise the rest of these pages make, which is that they show what
+ * the stylesheet actually says rather than a second copy of it.
+ */
+export function useTokenModes(name: string): { light: string; dark: string } {
+  const [value, setValue] = useState({ light: '', dark: '' })
+  useEffect(() => {
+    const probe = (mode: 'light' | 'dark') => {
+      const el = document.createElement('div')
+      el.setAttribute('data-theme', mode)
+      el.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden'
+      document.body.appendChild(el)
+      const read = getComputedStyle(el).getPropertyValue(name).trim()
+      el.remove()
+      return read
+    }
+    setValue({ light: probe('light'), dark: probe('dark') })
+  }, [name])
   return value
 }
 
@@ -100,7 +143,17 @@ export function Meta({ figma, css }: { figma: string; css: string }) {
   )
 }
 
+/**
+ * One colour token: a chip in the mode currently being viewed, then the name,
+ * the custom property, and both mode values side by side.
+ *
+ * Both are shown rather than only the active one because the question a
+ * designer brings to this page is usually what a token does across modes, and
+ * flipping the toolbar to find out loses the comparison. The chip still follows
+ * the toolbar, so what you see and what is labelled agree.
+ */
 export function Swatch({ figma, css }: { figma: string; css: string }) {
+  const modes = useTokenModes(css)
   return (
     <li className="flex items-center gap-3 rounded-md border border-border-subtle p-3">
       <span
@@ -108,7 +161,14 @@ export function Swatch({ figma, css }: { figma: string; css: string }) {
         style={{ background: `var(${css})` }}
         aria-hidden
       />
-      <Meta figma={figma} css={css} />
+      <div className="flex min-w-0 flex-col gap-0.5">
+        <span className="text-label-md text-text-primary">{figma}</span>
+        <span className="font-mono text-caption-md text-text-secondary">{css}</span>
+        <span className="flex flex-wrap gap-x-4 font-mono text-caption-md text-text-muted">
+          <span>Light {modes.light || '—'}</span>
+          <span>Dark {modes.dark || '—'}</span>
+        </span>
+      </div>
     </li>
   )
 }

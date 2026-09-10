@@ -6,6 +6,18 @@
  * collections. Keys are the Figma variable paths, so `action/primary/default`
  * in the colour section is Figma's `color/action/primary/default`.
  *
+ * Colour is the one collection with modes. Each colour token carries a light and
+ * a dark value, exactly as its Figma variable does, and both are emitted: the
+ * light one into the `@theme` block, the dark one into a `[data-theme='dark']`
+ * block that redeclares the same custom property. Tailwind v4 utilities compile
+ * to `var(--color-…)`, so redeclaring the variable under a selector is all it
+ * takes for `bg-surface-default` to follow the mode — no `dark:` variants
+ * anywhere in the components, and anything reading the variable directly
+ * follows too.
+ *
+ * Nothing else has modes. The elevation tokens look like an exception but are
+ * not: they are built on var(--color-shadow-default), so they change with it.
+ *
  * Run `npm run tokens` after changing tokens.json. Never edit tokens.css.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -26,8 +38,8 @@ L.push(' */')
 L.push('')
 L.push('@theme {')
 
-L.push('  /* Colour */')
-for (const [k, val] of Object.entries(t.color)) L.push(`  --color-${v(k)}: ${val};`)
+L.push('  /* Colour — light mode. Dark follows the @theme block. */')
+for (const [k, val] of Object.entries(t.color)) L.push(`  --color-${v(k)}: ${val.light};`)
 
 L.push('')
 L.push('  /* Radius */')
@@ -61,6 +73,8 @@ L.push(' * utilities and p-4 *is* space/16. These exist for anyone consuming the
 L.push(' * tokens outside Tailwind, or cross-checking against Figma.')
 L.push(' */')
 L.push(':root {')
+L.push('  color-scheme: light;')
+L.push('')
 for (const [k, val] of Object.entries(t.space)) L.push(`  --space-${v(k)}: ${val};`)
 L.push('')
 for (const [k, val] of Object.entries(t.borderWidth)) L.push(`  --border-width-${v(k)}: ${val};`)
@@ -69,9 +83,68 @@ for (const [k, val] of Object.entries(t.size)) L.push(`  --size-${v(k)}: ${val};
 L.push('}')
 L.push('')
 
+L.push('/*')
+L.push(' * Light, restated.')
+L.push(' *')
+L.push(' * The @theme block above already carries these, so this looks redundant —')
+L.push(' * but custom properties inherit, which means a subtree inside a dark page')
+L.push(' * has no way back to light without them. With this block, data-theme works')
+L.push(' * in both directions and can be nested: a light island inside a dark page,')
+L.push(' * or the reverse. The Colour foundations page relies on it to show both')
+L.push(' * values of every token at once, whichever mode you are reading it in.')
+L.push(' */')
+L.push("[data-theme='light'] {")
+L.push('  color-scheme: light;')
+L.push('')
+for (const [k, val] of Object.entries(t.color)) L.push(`  --color-${v(k)}: ${val.light};`)
+L.push('}')
+L.push('')
+L.push('/*')
+L.push(' * Dark mode.')
+L.push(' *')
+L.push(' * Set data-theme="dark" on <html> and every colour token switches. Only')
+L.push(' * colour has modes in Figma, so only colour is redeclared here — the type')
+L.push(' * scale, spacing, radii and border widths are shared by both.')
+L.push(' *')
+L.push(' * color-scheme tells the browser to render its own furniture dark too:')
+L.push(' * scrollbars, form control internals, the caret and the default focus ring.')
+L.push(' */')
+L.push("[data-theme='dark'] {")
+L.push('  color-scheme: dark;')
+L.push('')
+for (const [k, val] of Object.entries(t.color)) L.push(`  --color-${v(k)}: ${val.dark};`)
+L.push('}')
+L.push('')
+
 writeFileSync('src/styles/tokens.css', L.join('\n'))
+
+/*
+ * A second copy for Storybook's manager — the sidebar and toolbar.
+ *
+ * The manager is a separate document from the preview iframe and does not go
+ * through Vite, so it cannot import the stylesheet above; and it could not use
+ * it as-is anyway, because a browser loading tokens.css directly would skip the
+ * whole `@theme` block as an unknown at-rule and lose every light value with
+ * it.
+ *
+ * So this holds the two mode blocks and nothing else, as plain CSS, served from
+ * public/ and linked from manager-head.html. Generated from the same source, so
+ * the chrome cannot drift from the components.
+ */
+const M = []
+M.push('/* Mothership UI colour tokens for the Storybook manager — GENERATED, DO NOT EDIT. */')
+for (const mode of ['light', 'dark']) {
+  M.push('')
+  M.push(`[data-theme='${mode}'] {`)
+  M.push(`  color-scheme: ${mode};`)
+  M.push('')
+  for (const [k, val] of Object.entries(t.color)) M.push(`  --color-${v(k)}: ${val[mode]};`)
+  M.push('}')
+}
+M.push('')
+writeFileSync('public/manager-tokens.css', M.join('\n'))
 
 const n = Object.keys(t.color).length + Object.keys(t.radius).length + Object.keys(t.elevation).length +
   Object.keys(t.type).length + Object.keys(t.space).length + Object.keys(t.size).length +
   Object.keys(t.borderWidth).length + Object.keys(t.font).length
-console.log(`src/styles/tokens.css written — ${n} tokens`)
+console.log(`src/styles/tokens.css written — ${n} tokens, ${Object.keys(t.color).length} of them in two modes`)

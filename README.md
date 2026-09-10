@@ -238,6 +238,52 @@ Figma's Dev Mode shows the real code component and links to its source.
 to what; the live mapping lives in Figma. Mapping a component set propagates to
 every variant underneath it automatically.
 
+## Colour modes
+
+Colour is the only Figma collection with modes, and every colour token carries
+both values. `tokens/tokens.json` holds them as `{ light, dark }` per token, and
+`npm run tokens` emits three blocks: the light values into Tailwind's `@theme`,
+then `[data-theme='light']` and `[data-theme='dark']` redeclaring the same
+custom properties.
+
+To use dark mode in an application, set the attribute on a root element:
+
+```html
+<html data-theme="dark">
+```
+
+That is the whole mechanism. Tailwind v4 colour utilities compile to
+`var(--color-…)`, so redeclaring the variable under a selector is enough —
+there is not one `dark:` variant anywhere in the components, and a component
+asking for `surface/default` gets whichever value the current mode defines.
+Because the attribute works in both directions, it also nests: a subtree marked
+`data-theme="light"` inside a dark page renders light.
+
+Nothing else switches. The type scale, spacing, radii and border widths are
+shared by both modes. Elevation looks like an exception and is not — the shadow
+tokens are built on `var(--color-shadow-default)`, which is itself a colour
+token, so they deepen in dark on their own.
+
+In Storybook, the Theme control in the toolbar switches both halves at once. The
+canvas and docs pages follow the tokens directly; the sidebar and toolbar are a
+separate React app whose theme is handed over at startup, so
+`.storybook/manager.ts` mirrors the choice onto that document and
+`public/manager-tokens.css` gives it the same tokens.
+
+### Where the dark values came from
+
+The Figma REST endpoint that returns every mode of every variable is
+Enterprise-only and 403s on this plan. The plain file endpoint works and returns
+*resolved* fills, and the Foundations / Colour page in the file happens to hold
+one group per token, named for the variable, with a Light and a Dark swatch each
+pinned to its mode. Reading those two swatches reads the two values.
+
+`npm run tokens:modes` does that, and the workflow of the same name runs it with
+the repository's Figma token. It prints the light values alongside the dark ones
+deliberately: they should match what `tokens.json` already had, so they act as a
+check that it is reading the right thing. On the run that produced the current
+palette, 55 of 55 agreed.
+
 ## Contract checks
 
 `npm run check`, after a `npm run build-storybook`. Every push and pull request

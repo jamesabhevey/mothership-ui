@@ -26,16 +26,16 @@
   .sbdocs-preview-actions button:hover,
   .docblock-argstable button:hover,
   .sb-bar button:hover {
-    background-color: #e8eaec;
-    color: #1f2429;
+    background-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
   }
 
   .sbdocs-preview-actions .docblock-code-toggle:active,
   .sbdocs-preview-actions button:active,
   .docblock-argstable button:active,
   .sb-bar button:active {
-    background-color: #d3d7db;
-    color: #1f2429;
+    background-color: var(--color-border-default);
+    color: var(--color-text-primary);
   }
 
   /*
@@ -71,6 +71,96 @@
     line-height: 32px;
     letter-spacing: -0.3px;
     text-transform: none;
-    color: #1f2429;
+  }
+</style>
+
+<style>
+  /*
+    Storybook's own docs chrome, painted from the tokens.
+    ------------------------------------------------------------------
+    Everything below was a literal from Storybook's docs theme — white
+    backgrounds, #1f2429 prose, #e8eaec rules. Those are correct in light and
+    wrong in dark, and the docs theme is handed over once at build time, so it
+    cannot follow a toolbar toggle.
+
+    So each one is pointed at the token that already held that value. Light
+    renders exactly as before; dark follows because the token does. No rule here
+    is gated on [data-theme] — the variable does the switching, which is the
+    same trick the components use.
+
+    Two small departures, both improvements rather than accidents: inline code
+    picks up bg/subtle in place of Storybook's slightly blue #f6f9fc, and it
+    loses the 0.9 alpha on its text.
+
+    Left alone deliberately: the syntax-highlighted code blocks, which are dark
+    in Storybook's light theme too and read fine in both.
+  */
+  /*
+    Specificity, because these all fight Storybook's own rules. Its docs styles
+    are Emotion classes injected at runtime, after this block, so an equal tie
+    goes to Storybook. Worse, the args table doubles its own class
+    (`.css-x.css-x tbody > tr > *`) specifically to win ties, so ours has to
+    out-weigh a doubled class rather than merely match one — hence the otherwise
+    redundant `.sbdocs` and the repeated `.docblock-argstable`, which is the
+    same trick used back.
+  */
+  .sbdocs.sbdocs-wrapper {
+    background-color: var(--color-bg-default);
+  }
+
+  .sbdocs-wrapper .sbdocs-content :is(h1, h2, h3, h4, h5, h6, p, li, strong, em, blockquote, dt, dd) {
+    color: var(--color-text-primary);
+  }
+
+  .sbdocs-wrapper .sbdocs-content a:not([class*='sbdocs-preview'] a) {
+    color: var(--color-text-link);
+  }
+
+  .sbdocs-wrapper .sbdocs-content :is(p, li, td, h1, h2, h3) > code {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
+  }
+
+  /* The framed story preview and the block of actions beneath it. */
+  .sbdocs-wrapper .sbdocs-preview {
+    background-color: var(--color-surface-default);
+    border-color: var(--color-border-subtle);
+  }
+
+  .sbdocs-wrapper .sbdocs-preview-actions {
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-muted);
+  }
+
+  /* The props table. */
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable th {
+    color: var(--color-text-muted);
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable td {
+    background-color: var(--color-surface-default);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
+  }
+
+  /*
+    The type summaries — `"sm" | "md" | "lg"` and friends — are spans carrying
+    their own colour, so they do not inherit the cell's.
+  */
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable td span {
+    color: var(--color-text-primary);
+  }
+
+  /*
+    Its controls are Storybook's own form elements, not the library's. In light
+    they are a white field with a #d3d7db border, which is surface/default on
+    border/default exactly, so naming the tokens changes nothing there.
+  */
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable
+    :is(input[type='text'], input[type='number'], select, textarea, button) {
+    background-color: var(--color-surface-default);
+    border-color: var(--color-border-default);
+    color: var(--color-text-primary);
   }
 </style>

@@ -13,6 +13,15 @@
 -->
 <link rel="icon" type="image/svg+xml" href="./mothership-logo.svg">
 
+<!--
+  Colour tokens for the chrome, in both modes. Generated from tokens.json
+  alongside the components' stylesheet, so the sidebar cannot drift from what
+  the canvas is painted with. .storybook/manager.ts mirrors the toolbar's
+  Light / Dark choice onto <html> as data-theme, which is what selects between
+  the two blocks in here.
+-->
+<link rel="stylesheet" href="./manager-tokens.css">
+
 <style>
   @font-face {
     font-family: 'Inter';
@@ -120,14 +129,14 @@
   .sb-bar button:hover,
   #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover,
   #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover > a {
-    background-color: #e8eaec;
+    background-color: var(--color-border-subtle);
   }
 
   #storybook-sidebar-region button:active,
   .sb-bar button:active,
   #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active,
   #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active > a {
-    background-color: #d3d7db;
+    background-color: var(--color-border-default);
   }
 
   /*
@@ -146,7 +155,7 @@
     font-size: 14px;
     font-weight: 600;
     line-height: normal;
-    color: #1f2429;
+    color: var(--color-text-primary);
     text-transform: none;
     letter-spacing: 0;
     border-radius: 4px;
@@ -160,5 +169,72 @@
   */
   #storybook-explorer-tree .sidebar-subheading:not(:first-child) {
     margin-top: 16px;
+  }
+</style>
+
+<style>
+  /*
+    The chrome itself, painted from the tokens.
+    ------------------------------------------------------------------
+    theme.ts hands Storybook a palette of literals once at startup, which is
+    fine for one mode and cannot follow a toggle. So the surfaces that make up
+    the frame are pointed at the token that already held their value.
+
+    Nothing here is gated on [data-theme]: manager.ts always sets the attribute,
+    manager-tokens.css declares both modes, and the variable does the switching.
+    In light every one of these resolves to the literal theme.ts was already
+    using, so the sidebar looks exactly as it did.
+
+    Written against ids and structural classes rather than the generated Emotion
+    ones, and one level deeper than Storybook's own rules so an equal-specificity
+    tie does not hand it back.
+  */
+  /*
+    Storybook paints the body from a global element rule injected after this
+    block, so a plain `body` selector ties with it and loses. data-theme is on
+    <html> and always set, so it doubles as the extra specificity needed.
+  */
+  [data-theme] body {
+    background-color: var(--color-bg-default);
+    color: var(--color-text-primary);
+  }
+
+  #storybook-sidebar-region,
+  #storybook-panel-root,
+  .sb-bar {
+    background-color: var(--color-bg-default);
+  }
+
+  #storybook-explorer-menu,
+  .sidebar-header > div > a {
+    color: var(--color-text-primary);
+  }
+
+  /* The search field sits on the sidebar rather than in it. */
+  #storybook-explorer-searchfield {
+    background-color: var(--color-surface-default);
+    border-color: var(--color-border-default);
+    color: var(--color-text-primary);
+  }
+
+  #storybook-explorer-searchfield::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /*
+    The selected row keeps its solid brand fill, which is a different purple in
+    each mode — light on dark, dark on light — so the label has to move with it
+    rather than stay white.
+  */
+  #storybook-explorer-tree .sidebar-item[data-selected='true'],
+  #storybook-explorer-tree .sidebar-item[data-selected='true'] > a {
+    background-color: var(--color-action-primary-default);
+    color: var(--color-text-on-brand);
+  }
+
+  /* Rules between the frame's regions. */
+  .sb-bar,
+  #storybook-sidebar-region {
+    border-color: var(--color-border-subtle);
   }
 </style>

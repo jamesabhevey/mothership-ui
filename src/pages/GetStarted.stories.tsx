@@ -133,6 +133,28 @@ export function Example() {
         </P>
       </Group>
 
+      <Group name="Dark mode">
+        <P>
+          Every colour token has a light and a dark value, taken from the two modes of the Figma
+          Semantic collection. Switching is one attribute on a root element:
+        </P>
+        <Code>{`<html data-theme="dark">`}</Code>
+        <P>
+          That is all of it. There is no <code>dark:</code> variant anywhere in the library — the
+          custom properties are redeclared under <code>[data-theme='dark']</code> and every colour
+          utility, which compiles to <code>var(--color-…)</code>, follows. Anything you build from
+          the same tokens comes along for free.
+        </P>
+        <P>
+          It nests, too: a subtree marked <code>data-theme="light"</code> inside a dark page renders
+          light, which is occasionally what you want for a preview or an embedded document. Only
+          colour changes between modes — type, spacing, radii and border widths are shared.
+        </P>
+        <P>
+          Use the Theme control in the toolbar above to read this Storybook in either mode.
+        </P>
+      </Group>
+
       <Group name="Three things that will surprise you">
         <P>
           <strong>Hover and pressed are not props.</strong> Figma draws them as variants; the

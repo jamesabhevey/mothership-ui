@@ -99,10 +99,13 @@ for (const key of Object.keys(nodes)) if (nodes[key]?.document) walk(nodes[key].
 
 /** Colour token name -> current value. Colours only; see the note above. */
 const flat = new Map()
-for (const [k, v] of Object.entries(tokens.color)) flat.set(k, v.toLowerCase())
+// Compared against the light mode. Figma serves whichever mode a node is in,
+// and every probe points at light artwork. Dark values are read by name
+// instead, by scripts/sync-figma-modes.mjs.
+for (const [k, v] of Object.entries(tokens.color)) flat.set(k, v.light.toLowerCase())
 
 const setTokenValue = (key, value) => {
-  tokens.color[key] = value
+  tokens.color[key].light = value
 }
 
 /** Only colour observations are usable as probes. */

@@ -17,6 +17,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     [
       ['color/bg/default', '--color-bg-default'],
       ['color/bg/subtle', '--color-bg-subtle'],
+      ['color/bg/brand', '--color-bg-brand'],
       ['color/bg/selected', '--color-bg-selected'],
       ['color/bg/inverse', '--color-bg-inverse'],
     ],
@@ -57,6 +58,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
       ['color/border/default', '--color-border-default'],
       ['color/border/subtle', '--color-border-subtle'],
       ['color/border/strong', '--color-border-strong'],
+      ['color/border/link', '--color-border-link'],
     ],
   ],
   [
@@ -146,6 +148,12 @@ export const Colour: Story = {
           one onto the Figma Semantic collection: <code>color/action/primary/default</code> becomes{' '}
           <code>--color-action-primary-default</code> and the Tailwind utility{' '}
           <code>bg-action-primary-default</code>.
+          <br />
+          <br />
+          Colour is the one collection with modes, so each token carries a light and a dark value,
+          both listed below. The chip shows whichever mode the Theme control in the toolbar is set
+          to. Nothing else changes between modes — the type scale, spacing, radii and border widths
+          are shared.
           <br />
           <br />
           Intent colour is decoration. Text has to carry the meaning on its own, so never signal an
