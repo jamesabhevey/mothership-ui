@@ -13,7 +13,24 @@
  * once in a while.
  */
 const FLAG = 'data-theme-switching'
-const DURATION = 240
+
+/**
+ * How long the fade runs, taken from the stylesheet rather than repeated here.
+ *
+ * The CSS declares --theme-switch; this only needs to know when the fade is
+ * over so it can take the flag back off. Reading it means the two cannot drift
+ * apart — a number smaller here than there would cut the fade off part-way,
+ * which looks like a bug in the fade rather than in the timing.
+ *
+ * The small margin on top is so the flag outlives the last frame rather than
+ * landing on it.
+ */
+const durationOf = (root: HTMLElement) => {
+  const declared = getComputedStyle(root).getPropertyValue('--theme-switch').trim()
+  const ms = /^([\d.]+)(ms|s)$/.exec(declared)
+  if (!ms) return 160
+  return (ms[2] === 's' ? +ms[1] * 1000 : +ms[1]) + 40
+}
 
 let clear: ReturnType<typeof setTimeout> | undefined
 
@@ -31,7 +48,7 @@ export function applyTheme(root: HTMLElement, theme: 'light' | 'dark') {
     void root.offsetWidth
 
     clearTimeout(clear)
-    clear = setTimeout(() => root.removeAttribute(FLAG), DURATION)
+    clear = setTimeout(() => root.removeAttribute(FLAG), durationOf(root))
   }
 
   root.setAttribute('data-theme', theme)

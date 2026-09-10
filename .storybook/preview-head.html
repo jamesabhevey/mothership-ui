@@ -278,7 +278,11 @@
     Only while the mode is actually changing. apply-theme.ts puts
     data-theme-switching on the root, forces a style resolution so the
     transition is in effect before the colours move, and takes it off again
-    240ms later.
+    once the fade has run.
+
+    Short and ease-out: long enough to read as a fade rather than a jump, quick
+    enough that it never delays the reader. A colour change is feedback, not an
+    event worth watching.
 
     A permanent transition on every element would catch every hover too, and
     would leave the browser watching thousands of nodes on pages like Glyphs and
@@ -289,18 +293,28 @@
     Anyone who has asked their system for less movement gets the change
     instantly instead.
   */
+  :root {
+    /*
+      Declared once and read by apply-theme.ts, which needs the same number to
+      know when to take the flag back off. Three copies of it — here, in the
+      manager's copy of this block, and in the script — would eventually
+      disagree, and a flag removed early cuts the fade off mid-way.
+    */
+    --theme-switch: 120ms;
+  }
+
   [data-theme-switching],
   [data-theme-switching] *,
   [data-theme-switching] *::before,
   [data-theme-switching] *::after {
     transition:
-      background-color 240ms ease,
-      border-color 240ms ease,
-      color 240ms ease,
-      fill 240ms ease,
-      stroke 240ms ease,
-      box-shadow 240ms ease,
-      outline-color 240ms ease !important;
+      background-color var(--theme-switch) ease-out,
+      border-color var(--theme-switch) ease-out,
+      color var(--theme-switch) ease-out,
+      fill var(--theme-switch) ease-out,
+      stroke var(--theme-switch) ease-out,
+      box-shadow var(--theme-switch) ease-out,
+      outline-color var(--theme-switch) ease-out !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
