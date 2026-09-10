@@ -164,3 +164,41 @@
     color: var(--color-text-primary);
   }
 </style>
+
+<style>
+  /*
+    Contrast fixes found by sweeping the dark UI against AA.
+    ------------------------------------------------------------------
+    Three things failed, all of them Storybook literals that were fine on white
+    and not on #0b0d0f. Each is pointed at the token holding the value it
+    already had in light, so light is unchanged and dark is legible.
+
+      Show code / Copy code   #666f78 on #0b0d0f was 3.81:1, needs 4.5
+                              -> text/muted, 9.3:1 in dark, unchanged in light
+      inline code in the
+      props table             #1f2429 on #1f2429 — invisible. The chips are
+                              nested inside a span, and the earlier rule only
+                              reached a direct child of the cell
+      the story preview's
+      own toolbar strip       kept a white background of its own
+
+    The syntax-highlighted blocks are deliberately excluded: they are dark in
+    Storybook's light theme too and read fine in both.
+  */
+  .sbdocs-wrapper .sbdocs-preview-actions button,
+  .sbdocs-wrapper .docblock-code-toggle {
+    color: var(--color-text-muted);
+  }
+
+  .sbdocs-wrapper .sbdocs-content :not(pre) > code,
+  .sbdocs-wrapper .docblock-argstable :not(pre) > code {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
+  }
+
+  .sbdocs-wrapper .sb-bar {
+    background-color: var(--color-bg-default);
+    border-color: var(--color-border-subtle);
+  }
+</style>

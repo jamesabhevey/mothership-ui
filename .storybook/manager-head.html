@@ -367,7 +367,68 @@
     background-color: var(--color-bg-default);
   }
 
-  [data-theme] #storybook-sidebar-region {
-    border-right: 1px solid var(--color-border-subtle);
+  /*
+    The frame's own rules.
+
+    theme.ts hands Storybook a single appBorderColor literal, so every edge it
+    draws stayed at the light-mode grey on a dark page — the bright line down
+    the side of the canvas. Passing a var() there instead does not work:
+    Storybook runs colour maths on that value and the manager fails to start.
+
+    Three elements use it, and they are all frame furniture: the column holding
+    the sidebar, the hairline under the preview, and the onboarding panel. They
+    are named structurally, since the classes on them are generated. The
+    sidebar's is matched with :has() as an ancestor rather than a parent — the
+    bordered element is several levels above the region, not directly around it.
+    Setting border-color on the others it also matches costs nothing, since a
+    border with no width paints nothing.
+
+    An earlier border of my own on #storybook-sidebar-region is gone with this:
+    it sat directly against the column's, so the edge was drawing twice.
+  */
+  [data-theme] #root div:has(#storybook-sidebar-region),
+  [data-theme] #root > div > div:last-child,
+  [data-theme] div[id^='react-aria'] {
+    border-color: var(--color-border-subtle);
+  }
+</style>
+
+<style>
+  /*
+    Two more from the same sweep, both in the chrome.
+
+      the active toolbar
+      control                 Storybook paints it barSelectedColor, a darkened
+                              brand — #6920a2 on the tinted bar was 2.09:1.
+                              action/primary/default instead: 5.81:1 in light,
+                              7.44:1 in dark, and still recognisably the brand.
+                              Matched on our own aria-label rather than a
+                              generated class, since we are the ones who named
+                              the control.
+
+      the ⌘K hint in search   #5c6570 on #0b0d0f was 3.29:1 -> text/muted, 9.3:1
+  */
+  /*
+    Idle chrome buttons. Storybook's #666f78 is 3.81:1 on #0b0d0f — fine for an
+    icon, where 3:1 is the bar, but short for the ones carrying text, such as
+    the zoom level. text/muted holds #666f78 in light, so light is untouched,
+    and #aeb4ba in dark, which is 9.3:1.
+
+    Scoped to the toolbar and the sidebar header so it cannot reach the tree,
+    whose rows are text/primary and whose root headings would otherwise tie with
+    it and lose on document order.
+  */
+  [data-theme] .sb-bar button,
+  [data-theme] .sidebar-header button {
+    color: var(--color-text-muted);
+  }
+
+  [data-theme] .sb-bar button[aria-label^='Colour mode'] {
+    color: var(--color-action-primary-default);
+  }
+
+  [data-theme] .search-field code,
+  [data-theme] .search-field code span {
+    color: var(--color-text-muted);
   }
 </style>
