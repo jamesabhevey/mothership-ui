@@ -125,18 +125,36 @@
 
     The selected row is excluded so it keeps its solid brand fill.
   */
-  #storybook-sidebar-region button:hover,
-  .sb-bar button:hover,
-  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover,
-  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover > a {
+  /*
+    Colour as well as background. Storybook's rule for these is
+    `color: #8429cc` on hover, so the settings cog and the section expanders
+    turned brand purple — invisible against a dark sidebar and, in light, the
+    same shouting the docs chrome was already told not to do. Both go to
+    text/primary instead. The `[data-theme]` prefix is only there for weight:
+    Storybook's rule is two classes and lands later in the document.
+  */
+  [data-theme] #storybook-sidebar-region button:hover,
+  [data-theme] .sb-bar button:hover,
+  [data-theme] #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover,
+  [data-theme] #storybook-sidebar-region .sidebar-item:not([data-selected='true']):hover > a {
     background-color: var(--color-border-subtle);
+    color: var(--color-text-primary);
   }
 
-  #storybook-sidebar-region button:active,
-  .sb-bar button:active,
-  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active,
-  #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active > a {
+  [data-theme] #storybook-sidebar-region button:active,
+  [data-theme] .sb-bar button:active,
+  [data-theme] #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active,
+  [data-theme] #storybook-sidebar-region .sidebar-item:not([data-selected='true']):active > a {
     background-color: var(--color-border-default);
+    color: var(--color-text-primary);
+  }
+
+  /* Icons follow the label rather than keeping a colour of their own. */
+  [data-theme] #storybook-sidebar-region button:hover svg,
+  [data-theme] .sb-bar button:hover svg,
+  [data-theme] #storybook-sidebar-region button:active svg,
+  [data-theme] .sb-bar button:active svg {
+    color: inherit;
   }
 
   /*
@@ -236,5 +254,120 @@
   .sb-bar,
   #storybook-sidebar-region {
     border-color: var(--color-border-subtle);
+  }
+</style>
+
+<style>
+  /*
+    The sidebar tree.
+    ------------------------------------------------------------------
+    Rows carried Storybook's own #1f2429, set on .sidebar-item and inherited by
+    the link inside, which in dark mode is near-black text on a near-black
+    sidebar. The entry icons were worse: Storybook colour-codes them by story
+    type, so they arrived as a teal that belongs to no part of this palette.
+
+    Both now come from tokens. The icons are deliberately neutral in light as
+    well as dark — the tree already separates entries by indentation and by icon
+    shape, so the colour was carrying no information the layout did not, and a
+    system whose first rule is that colour is never the only signal should not
+    have a teal in its furniture.
+  */
+  [data-theme] #storybook-explorer-tree .sidebar-item,
+  [data-theme] #storybook-explorer-tree .sidebar-item > a,
+  [data-theme] #storybook-explorer-tree .sidebar-item > button {
+    color: var(--color-text-primary);
+  }
+
+  [data-theme] #storybook-explorer-tree svg {
+    color: var(--color-text-muted);
+  }
+
+  /* The selected row keeps its brand fill, so everything on it goes on-brand. */
+  [data-theme] #storybook-explorer-tree .sidebar-item[data-selected='true'],
+  [data-theme] #storybook-explorer-tree .sidebar-item[data-selected='true'] a,
+  [data-theme] #storybook-explorer-tree .sidebar-item[data-selected='true'] button,
+  [data-theme] #storybook-explorer-tree .sidebar-item[data-selected='true'] svg {
+    color: var(--color-text-on-brand);
+  }
+
+  /*
+    The row's context menu button.
+
+    Storybook gives it a white fill and a 5px white glow, which is how it hides
+    the truncated label underneath. The glow reads as a smudge in light and as a
+    hole punched in the sidebar in dark, so it goes. Nothing is lost by that:
+    the button only appears while its row is hovered, and the row's own fill
+    does the masking.
+  */
+  [data-theme] #storybook-sidebar-region [aria-label='Open context menu'] {
+    box-shadow: none;
+    background-color: transparent;
+    color: var(--color-text-secondary);
+  }
+
+  /*
+    Its own three steps, one darker than the row's, so the button is
+    distinguishable from the row it sits on rather than melting into it. These
+    have to out-weigh the generic chrome hover, which is why the id is spelt out
+    on each. Contrast of the glyph against its fill: 10.8:1 hovered and 3.4:1
+    pressed in light, 8:1 and 3.6:1 in dark — the pressed pair are graphical
+    rather than text, where 3:1 is the bar.
+  */
+  [data-theme] #storybook-sidebar-region [aria-label='Open context menu']:hover {
+    background-color: var(--color-border-default);
+    color: var(--color-text-primary);
+  }
+
+  [data-theme] #storybook-sidebar-region [aria-label='Open context menu']:active {
+    background-color: var(--color-border-strong);
+    color: var(--color-text-primary);
+  }
+
+  /* On the selected row it sits on the brand fill and takes its colour. */
+  [data-theme] .sidebar-item[data-selected='true'] [aria-label='Open context menu'] {
+    background-color: transparent;
+    color: var(--color-text-on-brand);
+  }
+
+  /*
+    The search field.
+
+    Storybook draws it as a 1px inset ring rather than a border, and left to
+    itself the ring stayed light grey while the field took a surface colour a
+    step lighter than the sidebar — which in dark read as a filled box floating
+    on the panel. The fill goes: the field sits flush on the sidebar with only
+    the ring around it, which is what it looks like in light.
+  */
+  [data-theme] .search-field {
+    box-shadow: inset 0 0 0 1px var(--color-border-default);
+  }
+
+  [data-theme] #storybook-explorer-searchfield {
+    background-color: transparent;
+  }
+
+  [data-theme] #storybook-explorer-searchfield::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /*
+    The frame.
+
+    The toolbar above the canvas kept a white background of its own, and the
+    preview iframe's own background painted a white edge down the side of the
+    canvas. The divide between sidebar and canvas is now an actual border rather
+    than whatever happened to be behind it.
+  */
+  [data-theme] .sb-bar {
+    background-color: var(--color-bg-default);
+    border-color: var(--color-border-subtle);
+  }
+
+  [data-theme] #storybook-preview-iframe {
+    background-color: var(--color-bg-default);
+  }
+
+  [data-theme] #storybook-sidebar-region {
+    border-right: 1px solid var(--color-border-subtle);
   }
 </style>

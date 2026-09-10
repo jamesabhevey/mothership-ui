@@ -19,9 +19,13 @@
  * neither problem, so both modes are covered and every difference names its
  * token.
  *
- * What it does not check: whether components in Figma are still *using* the
- * tokens. This compares the palette, not the artwork painted from it, so a
- * button given a hardcoded fill in Figma would not show up here.
+ * It then checks the other direction: whether the components are still painted
+ * from that palette. Any solid fill or stroke in a mapped component whose value
+ * is not a token in either mode was typed in by hand, and is reported with the
+ * layers painting it. That question is asked by value rather than by name, so
+ * it does not care which token a colour belongs to — only whether it is in the
+ * system at all. Which is why it has none of the ambiguity that sank the old
+ * approach: it never has to decide which of seven #ffffff tokens a colour is.
  *
  * Scope is colour, because colour is the only collection with modes and the
  * only one this page exposes. Numbers were deliberately left out of the old
@@ -30,7 +34,7 @@
  * alarms.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
-import { readColourModes, sameValue } from './lib/figma-colour-modes.mjs'
+import { readColourModes, readPaintedColours, sameValue } from './lib/figma-colour-modes.mjs'
 
 const TOKEN = process.env.FIGMA_TOKEN
 const FILE_KEY = process.env.FIGMA_FILE_KEY
@@ -108,11 +112,45 @@ if (onlyInCode.length) {
   console.log()
 }
 
+// ------------------------------------------------------- hard-coded colours
+
+const hardCoded = []
+try {
+  const mappings = JSON.parse(readFileSync('code-connect/mappings.json', 'utf8'))
+  const nodeIds = Object.keys(mappings.components ?? {})
+  if (nodeIds.length) {
+    const painted = await readPaintedColours({ fileKey: FILE_KEY, token: TOKEN, nodeIds })
+    const palette = Object.values(figma.modes).flatMap((v) => [v.light, v.dark]).filter(Boolean)
+    for (const [value, where] of painted) {
+      if (!palette.some((p) => sameValue(p, value))) hardCoded.push({ value, where })
+    }
+  }
+} catch (error) {
+  console.log(`Could not check for hard-coded colours: ${error.message}\n`)
+}
+
+if (hardCoded.length) {
+  console.log(
+    `NEEDS A PERSON — ${hardCoded.length} colour(s) painted in the components are not in the ` +
+      'palette, in either mode. Either the layer needs binding to a variable, or the colour needs ' +
+      'to become one:\n',
+  )
+  for (const { value, where } of hardCoded) {
+    console.log(`  ${value}`)
+    for (const w of where) console.log(`      ${w}`)
+  }
+  console.log()
+} else {
+  console.log('Every colour painted in the components is a token. Nothing hard-coded.\n')
+}
+
+const needsAPerson = onlyInFigma.length + onlyInCode.length + incomplete.length + hardCoded.length
+
 if (!drift.length) {
-  if (!onlyInFigma.length && !onlyInCode.length && !incomplete.length) {
+  if (!needsAPerson) {
     console.log('No drift. Figma and the code agree on every colour token, in both modes.')
   }
-  process.exit(onlyInFigma.length || onlyInCode.length || incomplete.length ? 1 : 0)
+  process.exit(needsAPerson ? 1 : 0)
 }
 
 const byMode = (mode) => drift.filter((d) => d.mode === mode)

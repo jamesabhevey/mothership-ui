@@ -137,3 +137,15 @@ jobs:
             --body-file pr-body.md \
             --base main \
             --head "$BRANCH"
+
+      # A hard-coded colour cannot be fixed from here — it needs a layer in
+      # Figma bound to a variable, or a new token. No pull request would carry
+      # it, so the run goes red instead and says why.
+      - name: Fail if anything needs a person
+        if: ${{ (inputs.mode || 'check') == 'check' }}
+        run: |
+          if grep -q "NEEDS A PERSON" drift-report.txt; then
+            echo "::error::Colours painted in the Figma components are not in the palette. See the run log or the figma-drift artifact."
+            exit 1
+          fi
+          echo "Nothing needs a person."

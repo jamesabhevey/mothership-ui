@@ -15,7 +15,7 @@
  * never disagree about how a value is read.
  */
 
-const api = async (path, token) => {
+export const api = async (path, token) => {
   const res = await fetch(`https://api.figma.com/v1/${path}`, { headers: { 'X-Figma-Token': token } })
   if (!res.ok) {
     const where = path.split('?')[0].replace(/files\/[^/]+/, 'files/KEY')
@@ -136,4 +136,43 @@ export function sameValue(a, b) {
   const y = parse(b)
   if (Array.isArray(x) && Array.isArray(y)) return x.every((n, i) => n === y[i])
   return x === y
+}
+
+/**
+ * Every solid fill and stroke painted inside a set of nodes, with where it was
+ * seen.
+ *
+ * Used to find colours that are not in the palette at all — a fill typed in by
+ * hand rather than bound to a variable. Solid paints only: gradients and images
+ * are not a colour anyone could have tokenised, and reporting them would be
+ * noise.
+ *
+ * @returns {Promise<Map<string, string[]>>} value -> the layer paths painting it
+ */
+export async function readPaintedColours({ fileKey, token, nodeIds }) {
+  const found = new Map()
+  // Figma caps how much it will return per request, so ask in batches.
+  for (let i = 0; i < nodeIds.length; i += 20) {
+    const batch = nodeIds.slice(i, i + 20)
+    const { nodes } = await api(`files/${fileKey}/nodes?ids=${batch.join(',')}`, token)
+    for (const key of Object.keys(nodes)) {
+      const root = nodes[key]?.document
+      if (!root) continue
+      const walk = (node, trail) => {
+        const here = trail ? `${trail} / ${node.name}` : node.name
+        for (const list of [node.fills, node.strokes]) {
+          for (const paint of list ?? []) {
+            if (paint.type !== 'SOLID' || paint.visible === false) continue
+            const value = toValue(paint.color, paint.opacity ?? 1)
+            if (!found.has(value)) found.set(value, [])
+            const where = found.get(value)
+            if (where.length < 4 && !where.includes(here)) where.push(here)
+          }
+        }
+        for (const child of node.children ?? []) walk(child, here)
+      }
+      walk(root, '')
+    }
+  }
+  return found
 }
