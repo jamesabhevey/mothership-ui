@@ -111,3 +111,10 @@ jobs:
       - name: Deploy the artifact
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          # 30 minutes rather than the default 10. Pages has twice sat at
+          # "updating_pages" past the default and aborted a deploy that was
+          # only slow, not broken — both times with GitHub reporting every
+          # system operational. Waiting longer costs nothing on a normal deploy,
+          # which finishes in well under a minute.
+          timeout: 1800000
