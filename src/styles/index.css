@@ -30,4 +30,16 @@
     background-color: var(--color-bg-default);
     color: var(--color-text-primary);
   }
+
+  /*
+    The scale tops out at Semi Bold, and the Bold face is not served — Display
+    moved to 600 and was the last thing using it. Left alone, the browser's
+    default of 700 on strong and b would be synthesised from the 600 face, which
+    is a smeared approximation of a weight the system does not have. 600 against
+    400 body text is plenty of emphasis, and it is a real face.
+  */
+  strong,
+  b {
+    font-weight: 600;
+  }
 }

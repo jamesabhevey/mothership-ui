@@ -312,3 +312,17 @@
     }
   }
 </style>
+
+<style>
+  /*
+    Headings at 600.
+    ------------------------------------------------------------------
+    Storybook's docs theme sets its headings bold. The scale has no 700 in it
+    any more — Display moved to SemiBold in Figma, and everything above body was
+    already 600 — so a docs page was the only place left in the Storybook
+    rendering a heavier heading than the system has.
+  */
+  .sbdocs-wrapper .sbdocs-content :is(h1, h2, h3, h4, h5, h6) {
+    font-weight: 600;
+  }
+</style>

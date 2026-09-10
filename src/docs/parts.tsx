@@ -70,8 +70,8 @@ export function useTokenModes(name: string): { light: string; dark: string } {
  *
  *   wrapper padding   64px top and bottom, 40px left and right
  *   content width     max 960px, centred within the padding
- *   h1                32px / 36px / 700
- *   section heading   24px / 32px / 700
+ *   h1                32px / 36px / 600
+ *   section heading   24px / 32px / 600
  *   body              14px / 24px / 400
  *
  * Three deliberate departures from those measurements. The content column is
@@ -88,10 +88,11 @@ export function useTokenModes(name: string): { light: string; dark: string } {
  * -0.6px and the 24px section heading takes heading/md's -0.3px, read from the
  * tokens rather than restated so they follow any change to the scale.
  *
- * Weight stays at 700 throughout. The scale sets heading/md at 600, but these
- * are page furniture rather than component type, and 700 keeps them level with
- * the h1 above. Dense token metadata below uses the caption tokens outright,
- * since it is data rather than prose.
+ * Weight is 600 throughout, matching the scale: heading/md is 600, and since
+ * Display moved to SemiBold there is no weight above it to be level with.
+ * Storybook's docs headings are moved to 600 in preview-head.html to match.
+ * Dense token metadata below uses the caption tokens outright, since it is data
+ * rather than prose.
  */
 const shell = 'px-10 py-16'
 const content = 'mx-auto w-full max-w-[960px]'
@@ -109,7 +110,7 @@ export function Page({
     <div className={shell}>
       <div className={`${content} flex flex-col gap-12`}>
         <header className="flex flex-col gap-4">
-          <h1 className="text-[32px]/9 font-bold tracking-[var(--text-display-sm--letter-spacing)] text-text-primary">
+          <h1 className="text-[32px]/9 font-semibold tracking-[var(--text-display-sm--letter-spacing)] text-text-primary">
             {title}
           </h1>
           {intro ? <div className="max-w-[80ch] text-[14px]/6 text-text-primary">{intro}</div> : null}
@@ -123,7 +124,7 @@ export function Page({
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-[24px]/8 font-bold tracking-[var(--text-heading-md--letter-spacing)] text-text-primary">
+      <h2 className="text-[24px]/8 font-semibold tracking-[var(--text-heading-md--letter-spacing)] text-text-primary">
         {name}
       </h2>
       {children}
@@ -191,8 +192,17 @@ export const toStoryId = (title: string) =>
  * Pair with target="_top" so the click navigates the whole Storybook, sidebar
  * included, rather than replacing the canvas with a nested copy.
  */
-export const storyHref = (id: string, view: 'story' | 'docs' = 'docs') =>
-  `./?path=/${view}/${id}`
+export const storyHref = (id: string, view: 'story' | 'docs' = 'docs') => {
+  // Carry the colour mode across. Storybook keeps it as a global in the query
+  // string, and these links are full page loads, so a plain ?path= lands in
+  // whatever mode the manager works out for itself. It does remember the last
+  // choice, but that restore happens after the manager bundle has loaded and
+  // depends on storage being writable; naming the mode in the link means the
+  // page opens in it regardless, and a link someone copies out of here carries
+  // the mode they were reading in.
+  const mode = typeof document === 'undefined' ? null : document.documentElement.getAttribute('data-theme')
+  return `./?path=/${view}/${id}${mode ? `&globals=theme:${mode}` : ''}`
+}
 
 /** A code sample. Wide lines scroll inside the block, never the page. */
 export function Code({ children }: { children: string }) {

@@ -86,7 +86,8 @@ export const Typography: Story = {
           <br />
           <strong>Label</strong> is for controls and form labels, <strong>body</strong> for reading
           text, <strong>caption</strong> for helper and metadata text. Label and caption are Medium
-          (500); body is Regular (400); headings are Semi Bold (600).
+          (500); body is Regular (400); display and headings are Semi Bold (600), so nothing in the
+          scale is heavier than that.
         </>
       }
     >

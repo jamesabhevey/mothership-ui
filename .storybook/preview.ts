@@ -2,13 +2,13 @@ import type { Preview } from '@storybook/react-vite'
 import { mothershipTheme } from './theme'
 import { applyTheme, themeOf } from './apply-theme'
 
-// Inter, in the four weights the type scale uses (400 body, 500 label/caption,
-// 600 heading, 700 display). Without these the metrics are wrong even though
-// the sizes are right.
+// Inter, in the three weights the type scale uses (400 body, 500 label and
+// caption, 600 display and heading). Without these the metrics are wrong even
+// though the sizes are right. There is no 700: Display moved to SemiBold, which
+// was the only thing that used Bold.
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
-import '@fontsource/inter/700.css'
 
 // The global stylesheet. This is the whole token layer — the Tailwind v4
 // `@theme` block holding every colour, radius, shadow and type step read from
