@@ -217,9 +217,21 @@ everywhere in a Figma file: an earlier version tried to match them and paired
 unrelated 44px gap, either of which would have raised a false alarm the moment a
 gap changed.
 
-**What it does not check** is whether components in Figma still *use* the
-tokens. This compares the palette, not the artwork painted from it, so a button
-given a hardcoded fill in Figma would not show up here.
+**It also checks the other direction:** whether the components are still painted
+from that palette. Any solid fill or stroke in a mapped component whose value is
+not a token in either mode was typed in by hand, and is reported with the layers
+painting it. That question is asked by value rather than by name, which is what
+keeps it unambiguous — it never has to work out which of seven `#ffffff` tokens
+a colour is, only whether the colour is in the system at all.
+
+Nothing can auto-fix a hard-coded colour: it needs a layer bound to a variable
+in Figma, or a new token. No pull request would carry it, so a finding turns the
+Monday run red instead, with the value and the layers listed in the log and the
+artifact.
+
+Figma's own component-set boundary — the dashed `#9747ff` outline it draws
+around a set in the editor — is skipped. It is on the set node rather than on
+any artwork, and it was the first thing this reported when it went live.
 
 <details>
 <summary>What this replaced, and why</summary>
