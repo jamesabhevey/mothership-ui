@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'check = report drift and open a PR; calibrate = rebuild the probe table'
+        description: 'check = compare both modes and open a PR if they differ; diagnose = test Figma access'
         type: choice
         default: check
-        options: [check, calibrate, diagnose]
+        options: [check, diagnose]
 
 permissions:
   contents: write
@@ -57,8 +57,9 @@ jobs:
           echo
           echo "200 = fine | 403 = token or scope problem | 404 = wrong file key"
 
-      # Reads the ordinary file endpoint, which works on any Figma plan, and
-      # compares the values components actually paint against tokens.json.
+      # Reads the Foundations / Colour page through the ordinary file endpoint,
+      # which works on any Figma plan, and compares every colour token's light
+      # and dark value against tokens.json.
       - name: Run the drift check
         id: drift
         if: ${{ inputs.mode != 'diagnose' }}
@@ -66,28 +67,25 @@ jobs:
         env:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
           FIGMA_FILE_KEY: ${{ secrets.FIGMA_FILE_KEY }}
-          MODE: ${{ inputs.mode || 'check' }}
         run: |
           set -o pipefail
-          if [ "$MODE" = "calibrate" ]; then
-            node scripts/check-figma-drift.mjs --calibrate | tee drift-report.txt
-          else
-            node scripts/check-figma-drift.mjs --write | tee drift-report.txt
-          fi
+          node scripts/check-figma-drift.mjs --write | tee drift-report.txt
 
       # The report always comes out, so a failed or empty run is still readable.
-      - name: Upload the report and probe table
+      - name: Upload the report
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: figma-drift
           path: |
             drift-report.txt
-            tokens/figma-probes.json
             tokens/tokens.json
           if-no-files-found: warn
 
-      - name: Regenerate the stylesheet if tokens changed
+      # Writes both stylesheets: the components' and the copy the Storybook
+      # manager loads. Committing only one would leave the chrome on stale
+      # values and fail the contract checks on the pull request.
+      - name: Regenerate the stylesheets if tokens changed
         if: ${{ (inputs.mode || 'check') == 'check' }}
         run: npm run tokens
 
@@ -100,7 +98,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if git diff --quiet -- tokens/tokens.json src/styles/tokens.css; then
+          if git diff --quiet -- tokens/tokens.json src/styles/tokens.css public/manager-tokens.css; then
             echo "No drift. Nothing to open."
             exit 0
           fi
@@ -109,18 +107,25 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add tokens/tokens.json src/styles/tokens.css
+          git add tokens/tokens.json src/styles/tokens.css public/manager-tokens.css
           git commit -m "Update design tokens to match Figma"
           git push -u origin "$BRANCH"
 
           {
-            echo "Figma and the code disagree on the tokens below. This brings the code into line."
+            echo "Figma and the code disagree on the colour values below. This brings the code"
+            echo "into line."
             echo
-            echo "Detected by reading the values the Figma components actually paint, not the"
-            echo "variable definitions — the variables API needs an Enterprise plan."
+            echo "Both modes are compared. The values are read by name from the Foundations /"
+            echo "Colour page, where each token has a Light and a Dark swatch pinned to its mode,"
+            echo "because the endpoint that would return variable definitions directly needs an"
+            echo "Enterprise plan."
             echo
             echo "Every component refers to these tokens by name, so no component code changes."
             echo "Type-check and build passed before this was opened."
+            echo
+            echo "Tokens added or removed in Figma are reported but never applied here — a new"
+            echo "token needs a name, a place on the Colour page and a decision about what it is"
+            echo "for. If the report below lists any, they need a person."
             echo
             echo '```'
             cat drift-report.txt

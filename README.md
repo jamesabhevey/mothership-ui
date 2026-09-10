@@ -172,12 +172,13 @@ paths, so `action/primary/default` in the colour section is Figma's
 `color/action/primary/default`.
 
 ```bash
-npm run tokens        # regenerate src/styles/tokens.css from tokens.json
-npm run tokens:sync   # read Figma, report drift (needs credentials, see below)
+npm run tokens        # regenerate both stylesheets from tokens.json
+npm run tokens:drift  # compare Figma against the code, both modes (needs credentials)
+npm run tokens:modes  # print every token's light and dark value from Figma
 ```
 
-`src/styles/tokens.css` is generated. Never edit it by hand — change
-`tokens.json` and regenerate. When this was introduced the compiled CSS was
+`src/styles/tokens.css` and `public/manager-tokens.css` are generated. Never
+edit either by hand — change `tokens.json` and regenerate. When this was introduced the compiled CSS was
 checked byte for byte against the previous hand-written stylesheet: identical,
 so the change carried no visual risk.
 
@@ -186,28 +187,58 @@ There are two mechanisms, because Figma's plan tiers force the issue.
 ### Drift check — active, runs weekly
 
 [.github/workflows/token-drift.yml](.github/workflows/token-drift.yml) runs every
-Monday and on demand. It reads the ordinary file endpoint, which works on any
-Figma plan, and compares the colours the components actually paint against
-`tokens.json`. On a change it updates the token, regenerates the stylesheet,
+Monday and on demand. It compares **every colour token in both modes** against
+Figma. On a difference it updates the token, regenerates both stylesheets,
 type-checks, builds and opens a pull request. Nothing lands unreviewed.
 
-`tokens/figma-probes.json` records where each colour is observable, as
-`nodeId#property`. It is generated, not hand-written — run the workflow in
-**calibrate** mode and commit the result. Do that again after restructuring the
-Figma file, since probes are tied to node IDs.
+Values are read by name from the Foundations / Colour page, where each token has
+a Light and a Dark swatch pinned to its mode — the same reader
+`npm run tokens:modes` uses, in
+[scripts/lib/figma-colour-modes.mjs](scripts/lib/figma-colour-modes.mjs), so the
+two can never disagree about how a value is read. The frame is located by name
+rather than node id: an id looks stable until somebody rebuilds the page, at
+which point it silently stops resolving.
 
-Current coverage: 25 probes over 52 of the 53 colour tokens. 13 map to a single
-token and apply automatically. The rest are groups — seven tokens are `#ffffff`,
-so a change there cannot be attributed to one of them, and the check reports the
-group and asks rather than guessing. `color/shadow/default` is invisible to this
-method, being a shadow rather than a fill.
+Coverage is all 55 colour tokens across both modes, with every difference named.
+It also reports tokens present in Figma but not the code, and the reverse. Those
+are never applied automatically — a new token needs a name, a place on the
+Colour page and a decision about what it is for, none of which belongs to a
+scheduled job.
 
-**Colours only, deliberately.** An earlier version probed numbers too and
-produced nonsense: it paired `radius/sm` with a 4px auto-layout gap and
-`size/control/min-target` with an unrelated 44px gap, because small integers
-recur everywhere. Either would have raised a false alarm the moment a gap
-changed. Hex values are distinctive enough for the technique to hold; numbers
-are not.
+If the palette cannot be read at all — the page renamed, the swatch groups
+restructured — the check fails loudly and changes nothing. A palette that cannot
+be read is not the same as a palette that agrees, and the difference matters
+when this runs unattended.
+
+**Colours only, deliberately.** Colour is the only collection with modes and the
+only one this page exposes. Numbers are left out because small integers recur
+everywhere in a Figma file: an earlier version tried to match them and paired
+`radius/sm` with a 4px auto-layout gap and `size/control/min-target` with an
+unrelated 44px gap, either of which would have raised a false alarm the moment a
+gap changed.
+
+**What it does not check** is whether components in Figma still *use* the
+tokens. This compares the palette, not the artwork painted from it, so a button
+given a hardcoded fill in Figma would not show up here.
+
+<details>
+<summary>What this replaced, and why</summary>
+
+The first version of this check had to work without being able to read variable
+names at all, so it recorded the colours components were painted — via a
+generated probe table of `nodeId#property` entries — and watched for those to
+change. It worked, with two limits built in. It could only check the mode the
+artwork happened to be in, which meant light only. And it could not attribute a
+change when several tokens shared a value: seven tokens are `#ffffff`, so a
+change there came out as "one of these seven" and needed a person to resolve.
+Its coverage was 25 probes over 52 of the then 53 tokens, of which 13 could be
+applied automatically.
+
+Reading by name has neither limit, needs no calibration step and no probe table,
+and cannot be broken by a node id changing. The probe table and the workflow's
+calibrate mode are gone.
+
+</details>
 
 The workflow also has a **diagnose** mode, which prints HTTP status codes and
 secret lengths — never values — for when credentials misbehave.

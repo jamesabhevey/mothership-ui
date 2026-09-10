@@ -1,38 +1,39 @@
 #!/usr/bin/env node
 /**
- * Detect token drift between Figma and the code, without the variables API.
+ * Does the code still hold the colours Figma holds — in both modes?
  *
- *   node scripts/check-figma-drift.mjs --calibrate   build the probe table
- *   node scripts/check-figma-drift.mjs               report drift
- *   node scripts/check-figma-drift.mjs --write       report and apply
+ *   node scripts/check-figma-drift.mjs           report
+ *   node scripts/check-figma-drift.mjs --write   report and bring the code into line
  *
- * Why this exists
- * ---------------
- * Reading variable *definitions* needs Figma's variables REST API, which is
- * Enterprise-only. The ordinary file endpoint works on any plan, but returns
- * the values components actually paint rather than the variables behind them.
+ * How it reads Figma
+ * ------------------
+ * By name, from the Foundations / Colour page, where every token has a Light
+ * and a Dark swatch pinned to its mode. See scripts/lib/figma-colour-modes.mjs.
  *
- * So instead of asking "what is color/action/primary/default?", this asks
- * "what colour is the primary button still painted?" — and if that stops
- * matching the token, the token has drifted.
+ * This replaced an earlier approach that had to work without being able to read
+ * variable names at all: it recorded the colours components were painted and
+ * watched for those to change. That worked, but it could only ever check the
+ * mode the artwork happened to be in, and it could not attribute a change when
+ * several tokens shared a value — seven tokens are #ffffff, so a change there
+ * came out as "one of these seven" and needed a person. Reading by name has
+ * neither problem, so both modes are covered and every difference names its
+ * token.
  *
- * Scope: colours only, deliberately.
+ * What it does not check: whether components in Figma are still *using* the
+ * tokens. This compares the palette, not the artwork painted from it, so a
+ * button given a hardcoded fill in Figma would not show up here.
  *
- * A first pass probed numbers too and produced nonsense — it matched the 4px
- * radius token to a 4px auto-layout gap, and a 44px touch target to an
- * unrelated 44px gap, because small integers recur everywhere. Any such probe
- * would raise a false alarm the moment an unrelated gap changed. Hex values are
- * distinctive enough for this to be sound; numbers are not, so they are left to
- * the variables API path or to a human.
- *
- * Shared values are handled as groups. Seven tokens are #ffffff, so a change
- * there cannot be attributed to one of them — the check reports the group and
- * asks for a decision instead of guessing. Groups holding a single token are
- * applied automatically.
+ * Scope is colour, because colour is the only collection with modes and the
+ * only one this page exposes. Numbers were deliberately left out of the old
+ * check too: small integers recur everywhere in a Figma file, so matching 4px
+ * to a radius rather than to an unrelated gap was guesswork that produced false
+ * alarms.
  */
+import { readFileSync, writeFileSync } from 'node:fs'
+import { readColourModes, sameValue } from './lib/figma-colour-modes.mjs'
+
 const TOKEN = process.env.FIGMA_TOKEN
 const FILE_KEY = process.env.FIGMA_FILE_KEY
-const CALIBRATE = process.argv.includes('--calibrate')
 const WRITE = process.argv.includes('--write')
 
 if (!TOKEN || !FILE_KEY) {
@@ -40,191 +41,94 @@ if (!TOKEN || !FILE_KEY) {
   process.exit(2)
 }
 
-const { readFileSync, writeFileSync, existsSync } = await import('node:fs')
-
 const tokens = JSON.parse(readFileSync('tokens/tokens.json', 'utf8'))
-const mappings = JSON.parse(readFileSync('code-connect/mappings.json', 'utf8'))
-const nodeIds = Object.keys(mappings.components)
 
-// ---------------------------------------------------------------- fetch
-
-const url = `https://api.figma.com/v1/files/${FILE_KEY}/nodes?ids=${nodeIds.join(',')}`
-const res = await fetch(url, { headers: { 'X-Figma-Token': TOKEN } })
-if (!res.ok) {
-  console.error(`Figma returned ${res.status} ${res.statusText}. Nothing was changed.`)
+let figma
+try {
+  figma = await readColourModes({ fileKey: FILE_KEY, token: TOKEN })
+} catch (error) {
+  // Loudly, and without touching anything. A palette that cannot be read is
+  // not the same as a palette that agrees, and the difference matters when
+  // this runs unattended every Monday.
+  console.error(`${error.message}\n\nNothing was changed.`)
   process.exit(3)
 }
-const { nodes } = await res.json()
 
-// ---------------------------------------------------------------- observe
-
-const hex = ({ r, g, b }, opacity = 1) => {
-  const c = (n) => Math.round(n * 255).toString(16).padStart(2, '0')
-  return opacity >= 1
-    ? `#${c(r)}${c(g)}${c(b)}`
-    : `rgb(${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)} / ${+opacity.toFixed(3)})`
-}
-
-/** Every observable value in the file, as `${nodeId}#${accessor}` -> value. */
-const observed = new Map()
-
-const paint = (list) => {
-  const p = (list ?? []).find((x) => x.type === 'SOLID' && x.visible !== false)
-  return p ? hex(p.color, p.opacity ?? 1) : null
-}
-
-const walk = (node) => {
-  const id = node.id
-  const fill = paint(node.fills)
-  if (fill) observed.set(`${id}#fill`, fill)
-  const stroke = paint(node.strokes)
-  if (stroke) observed.set(`${id}#stroke`, stroke)
-  if (typeof node.cornerRadius === 'number') observed.set(`${id}#cornerRadius`, `${node.cornerRadius}px`)
-  if (typeof node.strokeWeight === 'number') observed.set(`${id}#strokeWeight`, `${node.strokeWeight}px`)
-  if (typeof node.itemSpacing === 'number') observed.set(`${id}#itemSpacing`, `${node.itemSpacing}px`)
-  if (node.absoluteBoundingBox?.height) observed.set(`${id}#height`, `${Math.round(node.absoluteBoundingBox.height)}px`)
-  if (node.style) {
-    const s = node.style
-    if (s.fontSize) observed.set(`${id}#fontSize`, `${s.fontSize}px`)
-    if (s.lineHeightPx) observed.set(`${id}#lineHeight`, `${Math.round(s.lineHeightPx)}px`)
-    if (typeof s.letterSpacing === 'number') observed.set(`${id}#letterSpacing`, `${+s.letterSpacing.toFixed(2)}px`)
-    if (s.fontWeight) observed.set(`${id}#fontWeight`, `${s.fontWeight}`)
-  }
-  for (const child of node.children ?? []) walk(child)
-}
-
-for (const key of Object.keys(nodes)) if (nodes[key]?.document) walk(nodes[key].document)
-
-// ------------------------------------------------- flatten tokens to compare
-
-/** Colour token name -> current value. Colours only; see the note above. */
-const flat = new Map()
-// Compared against the light mode. Figma serves whichever mode a node is in,
-// and every probe points at light artwork. Dark values are read by name
-// instead, by scripts/sync-figma-modes.mjs.
-for (const [k, v] of Object.entries(tokens.color)) flat.set(k, v.light.toLowerCase())
-
-const setTokenValue = (key, value) => {
-  tokens.color[key].light = value
-}
-
-/** Only colour observations are usable as probes. */
-const colourObservations = () =>
-  [...observed].filter(([k]) => k.endsWith('#fill') || k.endsWith('#stroke'))
-
-// ---------------------------------------------------------------- calibrate
-
-const PROBES = 'tokens/figma-probes.json'
-
-if (CALIBRATE) {
-  // Group tokens by value. A group with one token is attributable; a group with
-  // several is still worth watching, it just needs a human to say which changed.
-  const byValue = new Map()
-  for (const [key, value] of flat) {
-    if (!byValue.has(value)) byValue.set(value, [])
-    byValue.get(value).push(key)
-  }
-
-  const colours = colourObservations()
-  const probes = {}
-  const unobserved = []
-
-  for (const [value, keys] of byValue) {
-    const spot = colours.find(([, v]) => String(v).toLowerCase() === value)
-    if (!spot) {
-      unobserved.push(`${value} (${keys.join(', ')})`)
-      continue
-    }
-    probes[value] = { at: spot[0], expect: value, tokens: keys }
-  }
-
-  writeFileSync(
-    PROBES,
-    JSON.stringify(
-      {
-        $comment: [
-          'Generated by `node scripts/check-figma-drift.mjs --calibrate`.',
-          'Each entry names one place in the Figma file where a token value is',
-          'observable, as nodeId#property. Regenerate after restructuring the',
-          'Figma file or renaming tokens.',
-        ],
-        generated: new Date().toISOString().slice(0, 10),
-        probes,
-      },
-      null,
-      2,
-    ) + '\n',
-  )
-
-  const covered = Object.values(probes).reduce((n, p) => n + p.tokens.length, 0)
-  const single = Object.values(probes).filter((p) => p.tokens.length === 1).length
-  console.log(`Observed ${colours.length} colour values across ${nodeIds.length} components.`)
-  console.log(`${Object.keys(probes).length} probe(s) covering ${covered} of ${flat.size} colour tokens.`)
-  console.log(`${single} probe(s) map to a single token and can be applied automatically.\n`)
-  for (const [value, p] of Object.entries(probes)) {
-    const mark = p.tokens.length === 1 ? 'auto ' : 'group'
-    console.log(`  ${mark} ${value.padEnd(22)} ${p.tokens.join(', ')}`)
-  }
-  if (unobserved.length) {
-    console.log(`\n${unobserved.length} value(s) not painted anywhere in the probed components:`)
-    for (const u of unobserved) console.log(`  ${u}`)
-  }
-  process.exit(0)
-}
-
-// ---------------------------------------------------------------- check
-
-if (!existsSync(PROBES)) {
-  console.error(`No probe table at ${PROBES}. Run with --calibrate first.`)
-  process.exit(2)
-}
-
-const { probes } = JSON.parse(readFileSync(PROBES, 'utf8'))
+const MODES = ['light', 'dark']
 const drift = []
-const needsDecision = []
-const gone = []
+const onlyInFigma = []
+const onlyInCode = []
+const incomplete = []
 
-for (const [value, probe] of Object.entries(probes)) {
-  const now = observed.get(probe.at)
-  if (now === undefined) {
-    gone.push(`${value} — probe ${probe.at} no longer exists in the file`)
+for (const [name, value] of Object.entries(figma.modes)) {
+  if (!tokens.color[name]) {
+    onlyInFigma.push(name)
     continue
   }
-  if (String(now).toLowerCase() === String(value).toLowerCase()) continue
-
-  if (probe.tokens.length === 1) {
-    drift.push({ path: probe.tokens[0], from: value, to: now, at: probe.at })
-  } else {
-    needsDecision.push({ tokens: probe.tokens, from: value, to: now, at: probe.at })
+  for (const mode of MODES) {
+    const theirs = value[mode]
+    const ours = tokens.color[name]?.[mode]
+    if (!theirs) {
+      incomplete.push(`${name} has no ${mode} swatch in Figma`)
+      continue
+    }
+    if (!sameValue(ours, theirs)) drift.push({ name, mode, from: ours, to: theirs })
   }
 }
 
-console.log(`Checked ${Object.keys(probes).length} colour probes across ${nodeIds.length} components.\n`)
+for (const name of Object.keys(tokens.color)) {
+  if (!figma.modes[name]) onlyInCode.push(name)
+}
 
-if (gone.length) {
-  console.log(`${gone.length} probe(s) no longer resolve. Re-run --calibrate:`)
-  for (const g of gone) console.log(`  ${g}`)
+const checked = Object.keys(figma.modes).length
+
+console.log(`Read ${checked} colour tokens from ${figma.frame}, both modes.\n`)
+
+if (incomplete.length) {
+  console.log(`${incomplete.length} token(s) missing a swatch, so one mode could not be compared:`)
+  for (const line of incomplete) console.log(`  ${line}`)
   console.log()
 }
 
-if (needsDecision.length) {
-  console.log(`${needsDecision.length} change(s) that cannot be attributed to one token — decide by hand:\n`)
-  for (const d of needsDecision)
-    console.log(`  ${d.from} -> ${d.to}   affects one of: ${d.tokens.join(', ')}   (seen at ${d.at})`)
+// Added and removed tokens are reported rather than applied. A new token needs
+// a name, a place on the Colour page and usually a decision about what it is
+// for; none of that belongs to a job running on a schedule.
+if (onlyInFigma.length) {
+  console.log(`${onlyInFigma.length} token(s) in Figma that the code does not have — add by hand:`)
+  for (const name of onlyInFigma) {
+    const v = figma.modes[name]
+    console.log(`  color/${name}   light ${v.light ?? '—'}   dark ${v.dark ?? '—'}`)
+  }
   console.log()
 }
 
-if (drift.length === 0) {
-  if (!needsDecision.length) console.log('No drift. Figma and the code agree on every probed colour.')
-  process.exit(gone.length || needsDecision.length ? 1 : 0)
+if (onlyInCode.length) {
+  console.log(`${onlyInCode.length} token(s) in the code that Figma no longer has — remove by hand:`)
+  for (const name of onlyInCode) console.log(`  color/${name}`)
+  console.log()
 }
 
-console.log(`${drift.length} token(s) have drifted:\n`)
-for (const d of drift) console.log(`  ${d.path}: ${d.from} -> ${d.to}   (seen at ${d.at})`)
+if (!drift.length) {
+  if (!onlyInFigma.length && !onlyInCode.length && !incomplete.length) {
+    console.log('No drift. Figma and the code agree on every colour token, in both modes.')
+  }
+  process.exit(onlyInFigma.length || onlyInCode.length || incomplete.length ? 1 : 0)
+}
+
+const byMode = (mode) => drift.filter((d) => d.mode === mode)
+console.log(
+  `${drift.length} value(s) have drifted across ${new Set(drift.map((d) => d.name)).size} token(s) ` +
+    `— ${byMode('light').length} in light, ${byMode('dark').length} in dark:\n`,
+)
+for (const mode of MODES) {
+  for (const d of byMode(mode)) {
+    console.log(`  ${mode.padEnd(5)} color/${d.name.padEnd(26)} ${d.from ?? '—'} -> ${d.to}`)
+  }
+}
 
 if (WRITE) {
-  for (const d of drift) setTokenValue(d.path, d.to)
+  for (const d of drift) tokens.color[d.name][d.mode] = d.to
   writeFileSync('tokens/tokens.json', JSON.stringify(tokens, null, 2) + '\n')
-  console.log('\ntokens/tokens.json updated. Run `npm run tokens` to regenerate the CSS.')
+  console.log('\ntokens/tokens.json updated. Run `npm run tokens` to regenerate the stylesheets.')
 }
 process.exit(1)
