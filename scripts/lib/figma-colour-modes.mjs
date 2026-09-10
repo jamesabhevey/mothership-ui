@@ -160,7 +160,11 @@ export async function readPaintedColours({ fileKey, token, nodeIds }) {
       if (!root) continue
       const walk = (node, trail) => {
         const here = trail ? `${trail} / ${node.name}` : node.name
-        for (const list of [node.fills, node.strokes]) {
+        // A component set's own paints are Figma's editor furniture — the
+        // dashed #9747ff boundary it draws around a set — rather than anything
+        // a designer chose. Its children are the artwork.
+        const editorChrome = node.type === 'COMPONENT_SET'
+        for (const list of editorChrome ? [] : [node.fills, node.strokes]) {
           for (const paint of list ?? []) {
             if (paint.type !== 'SOLID' || paint.visible === false) continue
             const value = toValue(paint.color, paint.opacity ?? 1)
