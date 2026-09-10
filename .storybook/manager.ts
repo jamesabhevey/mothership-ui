@@ -35,6 +35,32 @@ const write = (theme: 'light' | 'dark') => {
 }
 
 /**
+ * The preview's document, when it is there and reachable.
+ *
+ * Same origin, so the manager can set the mode on it directly. This is the
+ * whole point: left to itself the preview only learns about a change when the
+ * message reaches it and React re-renders the story, which is a postMessage hop
+ * and a render later than the chrome. At a 120ms fade that reads as the sidebar
+ * and toolbar changing first and the canvas catching up — two transitions
+ * instead of one. Setting both in the same task starts them in the same frame.
+ *
+ * The decorator in preview.ts still applies it too. That covers the first
+ * render, a reload, and the case where this returns null because the iframe is
+ * between documents; applyTheme is a no-op when the mode is already right, so
+ * whichever arrives second changes nothing and cannot start a second fade.
+ */
+const previewRoot = (): HTMLElement | null => {
+  try {
+    const frame = document.querySelector<HTMLIFrameElement>('#storybook-preview-iframe')
+    return frame?.contentDocument?.documentElement ?? null
+  } catch {
+    // Nothing should make this cross-origin, but a null here only costs the
+    // synchronisation, and the decorator still applies the mode.
+    return null
+  }
+}
+
+/**
  * Does the address bar name a mode? Storybook encodes globals as
  * `globals=theme:dark`, possibly alongside others.
  *
@@ -74,6 +100,8 @@ addons.register('mothership/theme-sync', (api) => {
   api.on(SET_GLOBALS, (payload: { globals?: Record<string, unknown> }) => {
     const fromStorybook = themeOf(payload?.globals)
     applyTheme(root, fromStorybook)
+    const preview = previewRoot()
+    if (preview) applyTheme(preview, fromStorybook)
 
     // Nothing in the URL, but something remembered, and they disagree: tell
     // Storybook about the remembered one. That updates the preview and the
@@ -86,7 +114,10 @@ addons.register('mothership/theme-sync', (api) => {
   // Fires on every change after that — the toolbar, or the line above.
   api.on(GLOBALS_UPDATED, (payload: { globals?: Record<string, unknown> }) => {
     const theme = themeOf(payload?.globals)
+    // Both documents, one task, so the two fades run as one.
     applyTheme(root, theme)
+    const preview = previewRoot()
+    if (preview) applyTheme(preview, theme)
     write(theme)
   })
 })

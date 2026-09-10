@@ -26,13 +26,20 @@ const FLAG = 'data-theme-switching'
  * landing on it.
  */
 const durationOf = (root: HTMLElement) => {
-  const declared = getComputedStyle(root).getPropertyValue('--theme-switch').trim()
+  const view = root.ownerDocument.defaultView ?? window
+  const declared = view.getComputedStyle(root).getPropertyValue('--theme-switch').trim()
   const ms = /^([\d.]+)(ms|s)$/.exec(declared)
   if (!ms) return 160
   return (ms[2] === 's' ? +ms[1] * 1000 : +ms[1]) + 40
 }
 
-let clear: ReturnType<typeof setTimeout> | undefined
+/**
+ * Per document, not one shared handle. The manager applies the mode to its own
+ * document and to the preview's in the same breath, and a single timer would be
+ * overwritten by the second call — leaving the first document's flag on, and
+ * with it a transition on every element for the rest of the session.
+ */
+const clearing = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>()
 
 export function applyTheme(root: HTMLElement, theme: 'light' | 'dark') {
   const current = root.getAttribute('data-theme')
@@ -47,8 +54,11 @@ export function applyTheme(root: HTMLElement, theme: 'light' | 'dark') {
     // finds no transition on the before-change style, and jumps.
     void root.offsetWidth
 
-    clearTimeout(clear)
-    clear = setTimeout(() => root.removeAttribute(FLAG), durationOf(root))
+    clearTimeout(clearing.get(root))
+    clearing.set(
+      root,
+      setTimeout(() => root.removeAttribute(FLAG), durationOf(root)),
+    )
   }
 
   root.setAttribute('data-theme', theme)
