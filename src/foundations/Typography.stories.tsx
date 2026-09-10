@@ -92,7 +92,12 @@ export const Typography: Story = {
     >
       {scale.map(([group, rows]) => (
         <Group key={group} name={group}>
-          <ul className="flex flex-col gap-5">
+          {/*
+            A rule above the first specimen as well as between them, so each
+            tier reads as a block under its heading rather than as three rows
+            that happen to follow it.
+          */}
+          <ul className="flex flex-col gap-5 border-t border-border-subtle pt-5">
             {rows.map(([figma, cls, stem]) => (
               <Specimen key={stem} figma={figma} cls={cls} stem={stem} />
             ))}

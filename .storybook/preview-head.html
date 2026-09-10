@@ -202,3 +202,33 @@
     border-color: var(--color-border-subtle);
   }
 </style>
+
+<style>
+  /*
+    The last of Storybook's light literals on the docs pages.
+    ------------------------------------------------------------------
+    All three were still drawing at #e8eaec or #d3d7db on a dark page: the
+    hairline under the story preview's toolbar, the props table's cell borders,
+    and the ring around its controls. Same treatment as everywhere else — the
+    token that already held the light value, so light does not move.
+
+    The table needs both the doubled class and `tbody > tr >` spelt out.
+    Storybook's rule for those cells is `.css-x.css-x tbody > tr > *`, and
+    matching only one of the two — the doubled class, or the row structure —
+    still loses to it. Established by testing rather than by counting: the
+    arithmetic says either should be enough, and neither is.
+  */
+  .sbdocs-wrapper .sbdocs-preview > div:first-child {
+    box-shadow: inset 0 -1px 0 0 var(--color-border-subtle);
+  }
+
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr > td,
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable tbody > tr > th,
+  .sbdocs-wrapper .docblock-argstable.docblock-argstable thead > tr > th {
+    border-color: var(--color-border-subtle);
+  }
+
+  .sbdocs-wrapper .docblock-argstable :is(select, input, textarea) {
+    box-shadow: inset 0 0 0 1px var(--color-border-default);
+  }
+</style>

@@ -361,6 +361,13 @@
   [data-theme] .sb-bar {
     background-color: var(--color-bg-default);
     border-color: var(--color-border-subtle);
+    /*
+      Storybook draws the toolbar's bottom edge as an inset shadow rather than a
+      border, in the same light literal as everything else, so it stayed pale
+      grey on a dark page. Restated with the token: same hairline, same colour
+      as the sidebar's right edge, so the two edges of the frame match.
+    */
+    box-shadow: inset 0 -1px 0 0 var(--color-border-subtle);
   }
 
   [data-theme] #storybook-preview-iframe {
