@@ -385,10 +385,25 @@ actually use. The mapping:
   the description notes they were kept so it can be reintroduced. Keyboard
   focus has to be visible, so every interactive component uses it
   (`src/lib/focus.ts`).
-- **Select uses a native `<select>`.** The Figma `Active` variant draws the open
-  list as a Menu instance. In code that is the browser's own popup, which keeps
-  keyboard and screen-reader behaviour correct on every platform. `Menu` and
-  `MenuItem` are exported separately for custom, non-native pickers.
+- **Select opens a Menu, not the browser's popup.** The Figma `Active` variant
+  draws the open list as a Menu instance, and so does the code: one floating
+  surface in the system rather than a native popup that cannot be styled and
+  looks different on every platform. It was a native `<select>` until that was
+  brought into line.
+
+  Everything the native element used to give away is implemented: the trigger is
+  a `combobox`, the list a `listbox` of `option`s, arrow keys and Home and End
+  move through it skipping disabled rows, Enter and Space choose, Escape closes
+  and returns focus, Tab closes on the way past, typing jumps to the option
+  starting with what was typed, and a click elsewhere dismisses. Options are
+  still declared as `<option>` children — that is what a select looks like in
+  any codebase — and are read into the list rather than rendered.
+
+  The one thing it cannot give back is the mobile picker: a native select opens
+  the operating system's own wheel, which beats any list a page can draw on a
+  phone. Worth knowing for a form used mostly on mobile. `name` submits through
+  a hidden input, and `onChange` became `onValueChange`, which takes the value
+  rather than an event.
 - **Icons come from `lucide-react`.** The Figma Icon set is Lucide drawn on a
   24px grid with a 2px round stroke, so this is the same artwork from its
   source rather than re-exported SVG. Sizes stay on the 16/20/24/32 scale, and

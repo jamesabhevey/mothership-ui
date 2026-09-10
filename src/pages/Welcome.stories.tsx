@@ -100,7 +100,7 @@ export const Welcome: Story = {
           <Stat value="29" label="components" />
           <Stat value={String(iconNames.length)} label="icons" />
           <Stat value="104" label="design tokens" />
-          <Stat value="93" label="documented variants" />
+          <Stat value="95" label="documented variants" />
         </ul>
         <P>
           Components are grouped the way the Figma library groups them: Form Elements, Content
