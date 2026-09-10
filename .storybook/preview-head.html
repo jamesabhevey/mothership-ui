@@ -270,3 +270,45 @@
     border-bottom-right-radius: var(--radius-md);
   }
 </style>
+
+<style>
+  /*
+    The cross-fade between modes.
+    ------------------------------------------------------------------
+    Only while the mode is actually changing. apply-theme.ts puts
+    data-theme-switching on the root, forces a style resolution so the
+    transition is in effect before the colours move, and takes it off again
+    240ms later.
+
+    A permanent transition on every element would catch every hover too, and
+    would leave the browser watching thousands of nodes on pages like Glyphs and
+    Catalog for something that happens now and then. !important is here to
+    out-rank the components' own transition-colors for the length of the switch,
+    so everything crosses at one speed rather than in waves.
+
+    Anyone who has asked their system for less movement gets the change
+    instantly instead.
+  */
+  [data-theme-switching],
+  [data-theme-switching] *,
+  [data-theme-switching] *::before,
+  [data-theme-switching] *::after {
+    transition:
+      background-color 240ms ease,
+      border-color 240ms ease,
+      color 240ms ease,
+      fill 240ms ease,
+      stroke 240ms ease,
+      box-shadow 240ms ease,
+      outline-color 240ms ease !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-theme-switching],
+    [data-theme-switching] *,
+    [data-theme-switching] *::before,
+    [data-theme-switching] *::after {
+      transition: none !important;
+    }
+  }
+</style>

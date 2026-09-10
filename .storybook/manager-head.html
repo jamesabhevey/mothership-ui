@@ -93,21 +93,26 @@
     letter-spacing: -0.4px;
   }
 
+  /*
+    The mark, painted rather than drawn.
+
+    The file is a single path filled #8429cc — the light brand. Used as a
+    background image it would stay that purple on a dark page, where the brand
+    is #c985ff. So the shape is used as a mask and the colour comes from
+    action/primary/default, which means one asset covers both modes and the mark
+    follows any change to the brand rather than having to be re-exported.
+
+    The PNG fallback that used to sit alongside it is gone: a mask needs the
+    file's alpha, and there has never been a PNG in public/ for it to find.
+  */
   .sidebar-header > div > a::before {
     content: '';
     flex: 0 0 auto;
     width: 24px;
     height: 24px;
-    /*
-      Two layers so either file format works: whichever of the two exists is
-      painted, and a 404 on one layer simply contributes nothing. Drop the mark
-      into public/ as mothership-logo.svg (preferred — crisp at any size) or
-      mothership-logo.png.
-    */
-    background-image: url('./mothership-logo.svg'), url('./mothership-logo.png');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: var(--color-action-primary-default);
+    -webkit-mask: url('./mothership-logo.svg') center / contain no-repeat;
+    mask: url('./mothership-logo.svg') center / contain no-repeat;
   }
 
   /*
@@ -467,5 +472,47 @@
   [data-theme] .search-field code,
   [data-theme] .search-field code span {
     color: var(--color-text-muted);
+  }
+</style>
+
+<style>
+  /*
+    The cross-fade between modes.
+    ------------------------------------------------------------------
+    Only while the mode is actually changing. apply-theme.ts puts
+    data-theme-switching on the root, forces a style resolution so the
+    transition is in effect before the colours move, and takes it off again
+    240ms later.
+
+    A permanent transition on every element would catch every hover too, and
+    would leave the browser watching thousands of nodes on pages like Glyphs and
+    Catalog for something that happens now and then. !important is here to
+    out-rank the components' own transition-colors for the length of the switch,
+    so everything crosses at one speed rather than in waves.
+
+    Anyone who has asked their system for less movement gets the change
+    instantly instead.
+  */
+  [data-theme-switching],
+  [data-theme-switching] *,
+  [data-theme-switching] *::before,
+  [data-theme-switching] *::after {
+    transition:
+      background-color 240ms ease,
+      border-color 240ms ease,
+      color 240ms ease,
+      fill 240ms ease,
+      stroke 240ms ease,
+      box-shadow 240ms ease,
+      outline-color 240ms ease !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-theme-switching],
+    [data-theme-switching] *,
+    [data-theme-switching] *::before,
+    [data-theme-switching] *::after {
+      transition: none !important;
+    }
   }
 </style>

@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
 import { mothershipTheme } from './theme'
+import { applyTheme, themeOf } from './apply-theme'
 
 // Inter, in the four weights the type scale uses (400 body, 500 label/caption,
 // 600 heading, 700 display). Without these the metrics are wrong even though
@@ -53,11 +54,15 @@ const preview: Preview = {
       // Set on the iframe's root element rather than a wrapper, so the page
       // background, the docs chrome and anything portalled to <body> — modals,
       // tooltips, menus — are all inside the same mode.
+      //
       // Always set, never removed. tokens.css declares a light block as well as
       // a dark one, so an explicit value means a subtree can be pinned to the
       // other mode — which is how the Colour page shows both values at once.
-      const theme = context.globals.theme === 'dark' ? 'dark' : 'light'
-      document.documentElement.setAttribute('data-theme', theme)
+      //
+      // This runs on every render, so applyTheme returns early when the mode
+      // has not actually changed — otherwise every story render would flash the
+      // switching transition on.
+      applyTheme(document.documentElement, themeOf(context.globals))
       return Story()
     },
   ],
