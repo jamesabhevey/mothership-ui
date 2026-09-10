@@ -132,7 +132,15 @@ writeFileSync('src/styles/tokens.css', L.join('\n'))
  * the chrome cannot drift from the components.
  */
 const M = []
-M.push('/* Mothership UI colour tokens for the Storybook manager — GENERATED, DO NOT EDIT. */')
+M.push('/* Mothership UI tokens for the Storybook manager — GENERATED, DO NOT EDIT. */')
+M.push('')
+M.push('/* Shared by both modes. Radius is here because the chrome is shaped from it')
+M.push('   too — the search field and the sidebar headings — and a var() that is not')
+M.push('   declared is not an error, it silently computes to the property\'s initial')
+M.push('   value, which for a radius is a square corner. */')
+M.push(':root {')
+for (const [k, val] of Object.entries(t.radius)) M.push(`  --radius-${v(k)}: ${val};`)
+M.push('}')
 for (const mode of ['light', 'dark']) {
   M.push('')
   M.push(`[data-theme='${mode}'] {`)

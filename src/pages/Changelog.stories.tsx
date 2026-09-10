@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, P, Page } from '../docs/parts'
+import { P, Page } from '../docs/parts'
 import changelog from '../changelog.json'
 
 const meta = {
@@ -16,24 +16,6 @@ type Story = StoryObj<typeof meta>
 const { repo, commits } = changelog
 
 const commitUrl = (hash: string) => (repo ? `https://github.com/${repo}/commit/${hash}` : null)
-
-/**
- * Every change is its own version, so the days are headings rather than
- * versions in their own right — they just give the list some rhythm and say in
- * words what the version names say in digits. Dates are formatted in en-GB
- * explicitly rather than left to the reader's locale, so the page reads the
- * same for everyone looking at it together.
- */
-const dayOf = (iso: string) =>
-  new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-
-const byDay = commits.reduce<Array<[string, typeof commits]>>((days, commit) => {
-  const day = dayOf(commit.date)
-  const last = days[days.length - 1]
-  if (last && last[0] === day) last[1].push(commit)
-  else days.push([day, [commit]])
-  return days
-}, [])
 
 /**
  * Commit bodies are plain text, but they are written with backticks around
@@ -113,15 +95,16 @@ export const Changelog: Story = {
         </P>
       ) : (
         <>
-          {byDay.map(([day, entries]) => (
-            <Group key={day} name={day}>
-              <ul className="flex flex-col gap-5 border-t border-border-subtle pt-5">
-                {entries.map((commit) => (
-                  <Entry key={commit.full} commit={commit} />
-                ))}
-              </ul>
-            </Group>
-          ))}
+          {/*
+            One flat list rather than a heading per day. The version name
+            already carries the date, so a day heading above it was the same
+            date twice.
+          */}
+          <ul className="flex flex-col gap-5 border-t border-border-subtle pt-5">
+            {commits.map((commit) => (
+              <Entry key={commit.full} commit={commit} />
+            ))}
+          </ul>
 
           {repo ? (
             <P>

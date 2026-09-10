@@ -176,7 +176,7 @@
     color: var(--color-text-primary);
     text-transform: none;
     letter-spacing: 0;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 5px 6px 4px 8px;
   }
 
@@ -343,24 +343,41 @@
   }
 
   /*
-    The search field.
+    The search field, matched to the library's own.
 
-    Storybook draws it as a 1px inset ring rather than a border, and left to
-    itself the ring stayed light grey while the field took a surface colour a
-    step lighter than the sidebar — which in dark read as a filled box floating
-    on the panel. The fill goes: the field sits flush on the sidebar with only
-    the ring around it, which is what it looks like in light.
+    TextField in a search layout — the one on the Catalog page — is a 32px shell
+    at radius/md on surface/default, with a 1px border/default edge, 14px
+    text/primary inside, a text/muted placeholder and an icon/default glyph.
+    Storybook's sidebar field was 10px cornered, transparent, and 13px, so the
+    two search boxes in the same product did not look like the same control.
+
+    The edge stays an inset ring rather than becoming a real border: Storybook
+    draws it that way, and a ring occupies no space, so swapping it for a border
+    would move everything inside by a pixel for no visible gain.
+
+    Left alone: the internal spacing. The shell holds an icon, the field, the
+    Cmd-K hint and the filter button, all sized by Storybook, and re-spacing
+    them to match a two-element field would be fighting its layout for nothing.
   */
   [data-theme] .search-field {
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-default);
     box-shadow: inset 0 0 0 1px var(--color-border-default);
   }
 
   [data-theme] #storybook-explorer-searchfield {
     background-color: transparent;
+    font-size: 14px;
+    line-height: 20px;
   }
 
   [data-theme] #storybook-explorer-searchfield::placeholder {
     color: var(--color-text-muted);
+  }
+
+  /* The leading glyph, not the filter button at the other end. */
+  [data-theme] .search-field > div:first-child svg {
+    color: var(--color-icon-default);
   }
 
   /*

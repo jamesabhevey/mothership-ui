@@ -1,4 +1,16 @@
-/* Mothership UI colour tokens for the Storybook manager — GENERATED, DO NOT EDIT. */
+/* Mothership UI tokens for the Storybook manager — GENERATED, DO NOT EDIT. */
+
+/* Shared by both modes. Radius is here because the chrome is shaped from it
+   too — the search field and the sidebar headings — and a var() that is not
+   declared is not an error, it silently computes to the property's initial
+   value, which for a radius is a square corner. */
+:root {
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
 
 [data-theme='light'] {
   color-scheme: light;
