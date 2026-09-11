@@ -43,3 +43,52 @@
     font-weight: 600;
   }
 }
+
+/*
+ * The one keyframed motion the components own, besides Tailwind's spin.
+ *
+ * A dropdown that is simply there on one frame and gone the next reads as a
+ * rendering glitch rather than a thing that opened. It arrives over
+ * duration/slow on easing/enter — decelerating, the curve for something coming
+ * towards the reader. It leaves instantly, because React unmounts it; an exit
+ * would mean keeping it mounted to animate, which is more machinery than a
+ * 100ms disappearance is worth.
+ */
+@keyframes select-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Reduced motion.
+ *
+ * Someone who has asked their system for less movement gets none of the
+ * decoration: transitions and animations collapse to effectively nothing rather
+ * than being removed, so anything whose final state depends on the animation
+ * still lands on it.
+ *
+ * The exception is a looping indicator, marked data-motion="loop". A spinner
+ * that stops spinning does not read as "calm", it reads as "frozen" — the one
+ * thing a loading indicator must never look like. Those keep turning, at half
+ * speed. Reduced motion means less movement, not less information.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *:not([data-motion='loop']),
+  *:not([data-motion='loop'])::before,
+  *:not([data-motion='loop'])::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-motion='loop'] {
+    animation-duration: calc(var(--duration-loop) * 2) !important;
+  }
+}

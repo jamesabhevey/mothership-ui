@@ -281,6 +281,55 @@ Figma's Dev Mode shows the real code component and links to its source.
 to what; the live mapping lives in Figma. Mapping a component set propagates to
 every variant underneath it automatically.
 
+## Motion
+
+Two small scales — how long something takes and how it accelerates — in
+`tokens/tokens.json` alongside the rest:
+
+| Token | Value | For |
+| --- | --- | --- |
+| `duration/fast` | 100ms | A control answering a pointer: hover, pressed, focus, checked |
+| `duration/base` | 150ms | Something that travels or fades rather than just recolours |
+| `duration/slow` | 250ms | A surface arriving |
+| `duration/loop` | 1000ms | One turn of a continuous indicator |
+| `easing/standard` | `cubic-bezier(0.4, 0, 0.2, 1)` | Anything already on screen changing |
+| `easing/enter` | `cubic-bezier(0, 0, 0.2, 1)` | Anything arriving |
+
+**Components do not name a duration.** Tailwind v4's own
+`--default-transition-duration` and `--default-transition-timing-function` are
+set to `duration/fast` and `easing/standard`, so every `transition-*` in the
+library resolves to the scale without saying so — which is what made this a
+change to one generated file rather than to sixteen components. A component
+names a duration only when it wants something other than the default, through
+`duration-[var(--duration-base)]`, and that reads as the exception it is. The
+`components use motion tokens, not literals` contract check fails the build on a
+`duration-200` or a written-out curve.
+
+Motion is the one foundation **not** read out of Figma. The library's variable
+collections cover colour, dimension and type; there is no motion collection, so
+this scale was defined in code. If it is added to Figma later, these are the
+values to add, and the drift check would need extending to cover them — it reads
+colour only today.
+
+Reduced motion is enforced once, in `src/styles/index.css`, rather than
+component by component. Transitions and animations collapse to nothing, so
+anything whose final state depends on an animation still lands on it. Continuous
+indicators are the exception: marked `data-motion="loop"`, they keep turning at
+half speed, because a frozen spinner reads as broken rather than calm.
+
+Two things were fixed in the course of standardising this, both of which had
+looked finished:
+
+- **The Switch thumb did not move.** It changed sides by switching the track to
+  `justify-end`, an alignment change, which cannot be transitioned — so the one
+  control whose movement *is* the feedback was the one that jumped. It now
+  translates 16px over `duration/base`. The transitioned property is `translate`
+  rather than `transform`: Tailwind v4's `translate-*` utilities set the
+  standalone `translate` property, and a transition list naming `transform`
+  moves the thumb without animating it, which looks exactly like the jump it was
+  meant to fix.
+- **The Spinner stopped dead under reduced motion.** It now slows instead.
+
 ## Colour modes
 
 Colour is the only Figma collection with modes, and every colour token carries

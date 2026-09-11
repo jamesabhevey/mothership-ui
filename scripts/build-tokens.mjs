@@ -50,6 +50,24 @@ L.push('  /* Elevation */')
 for (const [k, val] of Object.entries(t.elevation)) L.push(`  --shadow-elevation-${v(k)}: ${val};`)
 
 L.push('')
+L.push('  /* Motion */')
+for (const [k, val] of Object.entries(t.duration)) L.push(`  --duration-${v(k)}: ${val};`)
+for (const [k, val] of Object.entries(t.easing)) L.push(`  --ease-${v(k)}: ${val};`)
+L.push('')
+L.push('  /*')
+L.push('   * Tailwind\'s own defaults, pointed at the scale above.')
+L.push('   *')
+L.push('   * Every `transition-*` utility in the library reads these, so setting them')
+L.push('   * here is what makes the components tokenised rather than each one having')
+L.push('   * to name a duration. A component only says a duration when it wants')
+L.push('   * something other than the default.')
+L.push('   *')
+L.push('   * The spin keyframes are Tailwind\'s; only its timing comes from us.')
+L.push('   */')
+L.push('  --default-transition-duration: var(--duration-fast);')
+L.push('  --default-transition-timing-function: var(--ease-standard);')
+L.push('  --animate-spin: spin var(--duration-loop) linear infinite;')
+L.push('')
 L.push('  /* Type family */')
 for (const [k, val] of Object.entries(t.font)) L.push(`  --font-${v(k)}: ${val};`)
 
@@ -134,12 +152,15 @@ writeFileSync('src/styles/tokens.css', L.join('\n'))
 const M = []
 M.push('/* Mothership UI tokens for the Storybook manager — GENERATED, DO NOT EDIT. */')
 M.push('')
-M.push('/* Shared by both modes. Radius is here because the chrome is shaped from it')
-M.push('   too — the search field and the sidebar headings — and a var() that is not')
-M.push('   declared is not an error, it silently computes to the property\'s initial')
-M.push('   value, which for a radius is a square corner. */')
+M.push('/* Shared by both modes. Radius and motion are here because the chrome is')
+M.push('   shaped and timed from them too — the search field, the sidebar headings,')
+M.push('   the light/dark cross-fade — and a var() that is not declared is not an')
+M.push('   error: it silently computes to the property\'s initial value, which for a')
+M.push('   radius is a square corner and for a duration is no animation at all. */')
 M.push(':root {')
 for (const [k, val] of Object.entries(t.radius)) M.push(`  --radius-${v(k)}: ${val};`)
+for (const [k, val] of Object.entries(t.duration)) M.push(`  --duration-${v(k)}: ${val};`)
+for (const [k, val] of Object.entries(t.easing)) M.push(`  --ease-${v(k)}: ${val};`)
 M.push('}')
 for (const mode of ['light', 'dark']) {
   M.push('')
@@ -154,5 +175,6 @@ writeFileSync('public/manager-tokens.css', M.join('\n'))
 
 const n = Object.keys(t.color).length + Object.keys(t.radius).length + Object.keys(t.elevation).length +
   Object.keys(t.type).length + Object.keys(t.space).length + Object.keys(t.size).length +
-  Object.keys(t.borderWidth).length + Object.keys(t.font).length
+  Object.keys(t.borderWidth).length + Object.keys(t.font).length +
+  Object.keys(t.duration).length + Object.keys(t.easing).length
 console.log(`src/styles/tokens.css written — ${n} tokens, ${Object.keys(t.color).length} of them in two modes`)

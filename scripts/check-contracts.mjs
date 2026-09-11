@@ -112,6 +112,36 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 }
 
 // ---------------------------------------------------------------------------
+// 2b. No component names a duration or a curve in numbers.
+//
+// Motion is tokenised through Tailwind's transition defaults, so a component
+// that writes `duration-200` or an easing literal has stepped outside the scale
+// — and unlike a hard-coded colour it is invisible in review, because the
+// difference between 150ms and 200ms cannot be seen in a diff.
+//
+// Arbitrary values referring to a token, `duration-[var(--duration-base)]`, are
+// the supported way to ask for something other than the default.
+// ---------------------------------------------------------------------------
+{
+  const offenders = []
+  for (const f of srcFiles.filter((f) => f.startsWith('src/components/') && !f.includes('.stories.'))) {
+    readFileSync(f, 'utf8')
+      .split('\n')
+      .forEach((line, i) => {
+        const literal =
+          // duration-200, delay-75 — Tailwind's numeric scale
+          /\b(?:duration|delay)-\d+/.exec(line) ??
+          // a curve written out, or a bare ms/s value in a style prop
+          /cubic-bezier\([^)]*\)/.exec(line) ??
+          /transition(?:-duration|-timing-function)?:\s*[^v\n]*\d+m?s/.exec(line)
+        if (literal) offenders.push(`${f}:${i + 1} ${literal[0].trim()}`)
+      })
+  }
+  if (offenders.length) fail('components use motion tokens, not literals', offenders.join('\n         '))
+  else pass('components use motion tokens, not literals')
+}
+
+// ---------------------------------------------------------------------------
 // 3. Every internal link resolves to a story that exists.
 //
 // These links are built from story ids, and a story id is derived from its

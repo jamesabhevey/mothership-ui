@@ -93,7 +93,7 @@ const preview: Preview = {
           'Catalog',
           'Changelog',
           'Foundations',
-          ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation'],
+          ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation', 'Motion'],
           'Assets',
           // Inside the Iconography folder: the component's API, then the set
           // of glyphs itself. Named apart so neither is just "Iconography".

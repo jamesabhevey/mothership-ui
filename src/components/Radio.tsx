@@ -49,7 +49,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
       >
         <span
           className={cn(
-            'size-2 rounded-full opacity-0 transition-opacity',
+            'size-2 rounded-full opacity-0 transition-opacity duration-[var(--duration-base)]',
             disabled ? 'bg-text-muted' : 'bg-action-primary-default group-hover:bg-action-primary-hover',
           )}
         />

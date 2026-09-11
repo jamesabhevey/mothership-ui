@@ -359,7 +359,11 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
             size={size === 'lg' ? 24 : 16}
             strokeWidth={2}
             aria-hidden
-            className={cn('shrink-0 transition-transform', disabled ? 'text-icon-muted' : 'text-icon-default', open && 'rotate-180')}
+            className={cn(
+              'shrink-0 transition-transform duration-[var(--duration-base)]',
+              disabled ? 'text-icon-muted' : 'text-icon-default',
+              open && 'rotate-180',
+            )}
           />
         </button>
 
@@ -370,7 +374,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
             id={listId}
             aria-labelledby={label ? selectId : undefined}
             onKeyDown={onListKeyDown}
-            className="absolute left-0 right-0 top-full z-10 mt-1 max-h-60 overflow-y-auto"
+            className="absolute left-0 right-0 top-full z-10 mt-1 max-h-60 origin-top overflow-y-auto motion-safe:animate-[select-open_var(--duration-slow)_var(--ease-enter)]"
           >
             {options.map((option, index) => (
               <MenuItem

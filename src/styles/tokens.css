@@ -78,6 +78,28 @@
   --shadow-elevation-md: 0 4px 8px -1px var(--color-shadow-default);
   --shadow-elevation-lg: 0 12px 24px -4px var(--color-shadow-default);
 
+  /* Motion */
+  --duration-fast: 100ms;
+  --duration-base: 150ms;
+  --duration-slow: 250ms;
+  --duration-loop: 1000ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+
+  /*
+   * Tailwind's own defaults, pointed at the scale above.
+   *
+   * Every `transition-*` utility in the library reads these, so setting them
+   * here is what makes the components tokenised rather than each one having
+   * to name a duration. A component only says a duration when it wants
+   * something other than the default.
+   *
+   * The spin keyframes are Tailwind's; only its timing comes from us.
+   */
+  --default-transition-duration: var(--duration-fast);
+  --default-transition-timing-function: var(--ease-standard);
+  --animate-spin: spin var(--duration-loop) linear infinite;
+
   /* Type family */
   --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 

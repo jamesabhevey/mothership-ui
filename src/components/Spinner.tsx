@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '../lib/cn'
 
-const spinner = cva('shrink-0 animate-spin motion-reduce:animate-none', {
+const spinner = cva('shrink-0 animate-spin', {
   variants: {
     // size/icon/16 | 24 | 32 — the spinner matches the icon scale exactly.
     size: { sm: 'size-4', md: 'size-6', lg: 'size-8' },
@@ -34,6 +34,13 @@ export function Spinner({ className, size, label = 'Loading', ...props }: Spinne
         viewBox="0 0 24 24"
         fill="none"
         aria-hidden
+        /*
+          Marks this as a loop for the reduced-motion rule in index.css, which
+          halves its speed rather than stopping it. It used to stop, and a
+          frozen spinner is the one thing a loading indicator must not look
+          like.
+        */
+        data-motion="loop"
         className={cn(spinner({ size }), 'text-action-primary-default', className)}
         {...props}
       >

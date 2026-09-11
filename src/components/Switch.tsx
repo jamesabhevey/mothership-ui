@@ -36,8 +36,10 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
         className={cn(
           'flex h-6 w-10 shrink-0 items-center rounded-full px-1 transition-colors',
           'bg-bg-subtle border border-solid border-border-default',
-          'peer-checked:bg-action-primary-default peer-checked:border-transparent peer-checked:justify-end',
-          'peer-checked:[&>span]:border-transparent',
+          'peer-checked:bg-action-primary-default peer-checked:border-transparent',
+          // The thumb is a grandchild of the input, and peer- variants only
+          // reach siblings, so the checked state has to move it from here.
+          'peer-checked:[&>span]:border-transparent peer-checked:[&>span]:translate-x-4',
           'peer-disabled:border-border-subtle',
           'peer-disabled:peer-checked:bg-action-primary-disabled',
           'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-focus-ring',
@@ -45,7 +47,19 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
       >
         <span
           className={cn(
-            'size-4 rounded-full border border-solid transition-colors',
+            // The thumb travels rather than jumping. It used to move by
+            // switching the track to justify-end, which is an alignment change
+            // and cannot be transitioned — so the one control whose movement is
+            // the feedback was the one control that did not move. 16px is the
+            // track's 40 less its 4px padding either side and the 16px thumb.
+            //
+            // The transitioned property is `translate`, not `transform`:
+            // Tailwind v4's translate-* utilities set the standalone `translate`
+            // property, and a transition list naming `transform` moves the thumb
+            // without animating it — which looks exactly like the jump this was
+            // meant to fix.
+            'size-4 rounded-full border border-solid',
+            'transition-[background-color,border-color,translate] duration-[var(--duration-base)]',
             'bg-surface-default border-border-strong',
             disabled && 'bg-border-subtle border-border-subtle',
           )}
