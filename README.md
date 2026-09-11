@@ -305,11 +305,21 @@ names a duration only when it wants something other than the default, through
 `components use motion tokens, not literals` contract check fails the build on a
 `duration-200` or a written-out curve.
 
-Motion is the one foundation **not** read out of Figma. The library's variable
-collections cover colour, dimension and type; there is no motion collection, so
-this scale was defined in code. If it is added to Figma later, these are the
-values to add, and the drift check would need extending to cover them — it reads
-colour only today.
+These exist in Figma as well, in a **Motion** collection alongside Semantic,
+Dimension and Typography, created through the Plugin API. They use Figma's own
+`TIMING` and `EASING` variable types rather than being faked as numbers and
+strings, so a prototype transition can use the same values a component does.
+Each carries the same description as the code and a `WEB` code syntax pointing
+at its CSS variable, matching how every other variable in that file is set up.
+
+Two differences to know about. Figma states durations in **seconds** where the
+code states them in milliseconds — `duration/fast` is `0.1` there and `100ms`
+here. And `TIMING`/`EASING` variables reject `scopes` entirely; Figma constrains
+them by type, so unlike colour and dimension variables there is nothing to set.
+
+This scale was defined in code first and added to Figma afterwards, which is the
+reverse of every other foundation here. The weekly drift check does not cover
+motion yet — it reads colour only.
 
 Reduced motion is enforced once, in `src/styles/index.css`, rather than
 component by component. Transitions and animations collapse to nothing, so

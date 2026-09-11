@@ -77,9 +77,16 @@ export const Motion: Story = {
             the library resolves to one of them.
             <br />
             <br />
-            Motion is the one foundation not read out of Figma. The library's variable collections
-            cover colour, dimension and type; there is no motion collection to read, so this scale
-            was defined here. If it is added to Figma later, these are the values to add.
+            These live in Figma too, in a <strong>Motion</strong> collection alongside Semantic,
+            Dimension and Typography — as Figma's own <code>TIMING</code> and <code>EASING</code>{' '}
+            variable types, so a prototype transition can use the same values a component does.
+            Figma states durations in seconds where the code states them in milliseconds;{' '}
+            <code>duration/fast</code> is 0.1 there and 100ms here.
+            <br />
+            <br />
+            This scale was defined in code first and added to Figma afterwards, which is the reverse
+            of every other foundation here. The weekly drift check does not cover it yet — that
+            reads colour only.
             <br />
             <br />
             Motion here is feedback, not decoration. It exists to say <em>that</em> responded,{' '}
