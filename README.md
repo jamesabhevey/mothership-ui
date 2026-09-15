@@ -368,8 +368,16 @@ by one component do not need a token layer, and a union that only accepts those
 four is stronger than a token anyone could sidestep — the Figma variant property
 and the TypeScript union then say exactly the same thing.
 
-`public/illustration-sample.svg` is a stand-in for the stories only. The real
-artwork lives in Figma; this component ships none.
+`public/illustration-placeholder.jpg` is the library's own illustration,
+exported from the Figma component rather than redrawn, so the two cannot
+disagree. 1024px wide at 140KB — it renders around 320px, so that leaves
+headroom for a 2x display without shipping the 3.4MB original. In Figma it is
+what a fresh instance shows until a designer swaps it.
+
+The component does not default to it. With no `src` the box stays
+`surface/media`, because that state is an image still loading or one that
+failed, and filling it with the library's illustration would look like content
+somebody chose.
 
 ## Colour modes
 

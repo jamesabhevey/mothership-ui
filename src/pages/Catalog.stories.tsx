@@ -191,8 +191,8 @@ const entries: Entry[] = [
     description: 'A picture in a box of a fixed shape, holding its space before the image loads.',
     preview: (
       <div className="flex w-full items-start gap-2">
-        <Illustration ratio="16:9" src="./illustration-sample.svg" alt="" className="flex-1" />
-        <Illustration ratio="1:1" src="./illustration-sample.svg" alt="" className="w-16 shrink-0" />
+        <Illustration ratio="16:9" src="./illustration-placeholder.jpg" alt="" className="flex-1" />
+        <Illustration ratio="1:1" src="./illustration-placeholder.jpg" alt="" className="w-16 shrink-0" />
       </div>
     ),
   },
