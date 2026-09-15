@@ -97,7 +97,7 @@ const preview: Preview = {
           'Assets',
           // Inside the Iconography folder: the component's API, then the set
           // of glyphs itself. Named apart so neither is just "Iconography".
-          ['Iconography', ['Icon', 'Glyphs']],
+          ['Iconography', ['Icon', 'Glyphs'], 'Illustration'],
           'Components',
           [
             'Form Elements',

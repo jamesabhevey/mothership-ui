@@ -40,7 +40,8 @@ The three sections:
 - **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
   Elevation. Reference pages for the token layer.
 - **Assets** — Iconography, holding `Icon` (the component and its controls) and
-  Glyphs (the full set). Named apart so neither page is just "Iconography".
+  Glyphs (the full set), named apart so neither page is just "Iconography"; and
+  `Illustration`, a picture in a box of a fixed shape.
 - **Components** — Form Elements, Content Presentation, Navigation and Blocks,
   one page per component with a story per variant. Order within each group is
   set explicitly in `preview.ts`, matching the Figma library rather than falling
@@ -339,6 +340,36 @@ looked finished:
   moves the thumb without animating it, which looks exactly like the jump it was
   meant to fix.
 - **The Spinner stopped dead under reduced motion.** It now slows instead.
+
+## Illustration and aspect ratio
+
+`Illustration` holds a picture in a box of a fixed shape: `16:9`, `3:2`, `4:3` or
+`1:1`, matching the `ratio` variant on the Figma Illustration component set.
+
+The ratio is the point. The box is reserved at full height before the image
+loads, so the page does not jump when it arrives — which is what an aspect ratio
+is for, and why this is a component rather than a line in the documentation
+saying to use 16:9. The image covers and crops from the centre, matching the
+Fill scale mode the Figma component uses, so a wide image in a square box loses
+its sides rather than squashing. With no `src` the box is left as
+`surface/media`, which makes the loading and empty states the same deliberate
+thing.
+
+`alt` is required rather than optional, so the decision gets made instead of
+skipped. Most illustrations are decorative and sit beside text that already
+carries the meaning — pass `alt=""` for those.
+
+It composes rather than competing with Card: Card owns the slot and rounds it,
+`Illustration` owns the shape, and neither needs to know about the other. That
+is why its own corners are square.
+
+The four ratios are a typed prop rather than tokens. Three or four values used
+by one component do not need a token layer, and a union that only accepts those
+four is stronger than a token anyone could sidestep — the Figma variant property
+and the TypeScript union then say exactly the same thing.
+
+`public/illustration-sample.svg` is a stand-in for the stories only. The real
+artwork lives in Figma; this component ships none.
 
 ## Colour modes
 

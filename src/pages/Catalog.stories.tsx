@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Illustration } from '../components/Illustration'
 import {
   AppBar,
   Avatar,
@@ -182,6 +183,17 @@ const entries: Entry[] = [
       <FormSection title="Contact details">
         <TextField label="Email address" placeholder="you@example.com" />
       </FormSection>
+    ),
+  },
+  {
+    name: 'Illustration',
+    title: 'Assets/Illustration',
+    description: 'A picture in a box of a fixed shape, holding its space before the image loads.',
+    preview: (
+      <div className="flex w-full items-start gap-2">
+        <Illustration ratio="16:9" src="./illustration-sample.svg" alt="" className="flex-1" />
+        <Illustration ratio="1:1" src="./illustration-sample.svg" alt="" className="w-16 shrink-0" />
+      </div>
     ),
   },
   {
