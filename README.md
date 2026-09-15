@@ -276,8 +276,9 @@ so it stays a human decision.
 
 ### Code Connect
 
-All 29 components and all 26 icons are mapped, so inspecting a component in
-Figma's Dev Mode shows the real code component and links to its source.
+All 29 components, `Illustration`, and all 26 icons are mapped, so inspecting a
+component in Figma's Dev Mode shows the real code component and links to its
+source.
 [code-connect/mappings.json](code-connect/mappings.json) records what is mapped
 to what; the live mapping lives in Figma. Mapping a component set propagates to
 every variant underneath it automatically.
@@ -378,6 +379,10 @@ The component does not default to it. With no `src` the box stays
 `surface/media`, because that state is an image still loading or one that
 failed, and filling it with the library's illustration would look like content
 somebody chose.
+
+Code Connect needs a component set to be published before it will map it, so
+this one was recorded in `mappings.json` first and applied once the library went
+out. Mapping the set propagated to all four variants.
 
 ## Colour modes
 
