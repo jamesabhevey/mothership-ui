@@ -112,6 +112,36 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 }
 
 // ---------------------------------------------------------------------------
+// 2a. The public entry point lists every component.
+//
+// src/index.ts is what the package exports. A component added without being
+// re-exported is missing from the package with nothing to show for it: the
+// build passes, the types pass, and it simply is not there for anyone who
+// installs it. Generated, so this only has to check it is current.
+// ---------------------------------------------------------------------------
+{
+  const path = 'src/index.ts'
+  const before = readFileSync(path, 'utf8')
+  execFileSync('node', ['scripts/build-barrel.mjs'], { stdio: 'pipe' })
+  const after = readFileSync(path, 'utf8')
+  if (before !== after) {
+    writeFileSync(path, before)
+    const missing = after
+      .split('\n')
+      .filter((line) => line.startsWith('export') && !before.includes(line))
+      .map((line) => line.replace(/^export (type )?\{ /, '').replace(/ \}.*$/, ''))
+    fail(
+      'barrel is current',
+      `${path} is not what src/components generates. Run \`npm run barrel\` and commit the result` +
+        (missing.length ? `. Missing: ${missing.join(', ')}` : '') +
+        ' (this check restored your copy rather than leaving the tree dirty).',
+    )
+  } else {
+    pass('barrel is current', `${before.split('\n').filter((l) => l.startsWith('export')).length} exports`)
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 2b. No component names a duration or a curve in numbers.
 //
 // Motion is tokenised through Tailwind's transition defaults, so a component

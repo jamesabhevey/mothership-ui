@@ -18,3 +18,6 @@ storybook-static
 # Generated from the git history at build time by scripts/build-changelog.mjs.
 # Not committed: it would be one commit out of date the moment it was.
 src/changelog.json
+
+# The built package. Produced by `npm run build`, published from CI.
+dist/

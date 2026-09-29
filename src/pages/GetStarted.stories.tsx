@@ -67,6 +67,27 @@ export default defineConfig({
 })`}</Code>
       </Group>
 
+      <Group name="Install">
+        <P>
+          The library is published to npm. Two lines and you are running — no Tailwind, no build
+          configuration, nothing to copy.
+        </P>
+        <Code>{`npm install @yld/mothership-ui`}</Code>
+        <Code>{`import { Button, Card } from '@yld/mothership-ui'
+import '@yld/mothership-ui/styles.css'`}</Code>
+        <P>
+          The stylesheet is compiled and ships with the package — around 6KB over the wire for
+          every component. React 18 or 19 is a peer dependency, so your app keeps its own copy
+          rather than ending up with two, which is the thing that quietly breaks hooks.
+        </P>
+        <P>
+          Already on Tailwind v4 and want these tokens in your own markup? Import{' '}
+          <code>@yld/mothership-ui/tokens.css</code> as well, and{' '}
+          <code>bg-surface-default</code> and the rest work in your code the same way they do in
+          the components.
+        </P>
+      </Group>
+
       <Group name="The font">
         <P>
           The type scale is Inter in four weights, one per role: Regular 400 for body, Medium 500

@@ -1,0 +1,18 @@
+/*
+ * The stylesheet the published package ships.
+ *
+ * Automatic source detection is off, and only the components are scanned. That
+ * is the whole difference from index.css: a consumer installing this package
+ * should not be paying for the utilities the Catalog page or the Foundations
+ * pages happen to use, and those pages are not part of the library.
+ *
+ * Built by `npm run build:css` into dist/styles.css. A consuming app imports it
+ * once and needs no Tailwind of its own:
+ *
+ *   import '@yld/mothership-ui/styles.css'
+ */
+@import 'tailwindcss' source(none);
+@source '../components';
+
+@import './tokens.css';
+@import './base.css';

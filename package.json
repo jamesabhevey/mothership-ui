@@ -1,12 +1,12 @@
 {
-  "name": "mothership-ui",
-  "private": true,
+  "name": "@yld/mothership-ui",
+  "private": false,
   "version": "0.1.0",
   "type": "module",
   "description": "React implementation of the Mothership UI design system",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run barrel && npm run build:js && npm run build:types && npm run build:css",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "changelog": "node scripts/build-changelog.mjs",
@@ -19,24 +19,31 @@
     "tokens:sync": "node scripts/sync-figma-tokens.mjs",
     "tokens:drift": "node scripts/check-figma-drift.mjs",
     "tokens:modes": "node scripts/sync-figma-modes.mjs",
-    "check": "node scripts/check-contracts.mjs"
+    "check": "node scripts/check-contracts.mjs",
+    "barrel": "node scripts/build-barrel.mjs",
+    "build:js": "vite build --config vite.lib.config.ts",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:css": "tailwindcss -i src/styles/library.css -o dist/styles.css --minify && cp src/styles/tokens.css dist/tokens.css",
+    "build:app": "vite build",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.469.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
+    "@fontsource/inter": "^5.1.0",
     "@storybook/addon-docs": "^10.5.8",
     "@storybook/react-vite": "^10.5.8",
+    "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "storybook": "^10.5.8",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2",
@@ -44,5 +51,42 @@
   },
   "allowScripts": {
     "esbuild@0.25.12": true
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesabhevey/mothership-ui.git"
+  },
+  "homepage": "https://jamesabhevey.github.io/mothership-ui/",
+  "bugs": {
+    "url": "https://github.com/jamesabhevey/mothership-ui/issues"
+  },
+  "keywords": [
+    "design-system",
+    "react",
+    "components",
+    "ui",
+    "tailwind"
+  ],
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   }
 }
