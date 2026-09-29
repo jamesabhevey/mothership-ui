@@ -62,7 +62,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Action — primary',
+    'Action: primary',
     [
       ['color/action/primary/default', '--color-action-primary-default'],
       ['color/action/primary/hover', '--color-action-primary-hover'],
@@ -71,7 +71,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Action — secondary',
+    'Action: secondary',
     [
       ['color/action/secondary/default', '--color-action-secondary-default'],
       ['color/action/secondary/hover', '--color-action-secondary-hover'],
@@ -80,7 +80,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Action — tertiary',
+    'Action: tertiary',
     [
       ['color/action/tertiary/default', '--color-action-tertiary-default'],
       ['color/action/tertiary/hover', '--color-action-tertiary-hover'],
@@ -89,7 +89,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Action — destructive',
+    'Action: destructive',
     [
       ['color/action/destructive/default', '--color-action-destructive-default'],
       ['color/action/destructive/hover', '--color-action-destructive-hover'],
@@ -98,7 +98,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Feedback — info',
+    'Feedback: info',
     [
       ['color/feedback/info/surface', '--color-feedback-info-surface'],
       ['color/feedback/info/border', '--color-feedback-info-border'],
@@ -106,7 +106,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Feedback — success',
+    'Feedback: success',
     [
       ['color/feedback/success/surface', '--color-feedback-success-surface'],
       ['color/feedback/success/border', '--color-feedback-success-border'],
@@ -114,7 +114,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Feedback — warning',
+    'Feedback: warning',
     [
       ['color/feedback/warning/surface', '--color-feedback-warning-surface'],
       ['color/feedback/warning/border', '--color-feedback-warning-border'],
@@ -122,7 +122,7 @@ const groups: Array<[string, Array<[string, string]>]> = [
     ],
   ],
   [
-    'Feedback — danger',
+    'Feedback: danger',
     [
       ['color/feedback/danger/surface', '--color-feedback-danger-surface'],
       ['color/feedback/danger/border', '--color-feedback-danger-border'],
@@ -152,7 +152,7 @@ export const Colour: Story = {
           <br />
           Colour is the one collection with modes, so each token carries a light and a dark value,
           both listed below. The chip shows whichever mode the Theme control in the toolbar is set
-          to. Nothing else changes between modes — the type scale, spacing, radii and border widths
+          to. Nothing else changes between modes. The type scale, spacing, radii and border widths
           are shared.
           <br />
           <br />

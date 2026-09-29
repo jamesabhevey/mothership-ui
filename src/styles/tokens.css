@@ -1,5 +1,5 @@
 /*
- * Mothership UI design tokens — GENERATED FILE, DO NOT EDIT.
+ * Mothership UI design tokens, GENERATED FILE, DO NOT EDIT.
  *
  * Source: tokens/tokens.json, which mirrors the Figma variable collections
  * (Semantic / Dimension / Typography). Regenerate with `npm run tokens`.
@@ -9,7 +9,7 @@
  */
 
 @theme {
-  /* Colour — light mode. Dark follows the @theme block. */
+  /* Colour, light mode. Dark follows the @theme block. */
   --color-bg-default: #ffffff;
   --color-bg-subtle: #f5f6f7;
   --color-bg-brand: #8429cc;
@@ -210,7 +210,7 @@
 /*
  * Light, restated.
  *
- * The @theme block above already carries these, so this looks redundant —
+ * The @theme block above already carries these, so this looks redundant ,
  * but custom properties inherit, which means a subtree inside a dark page
  * has no way back to light without them. With this block, data-theme works
  * in both directions and can be nested: a light island inside a dark page,
@@ -281,7 +281,7 @@
  * Dark mode.
  *
  * Set data-theme="dark" on <html> and every colour token switches. Only
- * colour has modes in Figma, so only colour is redeclared here — the type
+ * colour has modes in Figma, so only colour is redeclared here, the type
  * scale, spacing, radii and border widths are shared by both.
  *
  * color-scheme tells the browser to render its own furniture dark too:

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Does the code still hold the colours Figma holds — in both modes?
+ * Does the code still hold the colours Figma holds, in both modes?
  *
  *   node scripts/check-figma-drift.mjs           report
  *   node scripts/check-figma-drift.mjs --write   report and bring the code into line
@@ -14,7 +14,7 @@
  * variable names at all: it recorded the colours components were painted and
  * watched for those to change. That worked, but it could only ever check the
  * mode the artwork happened to be in, and it could not attribute a change when
- * several tokens shared a value — seven tokens are #ffffff, so a change there
+ * several tokens shared a value, seven tokens are #ffffff, so a change there
  * came out as "one of these seven" and needed a person. Reading by name has
  * neither problem, so both modes are covered and every difference names its
  * token.
@@ -23,15 +23,15 @@
  * from that palette. Any solid fill or stroke in a mapped component whose value
  * is not a token in either mode was typed in by hand, and is reported with the
  * layers painting it. That question is asked by value rather than by name, so
- * it does not care which token a colour belongs to — only whether it is in the
+ * it does not care which token a colour belongs to, only whether it is in the
  * system at all. Which is why it has none of the ambiguity that sank the old
  * approach: it never has to decide which of seven #ffffff tokens a colour is.
  *
  * It then reads the type scale and the dimension scale, from the Foundations
  * Typography and Dimension frames. Numbers were left out of the old check for
- * a good reason — small integers recur everywhere in a Figma file, so matching
+ * a good reason, small integers recur everywhere in a Figma file, so matching
  * 4px to a radius rather than to an unrelated gap was guesswork that produced
- * false alarms — but that reason does not apply here. Each token has its own
+ * false alarms, but that reason does not apply here. Each token has its own
  * named frame stating its own value, so nothing is inferred from the artwork.
  *
  * Only colour is compared in both modes, because colour is the only collection
@@ -105,16 +105,16 @@ if (incomplete.length) {
 // a name, a place on the Colour page and usually a decision about what it is
 // for; none of that belongs to a job running on a schedule.
 if (onlyInFigma.length) {
-  console.log(`${onlyInFigma.length} token(s) in Figma that the code does not have — add by hand:`)
+  console.log(`${onlyInFigma.length} token(s) in Figma that the code does not have, add by hand:`)
   for (const name of onlyInFigma) {
     const v = figma.modes[name]
-    console.log(`  color/${name}   light ${v.light ?? '—'}   dark ${v.dark ?? '—'}`)
+    console.log(`  color/${name}   light ${v.light ?? ','}   dark ${v.dark ?? ','}`)
   }
   console.log()
 }
 
 if (onlyInCode.length) {
-  console.log(`${onlyInCode.length} token(s) in the code that Figma no longer has — remove by hand:`)
+  console.log(`${onlyInCode.length} token(s) in the code that Figma no longer has, remove by hand:`)
   for (const name of onlyInCode) console.log(`  color/${name}`)
   console.log()
 }
@@ -138,7 +138,7 @@ try {
 
 if (hardCoded.length) {
   console.log(
-    `NEEDS A PERSON — ${hardCoded.length} colour(s) painted in the components are not in the ` +
+    `NEEDS A PERSON, ${hardCoded.length} colour(s) painted in the components are not in the ` +
       'palette, in either mode. Either the layer needs binding to a variable, or the colour needs ' +
       'to become one:\n',
   )
@@ -167,8 +167,8 @@ let scaleError = null
  *
  * `fields` is explicit rather than taken from whatever keys the Figma side
  * happens to carry. The dimension reader also returns the section a token was
- * listed under, which is useful in a report and meaningless as a comparison —
- * left implicit, it reported every dimension token as drifted because the code
+ * listed under, which is useful in a report and meaningless as a comparison,
+ * left implicit, it reported every dimension token as drifted, because the code
  * has no section at all.
  */
 const compareScale = (kind, fields, fromFigma, fromCode) => {
@@ -225,13 +225,13 @@ if (scaleError) {
   if (scaleDiffs.length) {
     console.log(`${scaleDiffs.length} value(s) have drifted on the type and dimension scales:\n`)
     for (const d of scaleDiffs) {
-      console.log(`  ${d.kind.padEnd(9)} ${d.name.padEnd(28)} ${d.field.padEnd(13)} ${d.from ?? '—'} -> ${d.to}`)
+      console.log(`  ${d.kind.padEnd(9)} ${d.name.padEnd(28)} ${d.field.padEnd(13)} ${d.from ?? ','} -> ${d.to}`)
     }
     console.log()
   }
   if (scaleMissing.length) {
     console.log(
-      `NEEDS A PERSON — ${scaleMissing.length} token(s) exist on one side only. Adding or ` +
+      `NEEDS A PERSON, ${scaleMissing.length} token(s) exist on one side only. Adding or ` +
         'removing a step changes the scale, so neither is applied automatically:\n',
     )
     for (const m of scaleMissing) {
@@ -256,11 +256,11 @@ if (!drift.length) {
 const byMode = (mode) => drift.filter((d) => d.mode === mode)
 console.log(
   `${drift.length} value(s) have drifted across ${new Set(drift.map((d) => d.name)).size} token(s) ` +
-    `— ${byMode('light').length} in light, ${byMode('dark').length} in dark:\n`,
+    `, ${byMode('light').length} in light, ${byMode('dark').length} in dark:\n`,
 )
 for (const mode of MODES) {
   for (const d of byMode(mode)) {
-    console.log(`  ${mode.padEnd(5)} color/${d.name.padEnd(26)} ${d.from ?? '—'} -> ${d.to}`)
+    console.log(`  ${mode.padEnd(5)} color/${d.name.padEnd(26)} ${d.from ?? ','} -> ${d.to}`)
   }
 }
 

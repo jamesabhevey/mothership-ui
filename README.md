@@ -1,4 +1,4 @@
-# Mothership UI — React
+# Mothership UI for React
 
 React implementation of the Mothership UI Figma library.
 
@@ -11,7 +11,7 @@ and the component APIs follow the property names on the Figma component sets.
 YLD owns Mothership UI. James Hevey maintains it, on his own.
 
 Requests and bugs go through GitHub issues. There is no promised turnaround and
-no team behind it — that is the honest position rather than a disclaimer, so
+no team behind it. That is the honest position rather than a disclaimer, so
 nobody adopts it expecting support that does not exist. If it becomes something
 several teams depend on, it needs resourcing properly, and that is a
 conversation rather than an assumption.
@@ -46,7 +46,7 @@ import { Button, Card } from '@yldio/mothership-ui'
 import '@yldio/mothership-ui/styles.css'
 ```
 
-That is the whole setup. **No Tailwind required** — the package ships its own
+That is the whole setup. **No Tailwind required**: the package ships its own
 compiled stylesheet, 35KB, 6KB over the wire, covering every component. React 18
 or 19 is a peer dependency, so you keep your own copy.
 
@@ -67,7 +67,7 @@ Everything is documented, with live examples, at
 
 ```bash
 npm install
-npm run storybook     # the component explorer — the main way to work
+npm run storybook     # the component explorer, the main way to work
 npm run build         # build the publishable package into dist/
 npm run check         # the contract checks, after a build-storybook
 npm test              # axe over every story, in light and dark
@@ -101,11 +101,11 @@ to `main`: <https://jamesabhevey.github.io/mothership-ui/>
 
 The sidebar opens with three flat pages, then three sections.
 
-- **Welcome** — what the system is, where to go next, and what it is opinionated
+- **Welcome**: what the system is, where to go next, and what it is opinionated
   about.
-- **Get started** — how to install it, the font setup, and the conventions that
+- **Get started**: how to install it, the font setup, and the conventions that
   catch people out.
-- **Catalog** — every component with a live preview, searchable, each linking to
+- **Catalog**: every component with a live preview, searchable, each linking to
   its page.
 
 All three are single-story files with autodocs off, which is what makes them
@@ -118,12 +118,12 @@ from a subdirectory.
 
 The three sections:
 
-- **Foundations** — Colour, Typography, Spacing & Sizing, and Radius, Border &
+- **Foundations**: Colour, Typography, Spacing & Sizing, and Radius, Border &
   Elevation. Reference pages for the token layer.
-- **Assets** — Iconography, holding `Icon` (the component and its controls) and
+- **Assets**: Iconography, holding `Icon` (the component and its controls) and
   Glyphs (the full set), named apart so neither page is just "Iconography"; and
   `Illustration`, a picture in a box of a fixed shape.
-- **Components** — Form Elements, Content Presentation, Navigation and Blocks,
+- **Components**: Form Elements, Content Presentation, Navigation and Blocks,
   one page per component with a story per variant. Order within each group is
   set explicitly in `preview.ts`, matching the Figma library rather than falling
   back to alphabetical.
@@ -131,8 +131,8 @@ The three sections:
 The sidebar brand is the logo mark plus the title at 18px, 12px apart, styled in
 [.storybook/manager-head.html](.storybook/manager-head.html). The mark is a
 `background-image` rather than an `<img>`, so a missing file leaves the title
-readable instead of showing a broken-image icon. It declares two layers —
-`mothership-logo.svg` then `mothership-logo.png` — so whichever of the two sits
+readable instead of showing a broken-image icon. It declares two layers
+(`mothership-logo.svg` then `mothership-logo.png`) so whichever of the two sits
 in `public/` is the one that paints. The same file is the browser tab icon.
 
 Storybook's own controls use neutral hover and pressed colours rather than its
@@ -148,8 +148,8 @@ components alone: on a Button docs page the rules match 29 chrome controls and
 none of the 13 Buttons.
 
 Foundations and Assets pages use the same layout and type as the generated
-Component docs pages — 64px vertical and 40px horizontal padding, content capped
-at 960px and centred, `h1` at 32/36/700 — measured off a docs page rather than
+Component docs pages use 64px vertical and 40px horizontal padding, content
+capped at 960px and centred, and `h1` at 32/36/700, measured off a docs page rather than
 guessed, so every section reads as one document. Those are Storybook's docs
 typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
 (28/36) and `type/body/sm` (14/20). The content width departs from Storybook's
@@ -158,14 +158,14 @@ typography, not Mothership type tokens; the nearest tokens are `type/heading/lg`
 
 These pages **resolve their values live** from the CSS custom properties
 via `getComputedStyle` rather than restating them ([src/docs/parts.tsx](src/docs/parts.tsx)).
-Change a token and those pages follow — they document
+Change a token and those pages follow. They document
 what the tokens are right now and cannot drift out of date.
 
 Stories live beside the component they document (`Button.tsx` /
 `Button.stories.tsx`) in CSF3 format. Autodocs is enabled globally by
 `tags: ['autodocs']` in [.storybook/preview.ts](.storybook/preview.ts) rather
 than per file, so every component gets a docs page without repeating the tag.
-Those pages are generated from the component's own doc comment and prop types —
+Those pages are generated from the component's own doc comment and prop types,
 the guidance carried over from the Figma descriptions is the documentation.
 Foundations pages opt out with `tags: ['!autodocs']`, since the page is the doc.
 
@@ -175,13 +175,13 @@ Storybook's own chrome uses the library's tokens: brand purple for selection
 and controls, the grey ramp for surfaces and text, Inter throughout.
 
 The manager is a separate React app from the preview iframe, so it cannot read
-the `@theme` block — [.storybook/theme.ts](.storybook/theme.ts) hands the same
+the `@theme` block. [.storybook/theme.ts](.storybook/theme.ts) hands the same
 values over as literals, annotated with the token each one comes from. That
 theme is applied in two places: `manager.ts` for the chrome, and
 `parameters.docs.theme` in `preview.ts` for the autodocs pages, which render
 inside the preview iframe.
 
-Inter is loaded twice for the same reason — through `@fontsource` imports in
+Inter is loaded twice for the same reason, through `@fontsource` imports in
 `preview.ts` for stories, and via `@font-face` in
 [.storybook/manager-head.html](.storybook/manager-head.html) for the chrome.
 The four weights live in `public/fonts` (96KB) rather than mapping the whole
@@ -192,7 +192,7 @@ so the built site works under the `/mothership-ui/` path Pages serves it from.
 `src/styles/index.css`, which pulls in the generated token layer. Without that
 import components render unstyled. Storybook reuses the project's
 `vite.config.ts`, so the Tailwind v4 plugin that compiles the `@theme` block
-runs in the Storybook pipeline too — there is no second Tailwind config to keep
+runs in the Storybook pipeline too. There is no second Tailwind config to keep
 in sync.
 
 Story coverage mirrors the showcase page: one story per variant shown there.
@@ -217,7 +217,7 @@ Components.
 
 `FieldLabel` and `FieldHelperText` sit under a **Field Text** folder, and `Tab`
 and `MenuItem` under their parent, mirroring the Figma pages that hold them.
-**Blocks** covers the composed components — the ones built out of the others —
+**Blocks** covers the composed components, the ones built out of the others,
 and takes its name from the Figma page of the same name.
 
 Storybook renders all of them, which doubles as the visual reference.
@@ -238,7 +238,7 @@ maps straight onto the CSS custom property:
 
 Spacing is the one deliberate exception. Figma's `space/N` tokens are
 pixel-named and every step already lands on Tailwind's 4px grid, so components
-use stock utilities — `p-4` *is* `space/16` — and the raw `--space-*` variables
+use stock utilities (`p-4` *is* `space/16`) and the raw `--space-*` variables
 are published in `:root` for anyone cross-checking against the file or
 consuming the tokens outside Tailwind.
 
@@ -260,13 +260,13 @@ npm run tokens:modes  # print every token's light and dark value from Figma
 ```
 
 `src/styles/tokens.css` and `public/manager-tokens.css` are generated. Never
-edit either by hand — change `tokens.json` and regenerate. When this was introduced the compiled CSS was
+edit either by hand: change `tokens.json` and regenerate. When this was introduced the compiled CSS was
 checked byte for byte against the previous hand-written stylesheet: identical,
 so the change carried no visual risk.
 
 There are two mechanisms, because Figma's plan tiers force the issue.
 
-### Drift check — active, runs weekly
+### Drift check: active, runs weekly
 
 [.github/workflows/token-drift.yml](.github/workflows/token-drift.yml) runs every
 Monday and on demand. It compares **every colour token in both modes** against
@@ -274,7 +274,7 @@ Figma. On a difference it updates the token, regenerates both stylesheets,
 type-checks, builds and opens a pull request. Nothing lands unreviewed.
 
 Values are read by name from the Foundations / Colour page, where each token has
-a Light and a Dark swatch pinned to its mode — the same reader
+a Light and a Dark swatch pinned to its mode, the same reader
 `npm run tokens:modes` uses, in
 [scripts/lib/figma-colour-modes.mjs](scripts/lib/figma-colour-modes.mjs), so the
 two can never disagree about how a value is read. The frame is located by name
@@ -283,12 +283,12 @@ which point it silently stops resolving.
 
 Coverage is all 55 colour tokens across both modes, with every difference named.
 It also reports tokens present in Figma but not the code, and the reverse. Those
-are never applied automatically — a new token needs a name, a place on the
+are never applied automatically. A new token needs a name, a place on the
 Colour page and a decision about what it is for, none of which belongs to a
 scheduled job.
 
-If the palette cannot be read at all — the page renamed, the swatch groups
-restructured — the check fails loudly and changes nothing. A palette that cannot
+If the palette cannot be read at all, the page renamed or the swatch groups
+restructured, the check fails loudly and changes nothing. A palette that cannot
 be read is not the same as a palette that agrees, and the difference matters
 when this runs unattended.
 
@@ -303,7 +303,7 @@ gap changed.
 from that palette. Any solid fill or stroke in a mapped component whose value is
 not a token in either mode was typed in by hand, and is reported with the layers
 painting it. That question is asked by value rather than by name, which is what
-keeps it unambiguous — it never has to work out which of seven `#ffffff` tokens
+keeps it unambiguous: it never has to work out which of seven `#ffffff` tokens
 a colour is, only whether the colour is in the system at all.
 
 Nothing can auto-fix a hard-coded colour: it needs a layer bound to a variable
@@ -311,16 +311,16 @@ in Figma, or a new token. No pull request would carry it, so a finding turns the
 Monday run red instead, with the value and the layers listed in the log and the
 artifact.
 
-Figma's own component-set boundary — the dashed `#9747ff` outline it draws
-around a set in the editor — is skipped. It is on the set node rather than on
+Figma's own component-set boundary, the dashed `#9747ff` outline it draws
+around a set in the editor, is skipped. It is on the set node rather than on
 any artwork, and it was the first thing this reported when it went live.
 
 <details>
 <summary>What this replaced, and why</summary>
 
 The first version of this check had to work without being able to read variable
-names at all, so it recorded the colours components were painted — via a
-generated probe table of `nodeId#property` entries — and watched for those to
+names at all, so it recorded the colours components were painted, via a
+generated probe table of `nodeId#property` entries, and watched for those to
 change. It worked, with two limits built in. It could only check the mode the
 artwork happened to be in, which meant light only. And it could not attribute a
 change when several tokens shared a value: seven tokens are `#ffffff`, so a
@@ -335,9 +335,9 @@ calibrate mode are gone.
 </details>
 
 The workflow also has a **diagnose** mode, which prints HTTP status codes and
-secret lengths — never values — for when credentials misbehave.
+secret lengths, never values, for when credentials misbehave.
 
-### Variables sync — dormant, needs Enterprise
+### Variables sync: dormant, needs Enterprise
 
 [.github/workflows/token-sync.yml](.github/workflows/token-sync.yml) reads the
 variables REST API, which returns the variable definitions rather than inferring
@@ -352,7 +352,7 @@ ever changes, and everything else is already in place.
 
 One caveat that applies to that path too: typography variables are reported
 rather than written, because Figma stores size, line height and tracking
-separately while the code pairs them into one step — not a one-to-one mapping,
+separately while the code pairs them into one step, not a one-to-one mapping,
 so it stays a human decision.
 
 ### Code Connect
@@ -366,7 +366,7 @@ every variant underneath it automatically.
 
 ## Motion
 
-Two small scales — how long something takes and how it accelerates — in
+Two small scales, how long something takes and how it accelerates, in
 `tokens/tokens.json` alongside the rest:
 
 | Token | Value | For |
@@ -381,7 +381,7 @@ Two small scales — how long something takes and how it accelerates — in
 **Components do not name a duration.** Tailwind v4's own
 `--default-transition-duration` and `--default-transition-timing-function` are
 set to `duration/fast` and `easing/standard`, so every `transition-*` in the
-library resolves to the scale without saying so — which is what made this a
+library resolves to the scale without saying so, which is what made this a
 change to one generated file rather than to sixteen components. A component
 names a duration only when it wants something other than the default, through
 `duration-[var(--duration-base)]`, and that reads as the exception it is. The
@@ -396,13 +396,13 @@ Each carries the same description as the code and a `WEB` code syntax pointing
 at its CSS variable, matching how every other variable in that file is set up.
 
 Two differences to know about. Figma states durations in **seconds** where the
-code states them in milliseconds — `duration/fast` is `0.1` there and `100ms`
+code states them in milliseconds, `duration/fast` is `0.1` there and `100ms`
 here. And `TIMING`/`EASING` variables reject `scopes` entirely; Figma constrains
 them by type, so unlike colour and dimension variables there is nothing to set.
 
 This scale was defined in code first and added to Figma afterwards, which is the
 reverse of every other foundation here. The weekly drift check does not cover
-motion yet — it reads colour only.
+motion yet, it reads colour only.
 
 Reduced motion is enforced once, in `src/styles/index.css`, rather than
 component by component. Transitions and animations collapse to nothing, so
@@ -414,7 +414,7 @@ Two things were fixed in the course of standardising this, both of which had
 looked finished:
 
 - **The Switch thumb did not move.** It changed sides by switching the track to
-  `justify-end`, an alignment change, which cannot be transitioned — so the one
+  `justify-end`, an alignment change, which cannot be transitioned, so the one
   control whose movement *is* the feedback was the one that jumped. It now
   translates 16px over `duration/base`. The transitioned property is `translate`
   rather than `transform`: Tailwind v4's `translate-*` utilities set the
@@ -429,7 +429,7 @@ looked finished:
 `1:1`, matching the `ratio` variant on the Figma Illustration component set.
 
 The ratio is the point. The box is reserved at full height before the image
-loads, so the page does not jump when it arrives — which is what an aspect ratio
+loads, so the page does not jump when it arrives, which is what an aspect ratio
 is for, and why this is a component rather than a line in the documentation
 saying to use 16:9. The image covers and crops from the centre, matching the
 Fill scale mode the Figma component uses, so a wide image in a square box loses
@@ -439,7 +439,7 @@ thing.
 
 `alt` is required rather than optional, so the decision gets made instead of
 skipped. Most illustrations are decorative and sit beside text that already
-carries the meaning — pass `alt=""` for those.
+carries the meaning, so pass `alt=""` for those.
 
 It composes rather than competing with Card: Card owns the slot and rounds it,
 `Illustration` owns the shape, and neither needs to know about the other. That
@@ -447,12 +447,12 @@ is why its own corners are square.
 
 The four ratios are a typed prop rather than tokens. Three or four values used
 by one component do not need a token layer, and a union that only accepts those
-four is stronger than a token anyone could sidestep — the Figma variant property
+four is stronger than a token anyone could sidestep. The Figma variant property
 and the TypeScript union then say exactly the same thing.
 
 `public/illustration-placeholder.jpg` is the library's own illustration,
 exported from the Figma component rather than redrawn, so the two cannot
-disagree. 1024px wide at 140KB — it renders around 320px, so that leaves
+disagree. It is 1024px wide at 140KB and renders around 320px, so that leaves
 headroom for a 2x display without shipping the 3.4MB original. In Figma it is
 what a fresh instance shows until a designer swaps it.
 
@@ -480,14 +480,14 @@ To use dark mode in an application, set the attribute on a root element:
 ```
 
 That is the whole mechanism. Tailwind v4 colour utilities compile to
-`var(--color-…)`, so redeclaring the variable under a selector is enough —
+`var(--color-…)`, so redeclaring the variable under a selector is enough:
 there is not one `dark:` variant anywhere in the components, and a component
 asking for `surface/default` gets whichever value the current mode defines.
 Because the attribute works in both directions, it also nests: a subtree marked
 `data-theme="light"` inside a dark page renders light.
 
 Nothing else switches. The type scale, spacing, radii and border widths are
-shared by both modes. Elevation looks like an exception and is not — the shadow
+shared by both modes. Elevation looks like an exception and is not: the shadow
 tokens are built on `var(--color-shadow-default)`, which is itself a colour
 token, so they deepen in dark on their own.
 
@@ -522,20 +522,20 @@ semver answers. Releases are cut by tag; see **Releasing** above.
 **The Storybook is every commit.** It redeploys on each push to `main`, so what
 is documented there is the tip of the branch rather than the last release. The
 Changelog page lists those commits under the day they landed, newest first,
-which is all the version a continuously deployed site needs — there is nothing
+which is all the version a continuously deployed site needs. There is nothing
 to count. Each entry carries the kind of change it was, read from the verb its
 description opens with; only unambiguous verbs are labelled, and everything
 else is Changed rather than guessed at.
 
-The generator still names each commit `29.09.2026.9` — the day plus which
-change of that day it was — and that name is in `src/changelog.json` if
+The generator still names each commit `29.09.2026.9`, the day plus which
+change of that day it was, and that name is in `src/changelog.json` if
 anything ever needs to refer to one. It is not shown on the page: under a date
 heading it was the same date twice.
 
 That split is the honest description of a library that is published on a tag but
-documented continuously. It replaced a simpler story — everything was
+documented continuously. It replaced a simpler story in which everything was
 calendar-versioned, because nothing was published and there was no install to
-pin — which stopped being true the moment this went to npm.
+pin, which stopped being true the moment this went to npm.
 
 The Changelog page in Storybook lists them, newest first, each linking to its
 commit. It is generated by [scripts/build-changelog.mjs](scripts/build-changelog.mjs)
@@ -558,14 +558,14 @@ happen without anyone noticing:
 | Internal links resolve | a link to a story whose title has been renamed, which renders as a blank page rather than an error |
 | Welcome page counts are current | the component, token and variant counts stated as fact on the Welcome page drifting as the library grows |
 | CSS overrides still target real Storybook markup | a Storybook upgrade renaming an internal that `manager-head.html` or `preview-head.html` hangs a rule off, so the rule silently stops applying |
-| Accessibility failures still fail the build | the a11y suite being downgraded to warnings, losing its stylesheet, or losing axe's hook — each of which leaves it reporting a clean run having checked nothing |
+| Accessibility failures still fail the build | the a11y suite being downgraded to warnings, losing its stylesheet, or losing axe's hook, each of which leaves it reporting a clean run having checked nothing |
 
 The last one is the important one. The sidebar and docs chrome are restyled by
 targeting Storybook's own markup, which is not a public API, and when one of
 those hooks disappears the styling simply reverts to Storybook's defaults with
 no error anywhere.
 
-What none of them cover is the *value* a rule resolves to — whether a hover is
+What none of them cover is the *value* a rule resolves to: whether a hover is
 our grey or Storybook's purple. The accessibility suite below now runs a real
 browser, so measuring computed styles is no longer out of reach; nothing reads
 them yet.
@@ -576,7 +576,7 @@ them yet.
 
 axe runs against every story, in a real Chromium, in both colour modes. There
 are no test files. Each component already has a story per variant and per
-state, so the stories are the corpus — write a component with stories and it is
+state, so the stories are the corpus. Write a component with stories and it is
 covered, with nothing to remember.
 
 Two runs rather than one because contrast is the failure this catches most
@@ -592,15 +592,15 @@ It found three real problems on its first honest run, all present in both
 modes: a `Switch` in the trailing slot of a `ListItem` had no accessible name
 at all, in four places; and the changelog's prose link was distinguished from
 the text around it by colour alone, at 1.34:1. The switch case is now a type
-error — `Switch` takes children, `aria-label` or `aria-labelledby`, and will
-not compile without one — which is where that particular mistake belongs, since
+error. `Switch` takes children, `aria-label` or `aria-labelledby`, and will
+not compile without one, which is where that particular mistake belongs, since
 it is invisible on screen and only a screen reader would ever have found it.
 
 Three things about the setup are load-bearing, and all three fail by passing:
 addon-a11y ships `test: 'todo'`, which turns violations into warnings; Vitest
 does not inherit the root Vite config, so without Tailwind every story renders
 unstyled and contrast has nothing to measure; and since Storybook 10.3 the
-Vitest addon stops wiring addon annotations — axe's `afterEach` among them — if
+Vitest addon stops wiring addon annotations, axe's `afterEach` among them, if
 it finds a setup file calling `setProjectAnnotations`, which is what older
 guides tell you to write. Contract check 10 asserts all three.
 
@@ -618,7 +618,7 @@ design system quietly stops being one.
 
 The skill is the standard, written down. The workflow is only the trigger.
 Claude checks the repository out, runs the same checks a reviewer would, and
-comments on the diff — read-only, with no permission to edit the branch.
+comments on the diff. It is read-only, with no permission to edit the branch.
 
 It is advisory on purpose. Its own workflow, not a required check, and a
 failure blocks nothing. A gate that fails differently on a re-run gets switched
@@ -642,7 +642,7 @@ actually use. The mapping:
   `:hover`, `:active` and `:disabled`. `loading`, `disabled` and `selected`
   remain props, because those are application state.
 - **Focus is implemented.** Focus is not a variant in the file, but the
-  `focus/ring` effect style and the `color/focus/ring` token are still there —
+  `focus/ring` effect style and the `color/focus/ring` token are still there,
   the description notes they were kept so it can be reintroduced. Keyboard
   focus has to be visible, so every interactive component uses it
   (`src/lib/focus.ts`).
@@ -657,8 +657,8 @@ actually use. The mapping:
   move through it skipping disabled rows, Enter and Space choose, Escape closes
   and returns focus, Tab closes on the way past, typing jumps to the option
   starting with what was typed, and a click elsewhere dismisses. Options are
-  still declared as `<option>` children — that is what a select looks like in
-  any codebase — and are read into the list rather than rendered.
+  still declared as `<option>` children, which is what a select looks like in
+  any codebase, and are read into the list rather than rendered.
 
   The one thing it cannot give back is the mobile picker: a native select opens
   the operating system's own wheel, which beats any list a page can draw on a
@@ -669,7 +669,7 @@ actually use. The mapping:
   24px grid with a 2px round stroke, so this is the same artwork from its
   source rather than re-exported SVG. Sizes stay on the 16/20/24/32 scale, and
   colour inherits `currentColor` so the parent slot controls it. Enumerate the
-  set with the exported `iconNames` array, never `Object.keys(icons)` — build
+  set with the exported `iconNames` array, never `Object.keys(icons)`, since build
   tooling that walks the module appends its own keys to exported objects, and
   Storybook's docgen does exactly that.
 - **Fixed widths are dropped.** Figma instances carry a width (Card 320, Banner
@@ -684,7 +684,7 @@ the code enforces the ones it can:
 
 - `IconButton` requires `label`; it becomes the accessible name.
 - `Checkbox`, `Radio` and `Switch` put the label inside the control and pad the
-  row to the 44px minimum touch target — the boxes themselves are 20px and 24px.
+  row to the 44px minimum touch target. The boxes themselves are 20px and 24px.
 - `ListItem` is 48px minimum and marks the selected row with `aria-current`, so
   selection does not rely on background colour alone.
 - `FieldHelperText` pairs its error message with an alert glyph, so an error is

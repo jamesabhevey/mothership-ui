@@ -3,7 +3,7 @@ import { cn } from '../lib/cn'
 
 const spinner = cva('shrink-0 animate-spin', {
   variants: {
-    // size/icon/16 | 24 | 32 — the spinner matches the icon scale exactly.
+    // size/icon/16 | 24 | 32. The spinner matches the icon scale exactly.
     size: { sm: 'size-4', md: 'size-6', lg: 'size-8' },
   },
   defaultVariants: { size: 'sm' },
@@ -13,7 +13,7 @@ export type SpinnerProps = Omit<React.SVGProps<SVGSVGElement>, 'children'> &
   VariantProps<typeof spinner> & {
     /**
      * Announced alongside the spinner. A spinner on its own tells a screen
-     * reader user nothing, so pass the loading state in words — or set it to
+     * reader user nothing, so pass the loading state in words, or set it to
      * null when a visible label already says it.
      */
     label?: string | null

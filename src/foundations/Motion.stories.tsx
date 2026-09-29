@@ -36,7 +36,7 @@ function Token({ name, css, note }: { name: string; css: string; note: string })
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="text-label-md text-text-primary">{name}</span>
         <span className="font-mono text-caption-md text-text-secondary">{css}</span>
-        <span className="font-mono text-caption-md text-text-muted">{value || '—'}</span>
+        <span className="font-mono text-caption-md text-text-muted">{value || '-'}</span>
       </div>
       <p className={`${prose} text-text-secondary`}>{note}</p>
     </li>
@@ -73,20 +73,19 @@ export const Motion: Story = {
         title="Motion"
         intro={
           <>
-            Two small scales — how long something takes, and how it accelerates. Every transition in
-            the library resolves to one of them.
+            Two small scales: how long something takes, and how it accelerates. Every transition
+            in the library resolves to one of them.
             <br />
             <br />
             These live in Figma too, in a <strong>Motion</strong> collection alongside Semantic,
-            Dimension and Typography — as Figma's own <code>TIMING</code> and <code>EASING</code>{' '}
+            Dimension and Typography, as Figma's own <code>TIMING</code> and <code>EASING</code>{' '}
             variable types, so a prototype transition can use the same values a component does.
             Figma states durations in seconds where the code states them in milliseconds;{' '}
             <code>duration/fast</code> is 0.1 there and 100ms here.
             <br />
             <br />
             This scale was defined in code first and added to Figma afterwards, which is the reverse
-            of every other foundation here. The weekly drift check does not cover it yet — that
-            reads colour only.
+            of every other foundation here, and the weekly drift check still does not cover it.
             <br />
             <br />
             Motion here is feedback, not decoration. It exists to say <em>that</em> responded,{' '}
@@ -103,9 +102,9 @@ export const Motion: Story = {
           </ul>
           <P>Hover each bar to feel the difference between them.</P>
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Specimen label="fast — 100ms" duration="--duration-fast" easing="--ease-standard" />
-            <Specimen label="base — 150ms" duration="--duration-base" easing="--ease-standard" />
-            <Specimen label="slow — 250ms" duration="--duration-slow" easing="--ease-standard" />
+            <Specimen label="fast, 100ms" duration="--duration-fast" easing="--ease-standard" />
+            <Specimen label="base, 150ms" duration="--duration-base" easing="--ease-standard" />
+            <Specimen label="slow, 250ms" duration="--duration-slow" easing="--ease-standard" />
           </ul>
         </Group>
 
@@ -119,8 +118,8 @@ export const Motion: Story = {
             Both curves are slow at the end, because a thing that decelerates into place looks like
             it arrived somewhere rather than stopping dead. The difference is the start: standard
             eases in, so a change on screen builds; enter starts at speed, so something coming in
-            feels like it was already on its way. A continuous loop is linear — a spinner that
-            eased would look like it was struggling.
+            feels like it was already on its way. A continuous loop is linear, because a spinner
+            that eased would look like it was struggling.
           </P>
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Specimen label="standard" duration="--duration-slow" easing="--ease-standard" />
@@ -135,7 +134,7 @@ export const Motion: Story = {
             <code>--default-transition-timing-function</code> are set to <code>duration/fast</code>{' '}
             and <code>easing/standard</code>, so every <code>transition-*</code> in the library
             resolves to the scale without saying so. A component only names a duration when it wants
-            something other than that — which is the exception, and reads as one.
+            something other than that, which is the exception and reads as one.
           </P>
           <ul className="flex flex-col gap-4 border-t border-border-subtle pt-5">
             <Token
@@ -151,7 +150,7 @@ export const Motion: Story = {
             <Token
               name="A surface arriving"
               css="--duration-slow"
-              note="The Select dropdown, on easing/enter. It leaves instantly — an exit would mean keeping it mounted to animate, which is more machinery than a disappearance is worth."
+              note="The Select dropdown, on easing/enter. It leaves instantly, because an exit would mean keeping it mounted to animate."
             />
             <Token
               name="Continuous"
@@ -166,13 +165,13 @@ export const Motion: Story = {
           <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <li className="flex flex-col gap-2">
               <span className="font-mono text-caption-md text-text-secondary">
-                fast — hover the button
+                fast, hover the button
               </span>
               <Button variant="primary">Save changes</Button>
             </li>
             <li className="flex flex-col gap-2">
               <span className="font-mono text-caption-md text-text-secondary">
-                base — the thumb travels
+                base, the thumb travels
               </span>
               <Switch checked={on} onChange={(event) => setOn(event.target.checked)}>
                 Email notifications
@@ -180,7 +179,7 @@ export const Motion: Story = {
             </li>
             <li className="flex flex-col gap-2">
               <span className="font-mono text-caption-md text-text-secondary">
-                slow — the list arrives
+                slow, the list arrives
               </span>
               <Select label="Billing period" placeholder="Choose a period">
                 <option value="monthly">Monthly</option>
@@ -189,7 +188,7 @@ export const Motion: Story = {
               </Select>
             </li>
             <li className="flex flex-col gap-2">
-              <span className="font-mono text-caption-md text-text-secondary">loop — one turn</span>
+              <span className="font-mono text-caption-md text-text-secondary">loop, one turn</span>
               <Spinner size="md" />
             </li>
           </ul>
@@ -204,8 +203,9 @@ export const Motion: Story = {
           </P>
           <P>
             The exception is a continuous indicator. A spinner that stops spinning does not read as
-            calm, it reads as frozen — the one thing a loading indicator must never look like. Those
-            keep turning at half speed. Reduced motion means less movement, not less information.
+            calm, it reads as frozen, the one thing a loading indicator must never look like.
+            Those keep turning at half speed. Reduced motion means less movement, not less
+            information.
           </P>
           <P>
             It is enforced once, in the stylesheet, rather than component by component. Nothing in

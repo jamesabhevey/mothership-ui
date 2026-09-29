@@ -3,7 +3,7 @@ import { Illustration } from './Illustration'
 import { Card } from './Card'
 
 /**
- * The library's own illustration — the same image the Figma component carries,
+ * The library's own illustration, the same image the Figma component carries,
  * exported from it rather than redrawn, so the two cannot disagree.
  *
  * 1024px wide at 140KB. It renders around 320px here and 336px in Figma, so
@@ -62,7 +62,7 @@ export const NoImage: Story = {
     docs: {
       description: {
         story:
-          'With no `src` the box holds its shape and shows `surface/media`. This is the loading state and the state where a supplied image fails — deliberately empty rather than showing the library illustration, which would look like content somebody chose.',
+          'With no `src` the box holds its shape and shows `surface/media`. This is the loading state and the state where a supplied image fails. Deliberately empty rather than showing the library illustration, which would look like content somebody chose.',
       },
     },
   },

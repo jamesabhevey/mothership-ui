@@ -16,7 +16,7 @@ export type PageHeaderProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
  * description, a primary action and optional tabs.
  *
  * Use once per page, at the top of the scroll area. The fixed bar at the top
- * of a mobile screen is AppBar — PageHeader scrolls away, AppBar does not.
+ * of a mobile screen is AppBar. PageHeader scrolls away, AppBar does not.
  */
 export function PageHeader({
   className,

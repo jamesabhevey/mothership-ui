@@ -1,14 +1,18 @@
 import { useEffect, useState, type ReactNode } from 'react'
 
 /**
- * The one prose style for documentation copy: `body/md`, 16 on 24.
+ * The one prose style for documentation copy: 14 on 24.
  *
- * A token rather than an arbitrary value, so these pages sit on the same scale
- * as the components they document. It had been neither — running copy at 14/24
- * and secondary copy at 14/20, both invented, with nothing recording which was
- * right.
+ * Taken from the component pages rather than chosen. Storybook generates those
+ * and sets their body copy at 14/24, their headings at 32/36 and 24/32, and
+ * their column at 960; these hand-written pages sit in the same sidebar and
+ * should not announce themselves as a different kind of page.
+ *
+ * Defined once so it cannot drift a step at a time, which is what had
+ * happened: running copy at 14/24 and secondary copy under a heading at 14/20,
+ * with nothing recording which was right.
  */
-export const prose = 'text-body-md'
+export const prose = 'text-[14px]/6'
 
 /**
  * Read a custom property off :root.
@@ -104,16 +108,18 @@ export function useTokenModes(name: string): { light: string; dark: string } {
  * Dense token metadata below uses the caption tokens outright, since it is data
  * rather than prose.
  */
+// 64px and 40px, which is the padding Storybook gives a component page.
 const shell = 'px-10 py-16'
 
 /**
- * One column width for every page, prose and grids alike.
+ * One column width for every page, prose and grids alike, matching the 960 a
+ * component page uses.
  *
- * Paragraphs used to carry their own `max-w-[80ch]` on top of a 960px shell,
- * so running text stopped well short of the tables and swatch grids beside it
- * and nothing lined up down the right-hand edge. One width, set here.
+ * Paragraphs used to carry their own 80ch cap on top of it, so running text
+ * stopped well short of the tables and swatch grids beside it and nothing
+ * lined up down the right-hand edge.
  */
-const content = 'mx-auto w-full max-w-[760px]'
+const content = 'mx-auto w-full max-w-[960px]'
 
 export function Page({
   title,
@@ -127,8 +133,10 @@ export function Page({
   return (
     <div className={shell}>
       <div className={`${content} flex flex-col gap-14`}>
-        <header className="flex flex-col gap-5">
-          <h1 className="text-display-md text-text-primary">{title}</h1>
+        <header className="flex flex-col gap-4">
+          <h1 className="text-[32px]/9 font-semibold tracking-[var(--text-display-sm--letter-spacing)] text-text-primary">
+            {title}
+          </h1>
           {intro ? <div className={`${prose} text-text-primary`}>{intro}</div> : null}
         </header>
         {children}
@@ -139,8 +147,10 @@ export function Page({
 
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-5">
-      <h2 className="text-heading-lg text-text-primary">{name}</h2>
+    <section className="flex flex-col gap-4">
+      <h2 className="text-[24px]/8 font-semibold tracking-[var(--text-heading-md--letter-spacing)] text-text-primary">
+        {name}
+      </h2>
       {children}
     </section>
   )
@@ -153,7 +163,7 @@ export function Meta({ figma, css }: { figma: string; css: string }) {
     <div className="flex min-w-0 flex-col gap-0.5">
       <span className="text-label-md text-text-primary">{figma}</span>
       <span className="font-mono text-caption-md text-text-secondary">{css}</span>
-      <span className="font-mono text-caption-md text-text-muted">{value || '—'}</span>
+      <span className="font-mono text-caption-md text-text-muted">{value || '-'}</span>
     </div>
   )
 }
@@ -180,8 +190,8 @@ export function Swatch({ figma, css }: { figma: string; css: string }) {
         <span className="text-label-md text-text-primary">{figma}</span>
         <span className="font-mono text-caption-md text-text-secondary">{css}</span>
         <span className="flex flex-wrap gap-x-4 font-mono text-caption-md text-text-muted">
-          <span>Light {modes.light || '—'}</span>
-          <span>Dark {modes.dark || '—'}</span>
+          <span>Light {modes.light || '-'}</span>
+          <span>Dark {modes.dark || '-'}</span>
         </span>
       </div>
     </li>
@@ -201,7 +211,7 @@ export const toStoryId = (title: string) =>
  *
  * Relative, deliberately. The built site is served from a subdirectory on
  * GitHub Pages, so a root-absolute `/?path=…` leaves the Storybook altogether
- * and 404s — it only appears to work when developing at the domain root.
+ * and 404s. It only appears to work when developing at the domain root.
  *
  * Pair with target="_top" so the click navigates the whole Storybook, sidebar
  * included, rather than replacing the canvas with a nested copy.

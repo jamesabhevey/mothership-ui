@@ -6,7 +6,7 @@
  * it would otherwise mistake for utility classes and generate dead CSS for.
  *
  * This is the stylesheet for Storybook and the dev app, so it scans everything
- * else — the docs pages included. The published package is built from
+ * else, the docs pages included. The published package is built from
  * library.css instead, which scans only the components.
  */
 @source not '../../tokens';

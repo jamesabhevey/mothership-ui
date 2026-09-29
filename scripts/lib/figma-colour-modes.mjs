@@ -3,7 +3,7 @@
  *
  * Figma's variables endpoint would return all of this directly, but it is
  * Enterprise-only and 403s on this plan. The ordinary file endpoint works, and
- * returns *resolved* fills — so a frame pinned to a mode reports that mode's
+ * returns *resolved* fills, so a frame pinned to a mode reports that mode's
  * values.
  *
  * The Foundations / Colour page is laid out in exactly the shape that needs:
@@ -114,7 +114,7 @@ export async function readColourModes({ fileKey, token }) {
  * agree.
  *
  * A missing value on either side is never equal to anything, including another
- * missing value. Two absences are not agreement — they mean there was nothing
+ * missing value. Two absences are not agreement. They mean there was nothing
  * to compare, which the caller has to handle as its own case rather than let it
  * pass as a match.
  */
@@ -142,7 +142,7 @@ export function sameValue(a, b) {
  * Every solid fill and stroke painted inside a set of nodes, with where it was
  * seen.
  *
- * Used to find colours that are not in the palette at all — a fill typed in by
+ * Used to find colours that are not in the palette at all, a fill typed in by
  * hand rather than bound to a variable. Solid paints only: gradients and images
  * are not a colour anyone could have tokenised, and reporting them would be
  * noise.
@@ -160,8 +160,8 @@ export async function readPaintedColours({ fileKey, token, nodeIds }) {
       if (!root) continue
       const walk = (node, trail) => {
         const here = trail ? `${trail} / ${node.name}` : node.name
-        // A component set's own paints are Figma's editor furniture — the
-        // dashed #9747ff boundary it draws around a set — rather than anything
+        // A component set's own paints are Figma's editor furniture, the
+        // dashed #9747ff boundary it draws around a set, rather than anything
         // a designer chose. Its children are the artwork.
         const editorChrome = node.type === 'COMPONENT_SET'
         for (const list of editorChrome ? [] : [node.fills, node.strokes]) {

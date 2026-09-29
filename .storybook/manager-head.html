@@ -65,7 +65,7 @@
   /*
     The sidebar brand: logo mark, then the title at 18px, 12px apart.
 
-    Targeted structurally rather than by class — Storybook's brand link carries
+    Targeted structurally rather than by class, Storybook's brand link carries
     a generated Emotion class that changes between builds. The skip link is a
     direct child of .sidebar-header; the brand sits one level deeper.
 
@@ -88,7 +88,7 @@
   /*
     The mark, painted rather than drawn.
 
-    The file is a single path filled #8429cc — the light brand. Used as a
+    The file is a single path filled #8429cc, the light brand. Used as a
     background image it would stay that purple on a dark page, where the brand
     is #c985ff. So the shape is used as a mask and the colour comes from
     action/primary/default, which means one asset covers both modes and the mark
@@ -125,7 +125,7 @@
   /*
     Colour as well as background. Storybook's rule for these is
     `color: #8429cc` on hover, so the settings cog and the section expanders
-    turned brand purple — invisible against a dark sidebar and, in light, the
+    turned brand purple, invisible against a dark sidebar and, in light, the
     same shouting the docs chrome was already told not to do. Both go to
     text/primary instead. The `[data-theme]` prefix is only there for weight:
     Storybook's rule is two classes and lands later in the document.
@@ -155,7 +155,7 @@
   }
 
   /*
-    Root group headings — Foundations, Assets, Components.
+    Root group headings, Foundations, Assets, Components.
 
     Storybook styles these as small, wide, muted, uppercase labels. They are
     instead treated as headings that sit in the same rhythm as the rows beneath
@@ -238,7 +238,7 @@
 
   /*
     The selected row keeps its solid brand fill, which is a different purple in
-    each mode — light on dark, dark on light — so the label has to move with it
+    each mode, light on dark, dark on light, so the label has to move with it
     rather than stay white.
   */
   #storybook-explorer-tree .sidebar-item[data-selected='true'],
@@ -264,7 +264,7 @@
     type, so they arrived as a teal that belongs to no part of this palette.
 
     Both now come from tokens. The icons are deliberately neutral in light as
-    well as dark — the tree already separates entries by indentation and by icon
+    well as dark, the tree already separates entries by indentation and by icon
     shape, so the colour was carrying no information the layout did not, and a
     system whose first rule is that colour is never the only signal should not
     have a teal in its furniture.
@@ -307,7 +307,7 @@
     distinguishable from the row it sits on rather than melting into it. These
     have to out-weigh the generic chrome hover, which is why the id is spelt out
     on each. Contrast of the glyph against its fill: 10.8:1 hovered and 3.4:1
-    pressed in light, 8:1 and 3.6:1 in dark — the pressed pair are graphical
+    pressed in light, 8:1 and 3.6:1 in dark, the pressed pair are graphical
     rather than text, where 3:1 is the bar.
   */
   [data-theme] #storybook-sidebar-region [aria-label='Open context menu']:hover {
@@ -329,7 +329,7 @@
   /*
     The status badge Storybook puts on a newly added story. Its fill is the
     light-mode brand literal, so in dark it was one purple on another with a
-    near-black glyph — about 3.4:1. On the token pair it is 5.8:1 in light and
+    near-black glyph, about 3.4:1. On the token pair it is 5.8:1 in light and
     7.4:1 in dark. On the selected row it needs no separate rule: the row's fill
     is the same token, so the badge blends into it and only its glyph shows,
     which is the on-brand colour it already has.
@@ -342,7 +342,7 @@
   /*
     The search field, matched to the library's own.
 
-    TextField in a search layout — the one on the Catalog page — is a 32px shell
+    TextField in a search layout, the one on the Catalog page, is a 32px shell
     at radius/md on surface/default, with a 1px border/default edge, 14px
     text/primary inside, a text/muted placeholder and an icon/default glyph.
     Storybook's sidebar field was 10px cornered, transparent, and 13px, so the
@@ -405,14 +405,14 @@
     The frame's own rules.
 
     theme.ts hands Storybook a single appBorderColor literal, so every edge it
-    draws stayed at the light-mode grey on a dark page — the bright line down
+    draws stayed at the light-mode grey on a dark page, the bright line down
     the side of the canvas. Passing a var() there instead does not work:
     Storybook runs colour maths on that value and the manager fails to start.
 
     Three elements use it, and they are all frame furniture: the column holding
     the sidebar, the hairline under the preview, and the onboarding panel. They
     are named structurally, since the classes on them are generated. The
-    sidebar's is matched with :has() as an ancestor rather than a parent — the
+    sidebar's is matched with :has() as an ancestor rather than a parent, the
     bordered element is several levels above the region, not directly around it.
     Setting border-color on the others it also matches costs nothing, since a
     border with no width paints nothing.
@@ -433,7 +433,7 @@
 
       the active toolbar
       control                 Storybook paints it barSelectedColor, a darkened
-                              brand — #6920a2 on the tinted bar was 2.09:1.
+                              brand, #6920a2 on the tinted bar was 2.09:1.
                               action/primary/default instead: 5.81:1 in light,
                               7.44:1 in dark, and still recognisably the brand.
                               Matched on our own aria-label rather than a
@@ -443,7 +443,7 @@
       the ⌘K hint in search   #5c6570 on #0b0d0f was 3.29:1 -> text/muted, 9.3:1
   */
   /*
-    Idle chrome buttons. Storybook's #666f78 is 3.81:1 on #0b0d0f — fine for an
+    Idle chrome buttons. Storybook's #666f78 is 3.81:1 on #0b0d0f, fine for an
     icon, where 3:1 is the bar, but short for the ones carrying text, such as
     the zoom level. text/muted holds #666f78 in light, so light is untouched,
     and #aeb4ba in dark, which is 9.3:1.
@@ -492,8 +492,8 @@
   :root {
     /*
       Declared once and read by apply-theme.ts, which needs the same number to
-      know when to take the flag back off. Three copies of it — here, in the
-      manager's copy of this block, and in the script — would eventually
+      know when to take the flag back off. Three copies of it, here, in the
+      manager's copy of this block, and in the script, would eventually
       disagree, and a flag removed early cuts the fade off mid-way.
     */
     --theme-switch: 120ms;

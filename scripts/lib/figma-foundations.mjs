@@ -6,12 +6,12 @@
  * the variables themselves. The ordinary file endpoint works, and the
  * Foundations pages happen to be laid out in a shape that can be read exactly.
  *
- * Typography: one frame per role, named for the token — `type/display/lg` —
+ * Typography: one frame per role, named for the token, `type/display/lg`,
  * holding a label and a specimen. The specimen is set in the style it
  * documents, so its own resolved size, line height, tracking and weight *are*
  * the token's values. Nothing is parsed out of prose.
  *
- * Dimension: one frame per token, named for it — `space/16`, `radius/md` —
+ * Dimension: one frame per token, named for it, `space/16`, `radius/md`,
  * holding a label and the value written out as text. Read as the token's own
  * stated number rather than measured off the artwork, which is what makes this
  * safe: an earlier attempt at numbers tried to infer them from geometry and
@@ -30,7 +30,7 @@ import { api } from './figma-colour-modes.mjs'
  * Figma writes `size/control/min-target` where the code, having flattened the
  * path into a key, writes `size/control/min/target`. They are the same token,
  * and a comparison that did not know that would report two phantom differences
- * every Monday — which is how a check gets ignored.
+ * every Monday, which is how a check gets ignored.
  */
 export const normaliseName = (name) => name.toLowerCase().replace(/[-/\s]/g, '')
 

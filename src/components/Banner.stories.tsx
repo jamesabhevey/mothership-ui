@@ -49,7 +49,7 @@ export const Warning: Story = {
 }
 
 /**
- * `danger` renders as `role="alert"`. Use it only for genuine failures —
+ * `danger` renders as `role="alert"`. Use it only for genuine failures.
  * overuse trains users to ignore it. Shown without a dismiss control, as a
  * validation summary that should stay until it is resolved.
  */

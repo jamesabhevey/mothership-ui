@@ -6,7 +6,7 @@ on:
     branches: [main]
   # Pull requests get the type-check, the build and the contract checks, but
   # never the deploy. Nothing enforces PRs today, so this does nothing until
-  # somebody opens one — at which point it is already there.
+  # somebody opens one, at which point it is already there.
   pull_request:
     branches: [main]
   # Lets you re-run a deploy from the Actions tab without an empty commit,
@@ -16,8 +16,8 @@ on:
 
 # The default GITHUB_TOKEN is read-only for contents. Pages deployment needs
 # two extra grants, and nothing else:
-#   pages: write     — publish the site
-#   id-token: write  — mint the OIDC token deploy-pages uses to prove the
+#   pages: write    , publish the site
+#   id-token: write , mint the OIDC token deploy-pages uses to prove the
 #                      artifact came from this workflow run
 permissions:
   contents: read
@@ -79,7 +79,7 @@ jobs:
 
       - name: Install Chromium for the accessibility run
         # Only Chromium, and only its headless shell. The a11y suite renders
-        # every story in a real browser because axe needs computed styles —
+        # every story in a real browser because axe needs computed styles,
         # contrast cannot be checked against a stylesheet that was never
         # applied. `--with-deps` pulls the system libraries the runner image
         # does not ship.
@@ -91,7 +91,7 @@ jobs:
         run: npm test
 
       - name: Contract checks
-        # The assumptions this Storybook makes that nothing else would catch —
+        # The assumptions this Storybook makes that nothing else would catch,
         # dead internal links, a hand-edited generated stylesheet, a hard-coded
         # hex, a stale headline count, and CSS overrides pointing at Storybook
         # internals that an upgrade has renamed. Each of those fails silently,
@@ -127,7 +127,7 @@ jobs:
         with:
           # 30 minutes rather than the default 10. Pages has twice sat at
           # "updating_pages" past the default and aborted a deploy that was
-          # only slow, not broken — both times with GitHub reporting every
+          # only slow, not broken, both times with GitHub reporting every
           # system operational. Waiting longer costs nothing on a normal deploy,
           # which finishes in well under a minute.
           timeout: 1800000

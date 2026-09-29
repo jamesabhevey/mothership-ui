@@ -33,7 +33,7 @@ export type CardProps = HTMLAttributes<HTMLDivElement> &
  *
  * Use for a collection of comparable items in a grid, or to group a summary
  * with its own actions. Not for nesting inside another card, and not as a
- * general layout container — a card with no title and no action is probably
+ * general layout container. A card with no title and no action is probably
  * just a section and does not need a border.
  *
  * `interactive` applies the hover treatment, and only makes sense when the

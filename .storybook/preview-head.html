@@ -1,7 +1,7 @@
 <!--
   Injected into the preview iframe, which is where the generated docs pages
   render. The manager theme cannot reach in here, so Storybook's own controls
-  on those pages — Show code, Copy code, the story toolbar and the args table —
+  on those pages, Show code, Copy code, the story toolbar and the args table,
   need the same hover and pressed treatment applied separately.
 
   Scoped deliberately tightly to Storybook's chrome. A blanket `.sbdocs button`
@@ -10,7 +10,7 @@
 
   Selectors are deliberately one level deeper than Storybook's own. Its rules
   are a single class plus a pseudo-class, and Emotion injects them at runtime,
-  after this block — on an equal-specificity tie the later rule wins, so these
+  after this block, on an equal-specificity tie the later rule wins, so these
   need to out-specify rather than merely match.
 -->
 <style>
@@ -55,7 +55,7 @@
     tracking, which is the one piece of shouted type left in here and reads as a
     divider rather than the section heading it actually is.
 
-    It is brought onto our scale at type/heading/md — 24/32, -0.3px — matching
+    It is brought onto our scale at type/heading/md, 24/32, -0.3px, matching
     the section headings on the Welcome, Get started, Catalog, Foundations and
     Assets pages, so a section heading is one size wherever it appears. Casing
     and tracking come off for the same reason they did in the sidebar.
@@ -63,8 +63,8 @@
     Story names below it stay at Storybook's 20/30, a step down, so the nesting
     still reads. Weight and the surrounding margins are left alone.
 
-    Targeted structurally — the class on the element is a generated Emotion one
-    that changes between builds — and with enough specificity to win against it.
+    Targeted structurally, the class on the element is a generated Emotion one
+    that changes between builds, and with enough specificity to win against it.
   */
   .sbdocs-wrapper .sbdocs-content h2 {
     font-size: 24px;
@@ -78,14 +78,14 @@
   /*
     Storybook's own docs chrome, painted from the tokens.
     ------------------------------------------------------------------
-    Everything below was a literal from Storybook's docs theme — white
+    Everything below was a literal from Storybook's docs theme, white
     backgrounds, #1f2429 prose, #e8eaec rules. Those are correct in light and
     wrong in dark, and the docs theme is handed over once at build time, so it
     cannot follow a toolbar toggle.
 
     So each one is pointed at the token that already held that value. Light
     renders exactly as before; dark follows because the token does. No rule here
-    is gated on [data-theme] — the variable does the switching, which is the
+    is gated on [data-theme], the variable does the switching, which is the
     same trick the components use.
 
     Two small departures, both improvements rather than accidents: inline code
@@ -100,7 +100,7 @@
     are Emotion classes injected at runtime, after this block, so an equal tie
     goes to Storybook. Worse, the args table doubles its own class
     (`.css-x.css-x tbody > tr > *`) specifically to win ties, so ours has to
-    out-weigh a doubled class rather than merely match one — hence the otherwise
+    out-weigh a doubled class rather than merely match one, hence the otherwise
     redundant `.sbdocs` and the repeated `.docblock-argstable`, which is the
     same trick used back.
   */
@@ -145,7 +145,7 @@
   }
 
   /*
-    The type summaries — `"sm" | "md" | "lg"` and friends — are spans carrying
+    The type summaries, `"sm" | "md" | "lg"` and friends, are spans carrying
     their own colour, so they do not inherit the cell's.
   */
   .sbdocs-wrapper .docblock-argstable.docblock-argstable td span {
@@ -176,7 +176,7 @@
       Show code / Copy code   #666f78 on #0b0d0f was 3.81:1, needs 4.5
                               -> text/muted, 9.3:1 in dark, unchanged in light
       inline code in the
-      props table             #1f2429 on #1f2429 — invisible. The chips are
+      props table             #1f2429 on #1f2429, invisible. The chips are
                               nested inside a span, and the earlier rule only
                               reached a direct child of the cell
       the story preview's
@@ -209,12 +209,12 @@
     ------------------------------------------------------------------
     All three were still drawing at #e8eaec or #d3d7db on a dark page: the
     hairline under the story preview's toolbar, the props table's cell borders,
-    and the ring around its controls. Same treatment as everywhere else — the
+    and the ring around its controls. Same treatment as everywhere else, the
     token that already held the light value, so light does not move.
 
     The table needs both the doubled class and `tbody > tr >` spelt out.
     Storybook's rule for those cells is `.css-x.css-x tbody > tr > *`, and
-    matching only one of the two — the doubled class, or the row structure —
+    matching only one of the two, the doubled class, or the row structure,
     still loses to it. Established by testing rather than by counting: the
     arithmetic says either should be enough, and neither is.
   */
@@ -237,7 +237,7 @@
   /*
     The props table's corners.
     ------------------------------------------------------------------
-    The component preview above it is an 8px card — radius/md — and the table
+    The component preview above it is an 8px card, radius/md, and the table
     below was a hard rectangle, so the two blocks on every component page did
     not agree.
 
@@ -245,8 +245,8 @@
     outer cells, and the header row sits outside it, so the rounded box is the
     tbody. With border-collapse: collapse a radius on either the table or its
     cells is ignored, so the table is switched to the separate model with no
-    spacing — which changes nothing visually here, because no two adjacent cells
-    both carry a border to double up — and the four corner cells take the
+    spacing, which changes nothing visually here, because no two adjacent cells
+    both carry a border to double up, and the four corner cells take the
     radius.
   */
   .sbdocs-wrapper .docblock-argstable.docblock-argstable {
@@ -296,8 +296,8 @@
   :root {
     /*
       Declared once and read by apply-theme.ts, which needs the same number to
-      know when to take the flag back off. Three copies of it — here, in the
-      manager's copy of this block, and in the script — would eventually
+      know when to take the flag back off. Three copies of it, here, in the
+      manager's copy of this block, and in the script, would eventually
       disagree, and a flag removed early cuts the fade off mid-way.
     */
     --theme-switch: 120ms;
@@ -332,8 +332,8 @@
     Headings at 600.
     ------------------------------------------------------------------
     Storybook's docs theme sets its headings bold. The scale has no 700 in it
-    any more — Display moved to SemiBold in Figma, and everything above body was
-    already 600 — so a docs page was the only place left in the Storybook
+    any more, Display moved to SemiBold in Figma, and everything above body was
+    already 600, so a docs page was the only place left in the Storybook
     rendering a heavier heading than the system has.
   */
   .sbdocs-wrapper .sbdocs-content :is(h1, h2, h3, h4, h5, h6) {

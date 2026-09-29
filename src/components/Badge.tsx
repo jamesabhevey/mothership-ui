@@ -24,7 +24,7 @@ export type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & VariantProps<ty
 /**
  * A small, non-interactive label showing status, category or count.
  *
- * Not for anything clickable — a badge is read only. If the user can act on
+ * Not for anything clickable; a badge is read only. If the user can act on
  * it, use Button at `sm`.
  *
  * Intent colour is decoration, so the label text must carry the meaning on

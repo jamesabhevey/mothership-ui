@@ -4,7 +4,7 @@ import { cn } from '../lib/cn'
 export type AppBarProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
   /** Names the screen, not the application. */
   title: ReactNode
-  /** Usually a back control. Pass an IconButton — its label is required. */
+  /** Usually a back control. Pass an IconButton; its label is required. */
   leadingAction?: ReactNode
   trailingAction?: ReactNode
   /** Centred on iOS, default (leading) on Android, to match platform convention. */
@@ -17,7 +17,7 @@ export type AppBarProps = Omit<HTMLAttributes<HTMLElement>, 'title'> & {
  *
  * Use on every screen in an application shell, to anchor where the user is
  * and give them a way back. Page headings inside a scrolling page need
- * PageHeader instead — an app bar stays fixed while content scrolls beneath.
+ * PageHeader instead. An app bar stays fixed while content scrolls beneath.
  */
 export function AppBar({
   className,

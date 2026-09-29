@@ -6,7 +6,7 @@ import { extendTailwindMerge } from 'tailwind-merge'
  *
  * `text-label-md` (a font size) and `text-text-primary` (a colour) are both
  * `text-*`, and without this the merger treats them as the same conflict
- * group and silently drops whichever comes first — which shows up as text
+ * group and silently drops whichever comes first, which shows up as text
  * rendering at the wrong colour. Same story for `shadow-elevation-*`.
  */
 const twMerge = extendTailwindMerge({

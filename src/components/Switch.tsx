@@ -11,7 +11,7 @@ type SwitchBase = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> &
  * A switch has to be named, one way or another.
  *
  * The visible label is the usual way, but a switch in the trailing slot of a
- * ListItem has no room for one — the row's own title is the label, and the
+ * ListItem has no room for one. The row's own title is the label, and the
  * input is left with no accessible name at all. A screen reader then announces
  * "switch, on" with nothing to say what is on. That is easy to write and
  * invisible on screen, so the type makes it impossible instead of leaving it to
@@ -25,7 +25,7 @@ export type SwitchProps = SwitchBase &
  *
  * Use when the change applies the moment it is toggled, such as enabling
  * notifications in a settings screen. Choices that only apply once a form is
- * submitted need Checkbox — a switch with a Save button beside it is a
+ * submitted need Checkbox; a switch with a Save button beside it is a
  * contradiction.
  *
  * The 40x24 track is below the 44px minimum touch target, so the hit area
@@ -62,14 +62,14 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
           className={cn(
             // The thumb travels rather than jumping. It used to move by
             // switching the track to justify-end, which is an alignment change
-            // and cannot be transitioned — so the one control whose movement is
+            // and cannot be transitioned, so the one control whose movement is
             // the feedback was the one control that did not move. 16px is the
             // track's 40 less its 4px padding either side and the 16px thumb.
             //
             // The transitioned property is `translate`, not `transform`:
             // Tailwind v4's translate-* utilities set the standalone `translate`
             // property, and a transition list naming `transform` moves the thumb
-            // without animating it — which looks exactly like the jump this was
+            // without animating it, which looks exactly like the jump this was
             // meant to fix.
             'size-4 rounded-full border border-solid',
             'transition-[background-color,border-color,translate] duration-[var(--duration-base)]',

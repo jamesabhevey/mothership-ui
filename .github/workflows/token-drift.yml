@@ -34,7 +34,7 @@ jobs:
 
       - run: npm ci
 
-      # Prints HTTP status codes only — never a secret value. Lengths are shown
+      # Prints HTTP status codes only, never a secret value. Lengths are shown
       # so a truncated or newline-mangled secret is visible without revealing it.
       - name: Diagnose Figma access
         if: ${{ inputs.mode == 'diagnose' }}
@@ -46,7 +46,7 @@ jobs:
           echo "file key length: ${#FIGMA_FILE_KEY}   (expected 22)"
           case "$FIGMA_TOKEN" in
             figd_*) echo "token prefix:    looks like a Figma token" ;;
-            *)      echo "token prefix:    NOT figd_ — wrong value?" ;;
+            *)      echo "token prefix:    NOT figd_, wrong value?" ;;
           esac
           echo
           code() { curl -s -o /dev/null -w "%{http_code}" -H "X-Figma-Token: $FIGMA_TOKEN" "$1"; }
@@ -123,7 +123,7 @@ jobs:
             echo "Every component refers to these tokens by name, so no component code changes."
             echo "Type-check and build passed before this was opened."
             echo
-            echo "Tokens added or removed in Figma are reported but never applied here — a new"
+            echo "Tokens added or removed in Figma are reported but never applied here, a new"
             echo "token needs a name, a place on the Colour page and a decision about what it is"
             echo "for. If the report below lists any, they need a person."
             echo
@@ -138,7 +138,7 @@ jobs:
             --base main \
             --head "$BRANCH"
 
-      # A hard-coded colour cannot be fixed from here — it needs a layer in
+      # A hard-coded colour cannot be fixed from here. It needs a layer in
       # Figma bound to a variable, or a new token. No pull request would carry
       # it, so the run goes red instead and says why.
       - name: Fail if anything needs a person

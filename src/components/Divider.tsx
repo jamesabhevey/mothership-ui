@@ -8,7 +8,7 @@ export type DividerProps = React.HTMLAttributes<HTMLDivElement> & {
  * A one pixel rule separating content within a surface.
  *
  * Use to separate rows in a list, sections in a form, or groups in a menu,
- * where whitespace alone is not enough. Not for outlining a container — put a
+ * where whitespace alone is not enough. Not for outlining a container: put a
  * border-border-default stroke on the container itself.
  *
  * Decorative, so it is hidden from assistive technology. Never rely on a

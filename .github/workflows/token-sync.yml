@@ -7,7 +7,7 @@ on:
   # over the REST API needs an Enterprise plan; this organisation is on Org, so
   # the endpoint returns 403 and a scheduled run would just collect a failure
   # every Monday. The script and workflow are correct and tested against that
-  # failure path — uncomment the schedule if the plan ever changes.
+  # failure path, uncomment the schedule if the plan ever changes.
   #
   # schedule:
   #   - cron: '0 7 * * 1'

@@ -9,7 +9,7 @@ import react from '@vitejs/plugin-react'
  * JavaScript entry, and the two cannot be expressed in one config.
  *
  * No Tailwind plugin here. The package stylesheet is compiled separately from
- * src/styles/library.css, which scans only the components — see
+ * src/styles/library.css, which scans only the components, see
  * `npm run build:css`. Running Tailwind in this build as well would emit a
  * second, wider stylesheet nobody imports.
  */

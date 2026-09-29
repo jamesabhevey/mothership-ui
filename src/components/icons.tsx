@@ -31,7 +31,7 @@ import {
 /**
  * Every glyph in the set, in the order the Figma Icon page lists them.
  *
- * This array is the canonical list — enumerate it rather than calling
+ * This array is the canonical list. Enumerate it rather than calling
  * `Object.keys(icons)`. Tooling that walks the module (Storybook's docgen, for
  * one) appends its own keys to exported objects, so the map is not safe to
  * iterate.
@@ -72,7 +72,7 @@ export type IconName = (typeof iconNames)[number]
  * 24px grid with a 2px round stroke. lucide-react ships that same artwork, so
  * the glyphs are reused rather than re-exported as SVG assets.
  *
- * Size comes from the parent slot and must be 16, 20, 24 or 32 — never a
+ * Size comes from the parent slot and must be 16, 20, 24 or 32, never a
  * value off the scale. Colour comes from the stroke, which inherits
  * currentColor so the surrounding component controls it.
  */

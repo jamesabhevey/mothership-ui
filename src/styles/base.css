@@ -19,7 +19,7 @@
   }
 
   /*
-    The scale tops out at Semi Bold, and the Bold face is not served — Display
+    The scale tops out at Semi Bold, and the Bold face is not served, Display
     moved to 600 and was the last thing using it. Left alone, the browser's
     default of 700 on strong and b would be synthesised from the 600 face, which
     is a smeared approximation of a weight the system does not have. 600 against
@@ -36,7 +36,7 @@
  *
  * A dropdown that is simply there on one frame and gone the next reads as a
  * rendering glitch rather than a thing that opened. It arrives over
- * duration/slow on easing/enter — decelerating, the curve for something coming
+ * duration/slow on easing/enter, decelerating, the curve for something coming
  * towards the reader. It leaves instantly, because React unmounts it; an exit
  * would mean keeping it mounted to animate, which is more machinery than a
  * 100ms disappearance is worth.
@@ -61,7 +61,7 @@
  * still lands on it.
  *
  * The exception is a looping indicator, marked data-motion="loop". A spinner
- * that stops spinning does not read as "calm", it reads as "frozen" — the one
+ * that stops spinning does not read as "calm". It reads as "frozen", the one
  * thing a loading indicator must never look like. Those keep turning, at half
  * speed. Reduced motion means less movement, not less information.
  */

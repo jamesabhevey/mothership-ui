@@ -1,12 +1,12 @@
 # Claude reviews a pull request against the design system.
 #
 # The judgement half of the PR gate. Everything that can be decided by a script
-# — colour and motion literals, a stale barrel, dead links, axe in both colour
-# modes — already runs in storybook-pages.yml and blocks the merge. This covers
+#, colour and motion literals, a stale barrel, dead links, axe in both colour
+# modes, already runs in storybook-pages.yml and blocks the merge. This covers
 # what a script cannot: whether a component was rebuilt instead of reused,
 # whether a control can be operated by keyboard, whether the thing is finished.
 #
-# Deliberately advisory. It runs as its own workflow, it is not a required
+# Deliberately advisory. It runs as its own workflow, is not a required
 # check, and a failure here does not block anything. A gate that fails
 # differently on a re-run for reasons nobody can reproduce gets switched off
 # within a fortnight, and takes the checks that did work with it.
@@ -20,7 +20,7 @@ on:
   pull_request:
     types: [opened, synchronize]
 
-# Read the code, write comments. Nothing else — this review never edits the
+# Read the code, write comments. Nothing else, this review never edits the
 # branch it is reviewing.
 permissions:
   contents: read
@@ -37,7 +37,7 @@ jobs:
     name: Review against the design system
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-    # The `secrets` context cannot be read from an `if`, at job or step level —
+    # The `secrets` context cannot be read from an `if`, at job or step level,
     # a workflow that tries fails to parse before any job starts. Lifting it
     # into `env`, which may read secrets, gives the steps below something they
     # are allowed to test.

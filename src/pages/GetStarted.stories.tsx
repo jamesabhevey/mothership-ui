@@ -47,7 +47,7 @@ export const GetStarted: Story = {
         <P>
           YLD owns Mothership UI. James Hevey maintains it, on his own. Requests and bugs go
           through GitHub issues; there is no promised turnaround and no team behind it. That is
-          the honest position rather than a disclaimer — nobody should adopt this expecting
+          the honest position rather than a disclaimer. Nobody should adopt this expecting
           support that does not exist.
         </P>
         <P>
@@ -65,14 +65,14 @@ export const GetStarted: Story = {
         <Code>{`@yldio:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}</Code>
         <P>
-          After that it installs like anything else — no Tailwind, no build configuration, nothing
-          to copy.
+          After that it installs like anything else. No Tailwind, no build configuration,
+          nothing to copy.
         </P>
         <Code>{`npm install @yldio/mothership-ui`}</Code>
         <Code>{`import { Button, Card } from '@yldio/mothership-ui'
 import '@yldio/mothership-ui/styles.css'`}</Code>
         <P>
-          The stylesheet is compiled and ships with the package — around 6KB over the wire for
+          The stylesheet is compiled and ships with the package, around 6KB over the wire for
           every component. React 18 or 19 is a peer dependency, so your app keeps its own copy
           rather than ending up with two, which is the thing that quietly breaks hooks.
         </P>
@@ -91,7 +91,7 @@ import '@yldio/mothership-ui/styles.css'`}</Code>
           locally rather than from a CDN so there is no third-party request and no layout shift.
         </P>
         <Code>{`npm install @fontsource/inter`}</Code>
-        <Code>{`// main.tsx — import before your stylesheet
+        <Code>{`// main.tsx, imported before your stylesheet
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
@@ -156,7 +156,7 @@ export function Example() {
         </P>
         <Code>{`<html data-theme="dark">`}</Code>
         <P>
-          That is all of it. There is no <code>dark:</code> variant anywhere in the library — the
+          That is all of it. There is no <code>dark:</code> variant anywhere in the library. The
           custom properties are redeclared under <code>[data-theme='dark']</code> and every colour
           utility, which compiles to <code>var(--color-…)</code>, follows. Anything you build from
           the same tokens comes along for free.
@@ -164,7 +164,7 @@ export function Example() {
         <P>
           It nests, too: a subtree marked <code>data-theme="light"</code> inside a dark page renders
           light, which is occasionally what you want for a preview or an embedded document. Only
-          colour changes between modes — type, spacing, radii and border widths are shared.
+          colour changes between modes. Type, spacing, radii and border widths are shared.
         </P>
         <P>
           Use the Theme control in the toolbar above to read this Storybook in either mode.

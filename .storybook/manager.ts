@@ -41,7 +41,7 @@ const write = (theme: 'light' | 'dark') => {
  * whole point: left to itself the preview only learns about a change when the
  * message reaches it and React re-renders the story, which is a postMessage hop
  * and a render later than the chrome. At a 120ms fade that reads as the sidebar
- * and toolbar changing first and the canvas catching up — two transitions
+ * and toolbar changing first and the canvas catching up, two transitions
  * instead of one. Setting both in the same task starts them in the same frame.
  *
  * The decorator in preview.ts still applies it too. That covers the first
@@ -74,8 +74,8 @@ const urlDeclaresTheme = /[?&]globals=[^&]*\btheme:/.test(window.location.search
  * Carry the Light / Dark choice from the toolbar into Storybook's own chrome,
  * and keep it across navigation.
  *
- * The toolbar sets a global, which lives in the preview. The manager — sidebar,
- * toolbar, the frame around everything — is a separate React app with its own
+ * The toolbar sets a global, which lives in the preview. The manager, sidebar,
+ * toolbar, the frame around everything, is a separate React app with its own
  * document, and the theme above is handed over once at startup, so it cannot
  * follow a global on its own.
  *
@@ -83,7 +83,7 @@ const urlDeclaresTheme = /[?&]globals=[^&]*\btheme:/.test(window.location.search
  * click but not a link. Every link on the Catalog and Welcome pages is a plain
  * `?path=…`, so following one used to drop the reader back into light halfway
  * through a dark session. The choice is now also written down, and restored on
- * load when the URL does not name one — so it holds across links, reloads, and
+ * load when the URL does not name one, so it holds across links, reloads, and
  * coming back tomorrow.
  */
 addons.register('mothership/theme-sync', (api) => {
@@ -111,7 +111,7 @@ addons.register('mothership/theme-sync', (api) => {
     }
   })
 
-  // Fires on every change after that — the toolbar, or the line above.
+  // Fires on every change after that, the toolbar, or the line above.
   api.on(GLOBALS_UPDATED, (payload: { globals?: Record<string, unknown> }) => {
     const theme = themeOf(payload?.globals)
     // Both documents, one task, so the two fades run as one.

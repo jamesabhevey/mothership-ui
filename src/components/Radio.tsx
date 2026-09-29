@@ -11,7 +11,7 @@ export type RadioProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 's
  * Lets the user pick exactly one option from a visible set.
  *
  * Use when there are two to five mutually exclusive options and seeing them
- * all at once helps the decision. One option must always be selected — a
+ * all at once helps the decision. One option must always be selected; a
  * radio cannot be unselected by clicking it again, so never use one for an
  * optional single choice. More than about five options need Select;
  * independent choices need Checkbox.

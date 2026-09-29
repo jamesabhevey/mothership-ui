@@ -22,8 +22,8 @@ const commitUrl = (hash: string) => (repo ? `https://github.com/${repo}/commit/$
  * Colour per kind of change, using the library's own Badge.
  *
  * Removed is neutral rather than danger. Red would read as something having
- * gone wrong, and most removals here are the opposite — a thing that stopped
- * earning its place being taken out on purpose.
+ * gone wrong, and most removals here are the opposite: a thing that stopped
+ * earning its place, taken out on purpose.
  */
 const intents: Record<string, BadgeProps['intent']> = {
   Added: 'success',
@@ -50,7 +50,7 @@ function withCode(text: string) {
 function Entry({ commit }: { commit: (typeof commits)[number] }) {
   const url = commitUrl(commit.full)
   return (
-    <li className="flex flex-col gap-4 border-b border-border-subtle pb-10 last:border-0 last:pb-0">
+    <li className="flex flex-col gap-3 border-b border-border-subtle pb-8 last:border-0 last:pb-0">
       <Badge className="self-start" intent={intents[commit.kind] ?? 'neutral'}>
         {commit.kind}
       </Badge>
@@ -59,10 +59,10 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
         the page somebody navigates by heading, and the levels are what makes
         that work.
       */}
-      <h3 className="text-heading-md text-text-primary">{commit.subject}</h3>
+      <h3 className="text-heading-sm text-text-primary">{commit.subject}</h3>
       {commit.body.map((paragraph, i) =>
         // A block that kept its line breaks was laid out deliberately in the
-        // commit message — a short column of tokens, usually. Rendered as
+        // commit message, usually a short column of tokens. Rendered as
         // written, in mono, rather than rewrapped into a run-on sentence.
         paragraph.includes('\n') ? (
           <pre
@@ -94,7 +94,7 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
 /**
  * Newest first, gathered by the day they landed.
  *
- * The commits arrive in order, so one pass is enough — no sorting, and no
+ * The commits arrive in order, so one pass is enough. No sorting, and no
  * assumption that a day's changes are contiguous beyond what git already
  * guarantees.
  */
@@ -118,10 +118,9 @@ export const Changelog: Story = {
           <br />
           <br />
           <strong>Every change that lands is a version.</strong> There is no release step to wait
-          for — a change reaches <code>main</code>, this Storybook redeploys, and that is what you
-          get when you pull the library. Which is why the date leads here rather than a number
-          like <code>2.1.0</code>: there is nothing to count. The npm package is separate, and is
-          semver.
+          for: a change reaches <code>main</code>, this Storybook redeploys, and that is what you
+          get. Which is why the date leads here rather than a number like <code>2.1.0</code>.
+          The npm package is separate, and is semver.
           <br />
           <br />
           Each entry carries the kind of change it was, read from the verb its description opens
@@ -145,7 +144,7 @@ export const Changelog: Story = {
           */}
           {byDay.map(([day, entries]) => (
             <Group key={day} name={day}>
-              <ul className="flex flex-col gap-10 border-t border-border-subtle pt-7">
+              <ul className="flex flex-col gap-8 border-t border-border-subtle pt-6">
                 {entries.map((commit) => (
                   <Entry key={commit.full} commit={commit} />
                 ))}

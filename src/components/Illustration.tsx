@@ -16,7 +16,7 @@ const box = cva('relative block w-full overflow-hidden bg-surface-media', {
 })
 
 export type IllustrationProps = VariantProps<typeof box> & {
-  /** Leave unset to show the placeholder — an image still loading, or none supplied. */
+  /** Leave unset to show the placeholder: an image still loading, or none supplied. */
   src?: string
   /**
    * What the picture says, or an empty string when it says nothing.
@@ -29,7 +29,7 @@ export type IllustrationProps = VariantProps<typeof box> & {
   alt: string
   /**
    * Lazy by default, which is right for an illustration further down a page.
-   * Set `eager` for one above the fold — a hero deferred is a hero that arrives
+   * Set `eager` for one above the fold. A hero deferred is a hero that arrives
    * late.
    */
   loading?: 'lazy' | 'eager'
@@ -44,7 +44,7 @@ export type IllustrationProps = VariantProps<typeof box> & {
  * photographs of people, which want Avatar, and not for icons, which want Icon.
  *
  * The ratio is the point. The box is reserved at its full height before the
- * image has loaded, so the page does not jump when it arrives — which is what
+ * image has loaded, so the page does not jump when it arrives, which is what
  * an aspect ratio is actually for, and why this is a component rather than a
  * note in the documentation saying to use 16:9.
  *
@@ -58,8 +58,8 @@ export type IllustrationProps = VariantProps<typeof box> & {
  * placeholder the Figma component falls back to. That is a usable loading and
  * empty state rather than an accident.
  *
- * Corners are square. Round it where it sits — Card already rounds its media
- * slot — so this never has to know what it is inside.
+ * Corners are square. Round it where it sits, since Card already rounds its
+ * media slot, so this never has to know what it is inside.
  */
 export const Illustration = forwardRef<HTMLDivElement, IllustrationProps>(function Illustration(
   { ratio = '16:9', src, alt, loading = 'lazy', className },

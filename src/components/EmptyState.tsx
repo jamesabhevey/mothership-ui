@@ -8,8 +8,8 @@ export type EmptyStateProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> & {
   /** 32px glyph. */
   icon?: ReactNode
   /**
-   * Omit when the user genuinely cannot act — for example when a filter
-   * returned nothing — and tell them to adjust the filter instead.
+   * Omit when the user genuinely cannot act, for example when a filter
+   * returned nothing, and tell them to adjust the filter instead.
    */
   action?: ReactNode
 }

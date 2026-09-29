@@ -9,11 +9,11 @@ export type ListItemProps = {
   leadingIcon?: ReactNode
   /**
    * 16px glyph. Show the trailing chevron only when the row actually
-   * navigates — an unfulfilled affordance is worse than none.
+   * navigates. An unfulfilled affordance is worse than none.
    */
   trailingIcon?: ReactNode
   /**
-   * Free-form trailing content — a Switch on a settings row, a Badge, a
+   * Free-form trailing content: a Switch on a settings row, a Badge, a
    * value. Unlike `trailingIcon` it is not constrained to a 16px slot.
    */
   trailing?: ReactNode
@@ -34,7 +34,7 @@ export type ListItemProps = {
  *
  * Minimum height is 48px, which clears the 44px touch target. Selected state
  * pairs its tint with the row's own content, and must not rely on background
- * colour alone — mark it with `aria-current` as this does.
+ * colour alone. Mark it with `aria-current` as this does.
  */
 export function ListItem({
   title,

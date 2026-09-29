@@ -43,7 +43,7 @@ export type BannerProps = Omit<HTMLAttributes<HTMLDivElement>, 'title'> &
  * Transient confirmations need a toast; validation of a single field belongs
  * in that field's helper text.
  *
- * Use `danger` only for genuine failures — overuse trains users to ignore it.
+ * Use `danger` only for genuine failures. Overuse trains users to ignore it.
  * The live region means the banner is announced when it appears rather than
  * only rendering visually.
  */

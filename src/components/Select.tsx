@@ -54,7 +54,7 @@ type Option = { value: string; label: ReactNode; text: string; disabled: boolean
  * The options stay written as `<option>` elements because that is what a select
  * looks like in every codebase, and because it keeps the markup portable: the
  * same children would work if this ever went back to a native control. They are
- * never rendered as options — they are a declaration, and this turns them into
+ * never rendered as options. They are a declaration, and this turns them into
  * the rows of the listbox.
  */
 function readOptions(children: ReactNode): Option[] {
@@ -122,7 +122,7 @@ export type SelectProps = Pick<VariantProps<typeof control>, 'size'> & {
  * decide. Two or three options worth comparing at a glance need Radio;
  * freeform input needs TextField.
  *
- * The open list is a Menu, as it is in Figma — one floating surface in the
+ * The open list is a Menu, as it is in Figma: one floating surface in the
  * system rather than the browser's own popup, which cannot be styled and looks
  * different on every platform.
  *
@@ -231,7 +231,7 @@ export const Select = forwardRef<HTMLButtonElement, SelectProps>(function Select
     rowRefs.current[active]?.focus()
   }, [open, active])
 
-  // A click anywhere outside dismisses, without stealing focus back — the
+  // A click anywhere outside dismisses, without stealing focus back, because the
   // person is already on their way somewhere else.
   useEffect(() => {
     if (!open) return

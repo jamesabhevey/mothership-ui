@@ -11,7 +11,7 @@ import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 
-// The global stylesheet. This is the whole token layer — the Tailwind v4
+// The global stylesheet. This is the whole token layer, the Tailwind v4
 // `@theme` block holding every colour, radius, shadow and type step read from
 // the Figma variable collections, plus the `:root` spacing/sizing variables and
 // the base layer that sets the page background and font family. Components are
@@ -31,7 +31,7 @@ const preview: Preview = {
   // Tailwind colour utility, which compiles to var(--color-…), follows.
   //
   // Nothing in the components knows about this. There is not one `dark:`
-  // variant in the library — a component asks for surface/default and gets
+  // variant in the library, a component asks for surface/default and gets
   // whichever value the current mode defines.
   globalTypes: {
     theme: {
@@ -53,15 +53,15 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       // Set on the iframe's root element rather than a wrapper, so the page
-      // background, the docs chrome and anything portalled to <body> — modals,
-      // tooltips, menus — are all inside the same mode.
+      // background, the docs chrome and anything portalled to <body>, modals,
+      // tooltips, menus, are all inside the same mode.
       //
       // Always set, never removed. tokens.css declares a light block as well as
       // a dark one, so an explicit value means a subtree can be pinned to the
-      // other mode — which is how the Colour page shows both values at once.
+      // other mode, which is how the Colour page shows both values at once.
       //
       // This runs on every render, so applyTheme returns early when the mode
-      // has not actually changed — otherwise every story render would flash the
+      // has not actually changed, otherwise every story render would flash the
       // switching transition on.
       applyTheme(document.documentElement, themeOf(context.globals))
       // createElement rather than Story(): calling it would run the story
@@ -84,7 +84,7 @@ const preview: Preview = {
     // axe, over every story, in the a11y panel and in `npm test`.
     //
     // `test: 'error'` is the whole point of this block. The addon ships with
-    // 'todo', which records violations as warnings and lets the run pass — a
+    // 'todo', which records violations as warnings and lets the run pass, a
     // reasonable default for a library retrofitting accessibility, and exactly
     // wrong for one that has already done the work. Left at 'todo' the suite
     // reports a clean 224 passes while quietly holding a list of failures.
@@ -107,7 +107,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        // Foundations first — the tokens everything else is built from — then
+        // Foundations first, the tokens everything else is built from, then
         // the components. Within each group the order is set explicitly rather
         // than alphabetically, matching the Figma library's own ordering.
         order: [

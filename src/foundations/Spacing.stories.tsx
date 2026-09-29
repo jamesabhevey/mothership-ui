@@ -26,14 +26,14 @@ const space: Array<[string, string, string]> = [
 ]
 
 const sizes: Array<[string, string, string]> = [
-  ['size/control/sm', '--size-control-sm', 'h-8 — below the 44px touch target'],
+  ['size/control/sm', '--size-control-sm', 'h-8, below the 44px touch target'],
   ['size/control/md', '--size-control-md', 'h-10'],
   ['size/control/lg', '--size-control-lg', 'h-12'],
   ['size/control/min-target', '--size-control-min-target', 'minimum touch target'],
   ['size/appbar', '--size-appbar', 'h-16'],
-  ['size/button/min-width/sm', '--size-button-min-width-sm', 'min-w-20 — loading state'],
-  ['size/button/min-width/md', '--size-button-min-width-md', 'min-w-24 — loading state'],
-  ['size/button/min-width/lg', '--size-button-min-width-lg', 'min-w-28 — loading state'],
+  ['size/button/min-width/sm', '--size-button-min-width-sm', 'min-w-20, loading state'],
+  ['size/button/min-width/md', '--size-button-min-width-md', 'min-w-24, loading state'],
+  ['size/button/min-width/lg', '--size-button-min-width-lg', 'min-w-28, loading state'],
 ]
 
 const icons: Array<[string, string, string]> = [
@@ -48,7 +48,7 @@ function Bar({ figma, css, note }: { figma: string; css: string; note: string })
     <li className="flex items-center gap-4">
       <span className="w-44 shrink-0 text-label-md text-text-primary">{figma}</span>
       <span className="w-14 shrink-0 font-mono text-caption-md text-text-secondary">
-        {value || '—'}
+        {value || '-'}
       </span>
       <span
         className="h-4 shrink-0 rounded-sm bg-action-primary-default"
@@ -66,7 +66,7 @@ function Box({ figma, css, note }: { figma: string; css: string; note: string })
     <li className="flex items-center gap-4">
       <span className="w-44 shrink-0 text-label-md text-text-primary">{figma}</span>
       <span className="w-14 shrink-0 font-mono text-caption-md text-text-secondary">
-        {value || '—'}
+        {value || '-'}
       </span>
       <span
         className="shrink-0 rounded-sm border border-border-default bg-bg-subtle"
@@ -86,7 +86,7 @@ export const SpacingAndSizing: Story = {
       intro={
         <>
           Figma's <code>space/N</code> tokens are pixel-named, and every step already lands on
-          Tailwind's 4px grid — so components use stock utilities and <code>p-4</code> <em>is</em>{' '}
+          Tailwind's 4px grid, so components use stock utilities and <code>p-4</code> <em>is</em>{' '}
           <code>space/16</code>. The raw variables are published on <code>:root</code> for anyone
           consuming the tokens outside Tailwind or cross-checking against Figma.
         </>

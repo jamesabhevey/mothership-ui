@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: Review a pull request against the Mothership UI design system — component reuse, tokens, layout, accessibility and finish. Use when reviewing a PR in this repository.
+description: Review a pull request against the Mothership UI design system, component reuse, tokens, layout, accessibility and finish. Use when reviewing a PR in this repository.
 ---
 
 # Design review
@@ -21,7 +21,7 @@ npm test
 **Do not report anything those already catch.** They cover hard-coded colours
 and durations in `src/components`, a stale barrel or token stylesheet, dead
 internal links, and every axe WCAG A/AA violation in both colour modes. If one
-of them fails, say so in one line and stop — the author needs to fix that
+of them fails, say so in one line and stop, the author needs to fix that
 first, and a second opinion on top of a red build is noise.
 
 Your job is what they cannot check. Be specific about that and nothing else.
@@ -37,8 +37,8 @@ library rather than in the page that needed it?
 
 **Tokens beyond colour.** The contract checks cover colour and motion literals
 in `src/components`. They do not cover spacing, sizing or type. A `p-[13px]`,
-a `text-[15px]`, a `gap-[7px]` — anything in square brackets that is not on the
-scale — is a finding. The scales are in `src/styles/tokens.css`.
+a `text-[15px]`, a `gap-[7px]`, anything in square brackets that is not on the
+scale, is a finding. The scales are in `src/styles/tokens.css`.
 
 **Layout.** Spacing that steps unevenly between siblings, a radius that
 disagrees with the surface it sits on, a component that breaks below 375px, a
@@ -60,7 +60,7 @@ reduced motion. Dark mode should have been considered rather than inherited.
 **Documentation.** A new component without stories is invisible to the docs, to
 autodocs and to the accessibility suite, which runs off the stories. Each one
 needs a story per variant and per state, and a doc comment saying when to use it
-*and when not to* — the second half is what stops a design system sprawling.
+*and when not to*, the second half is what stops a design system sprawling.
 
 ## How to report
 
@@ -74,7 +74,7 @@ things gets skimmed and then ignored, and the two that mattered go with it.
 
 This review is advisory. It does not block the merge, so write it as an opinion
 a reviewer can disagree with, not a gate. Say plainly when you are unsure
-rather than hedging every sentence — an uncertain finding stated as fact is
+rather than hedging every sentence, an uncertain finding stated as fact is
 worse than one stated as a question.
 
 Match the house style in anything you quote or suggest: plain words, specific

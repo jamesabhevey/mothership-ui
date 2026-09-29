@@ -4,7 +4,7 @@ import { create } from 'storybook/theming/create'
  * Storybook's own chrome, themed with the Mothership tokens.
  *
  * The manager is a separate React app from the preview iframe, so it cannot
- * read the `@theme` block in styles/index.css — the values have to be handed
+ * read the `@theme` block in styles/index.css, the values have to be handed
  * over as literals. They are copied from the Figma Semantic collection and
  * kept in the same order as the token file, so a drift is easy to spot.
  *

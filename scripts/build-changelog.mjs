@@ -3,7 +3,7 @@
  * git history -> src/changelog.json, for the Changelog page.
  *
  * Read at build time rather than fetched from GitHub in the browser. The API
- * would work — the repository is public — but unauthenticated calls are rate
+ * would work, since the repository is public, but unauthenticated calls are rate
  * limited per IP, so a page that several people open from one office network
  * would start failing, and it would fail silently on a page whose whole job is
  * to say what changed. The Pages deploy runs on every push to main, so building
@@ -34,7 +34,7 @@ const repo = (() => {
 
 /**
  * Commit bodies are hard-wrapped, so a paragraph arrives as several lines.
- * Rejoin them, keep the blank-line breaks, and drop the trailers — the
+ * Rejoin them, keep the blank-line breaks, and drop the trailers, the
  * co-author line is noise on a page like this.
  *
  * Indented blocks are the exception. A commit message that lays three tokens
@@ -93,14 +93,14 @@ const commits = log
  * a number on.
  *
  * The name is the day it landed plus which change of that day it was, counted
- * from the first — 10.09.2026.2 is the second change that day. Dates rather
+ * from the first, 10.09.2026.2 is the second change that day. Dates rather
  * than 2.1.0 because the Storybook is not versioned as a package: every change
  * that lands is what you get, so a number counting breaking changes would be
  * describing a release step that does not happen. The npm package is separate
  * and is semver.
  *
  * Day before month, as it is written here. It costs the property that a version
- * name sorts as a string, which nothing relied on — the list is ordered by git,
+ * name sorts as a string, which nothing relied on, since the list is ordered by git
  * not by parsing these back.
  *
  * The day is taken from the commit's own timezone offset, which is the day the
@@ -121,7 +121,7 @@ const MONTHS = [
  *
  * Built from the string rather than by constructing a Date. The commit carries
  * its own timezone offset, and the day the author saw is the day this should
- * say — handing the timestamp to the browser would re-resolve it in whatever
+ * say, handing the timestamp to the browser would re-resolve it in whatever
  * timezone the reader happens to be in, and quietly move a late-evening commit
  * to the following morning.
  */
@@ -136,7 +136,7 @@ const dayLabel = (iso) => {
  * Only verbs that are unambiguous are mapped; everything else is "Changed".
  * A classifier that guesses eagerly gets some of them wrong, and a changelog
  * entry labelled "Added" when something was removed is worse than one labelled
- * with the generic term — the reader stops trusting every label, not just that
+ * with the generic term, the reader stops trusting every label, not just that
  * one. Which is why "Bring", "Halve" and "Quieten" deliberately fall through.
  */
 const KINDS = [
@@ -165,4 +165,4 @@ for (const commit of [...commits].reverse()) {
 
 const out = { repo, generated: new Date().toISOString(), commits }
 writeFileSync('src/changelog.json', JSON.stringify(out, null, 2) + '\n')
-console.log(`src/changelog.json written — ${commits.length} commit(s)${repo ? ` from ${repo}` : ''}`)
+console.log(`src/changelog.json written, ${commits.length} commit(s)${repo ? ` from ${repo}` : ''}`)

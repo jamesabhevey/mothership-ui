@@ -52,8 +52,8 @@ export type IconButtonProps = Omit<
 /**
  * Triggers an action using an icon alone, where a text label would not fit.
  *
- * Use where space is genuinely constrained — a toolbar, a table row, an app
- * bar, the close control on a modal — and the icon is unambiguous. If you
+ * Use where space is genuinely constrained (a toolbar, a table row, an app
+ * bar, the close control on a modal) and the icon is unambiguous. If you
  * would need a tooltip to explain it, use Button with a visible label.
  *
  * `sm` is 32px and `md` is 40px, both below the 44px minimum touch target, so

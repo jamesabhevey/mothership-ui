@@ -2,7 +2,7 @@
 /**
  * Print every colour token's Light and Dark value from Figma, as JSON.
  *
- * For pulling the palette in by hand — seeding it, or after a restructure the
+ * For pulling the palette in by hand, seeding it, or after a restructure the
  * drift check cannot apply on its own. For the routine question of whether the
  * two still agree, use `npm run tokens:drift`, which reads Figma exactly the
  * same way and reports the differences.

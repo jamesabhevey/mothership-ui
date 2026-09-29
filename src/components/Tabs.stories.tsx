@@ -18,7 +18,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-/** Exactly one tab is active at all times — never zero, never more than one. */
+/** Exactly one tab is active at all times: never zero, never more than one. */
 export const Default: Story = {
   render: (args) => {
     const [active, setActive] = useState('overview')

@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
  * Runs axe over every story, in both colour modes.
  *
  * There are no hand-written test files. Every component already has a story per
- * variant and per state, so the stories are the test corpus — a new component
+ * variant and per state, so the stories are the test corpus, a new component
  * with stories is covered the moment it is written, and nobody has to remember
  * to add a test.
  *
@@ -19,7 +19,7 @@ import tailwindcss from '@tailwindcss/vite'
  * `data-theme` set to its own mode.
  *
  * Note there is deliberately no `.storybook/vitest.setup.ts`. Since Storybook
- * 10.3 the addon wires the preview *and* addon annotations itself — but it
+ * 10.3 the addon wires the preview *and* addon annotations itself, but it
  * backs off silently if it finds a setup file in the config directory calling
  * `setProjectAnnotations`, on the assumption you are doing it by hand. Older
  * guides still tell you to write that file with the preview annotations only,
@@ -45,7 +45,7 @@ const project = async (theme: 'light' | 'dark') => ({
   // do not pick up the root vite.config.ts, so without this the token
   // stylesheet is handed to plain PostCSS, which cannot read `@source` or
   // `@theme` and silently produces nothing. Every story then renders unstyled,
-  // and axe's colour-contrast rule — the main reason for running both modes —
+  // and axe's colour-contrast rule, the main reason for running both modes,
   // has no colours to check while the suite still reports a pass.
   plugins: [
     tailwindcss(),
@@ -57,7 +57,7 @@ const project = async (theme: 'light' | 'dark') => ({
   // Without this the story files and the renderer can end up on separately
   // resolved copies of react: react-dom sets the hook dispatcher on its own
   // copy's internals, a story reads it from the other, finds null, and throws
-  // "Cannot read properties of null (reading 'useState')" — but only for the
+  // "Cannot read properties of null (reading 'useState')", but only for the
   // stories that call hooks directly, and only when Vite's dependency cache is
   // cold, which is why it appeared on CI and never locally.
   resolve: { dedupe: ['react', 'react-dom', 'react/jsx-runtime'] },
@@ -65,7 +65,7 @@ const project = async (theme: 'light' | 'dark') => ({
   //
   // On a cold cache the optimiser finds react part-way through the suite,
   // re-bundles and reloads, and modules either side of that point end up on
-  // different instances of it — react-dom sets the hook dispatcher on one, a
+  // different instances of it, react-dom sets the hook dispatcher on one, a
   // story reads it from the other and gets null. It only ever hit the pages
   // that call hooks directly, and only on a cold cache, which is why CI failed
   // and a second local run never did.

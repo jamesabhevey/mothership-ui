@@ -2,7 +2,7 @@
  * Put a colour mode on a document, and animate the change.
  *
  * Shared by the preview and the manager, which are separate bundles running in
- * separate documents but have to agree on both the attribute and the timing —
+ * separate documents but have to agree on both the attribute and the timing,
  * otherwise the canvas and the chrome cross-fade at different speeds and the
  * switch looks broken rather than smooth.
  *
@@ -19,7 +19,7 @@ const FLAG = 'data-theme-switching'
  *
  * The CSS declares --theme-switch; this only needs to know when the fade is
  * over so it can take the flag back off. Reading it means the two cannot drift
- * apart — a number smaller here than there would cut the fade off part-way,
+ * apart, a number smaller here than there would cut the fade off part-way,
  * which looks like a bug in the fade rather than in the timing.
  *
  * The small margin on top is so the flag outlives the last frame rather than
@@ -36,7 +36,7 @@ const durationOf = (root: HTMLElement) => {
 /**
  * Per document, not one shared handle. The manager applies the mode to its own
  * document and to the preview's in the same breath, and a single timer would be
- * overwritten by the second call — leaving the first document's flag on, and
+ * overwritten by the second call, leaving the first document's flag on, and
  * with it a transition on every element for the rest of the session.
  */
 const clearing = new WeakMap<HTMLElement, ReturnType<typeof setTimeout>>()

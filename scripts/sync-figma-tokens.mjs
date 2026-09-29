@@ -109,7 +109,7 @@ for (const variable of variables) {
 
   const next = typeof value === 'number' ? `${value}px` : value
   const current = tokens[section][key]
-  if (current === undefined) changes.push({ kind: 'new', section, key, from: '—', to: next })
+  if (current === undefined) changes.push({ kind: 'new', section, key, from: ',', to: next })
   else if (current !== next) changes.push({ kind: 'changed', section, key, from: current, to: next })
   if (current === undefined || current !== next) tokens[section][key] = next
 }
@@ -129,7 +129,7 @@ if (unseen.size) {
 }
 
 if (typeSeen.length) {
-  console.log(`\n${typeSeen.length} typography variable(s) seen, reported only — pair these by hand:`)
+  console.log(`\n${typeSeen.length} typography variable(s) seen, reported only, pair these by hand:`)
   for (const t of typeSeen.slice(0, 40)) console.log(`  ${t}`)
 }
 

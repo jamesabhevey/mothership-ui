@@ -43,7 +43,7 @@ const button = cva(
       loading: { true: '', false: '' },
     },
     compoundVariants: [
-      // size/button/min-width — Loading hides the label, so the button holds a
+      // size/button/min-width. Loading hides the label, so the button holds a
       // sensible footprint instead of collapsing to the spinner.
       { loading: true, size: 'sm', class: 'min-w-20' },
       { loading: true, size: 'md', class: 'min-w-24' },
@@ -70,7 +70,7 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'color'>
  * alternatives beside it, Tertiary for low emphasis actions in dense layouts,
  * Destructive only for irreversible actions such as delete.
  *
- * Not for navigation to another screen or an external page — use a link or
+ * Not for navigation to another screen or an external page. Use a link or
  * ListItem so the control matches what actually happens.
  *
  * `sm` is 32px high and falls below the 44px minimum touch target, so use
@@ -97,8 +97,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   const iconSlot = size === 'lg' ? 'size-6' : 'size-4'
-  // Loading keeps the variant's own fill — it is a busy control, not a
-  // disabled one — so it uses aria-disabled rather than the disabled
+  // Loading keeps the variant's own fill, because it is a busy control rather
+  // than a disabled one, so it uses aria-disabled rather than the disabled
   // attribute, which would pull in the disabled colours.
   const busy = loading && !disabled
 

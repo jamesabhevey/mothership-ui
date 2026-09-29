@@ -53,21 +53,20 @@ export const Welcome: Story = {
       title="Mothership UI"
       intro={
         <>
-          A design system that exists twice: once as a Figma library, once as React components. This
-          Storybook is the code half, and the place to check what a component actually does before
-          you build with it.
+          A design system that exists twice: once as a Figma library, once as React components.
+          This Storybook is the code half.
           <br />
           <br />
-          Every colour, spacing step, corner radius, shadow and type step was read out of the Figma
-          variable collections rather than matched by eye, and the component APIs follow the property
-          names on the Figma component sets. A designer and a developer describing the same button
-          should be using the same words.
+          Every colour, spacing step, radius, shadow and type step was read out of the Figma
+          variable collections rather than matched by eye, and the component APIs use the property
+          names from the Figma component sets. A designer and a developer describing the same
+          button should be using the same words.
         </>
       }
     >
       {/*
         The three reference sections, in sidebar order. Get started and Catalog
-        are deliberately not repeated here — they sit directly above this page in
+        are deliberately not repeated here. They sit directly above this page in
         the sidebar, and the intro already points at them.
       */}
       <Group name="Start here">
@@ -92,8 +91,8 @@ export const Welcome: Story = {
           for the same reason.
 
           The icon count derives itself. The other three are counted from the
-          built story index and tokens.json — 29 component pages, 93 stories
-          under Components, and every entry across the token file — so they need
+          built story index and tokens.json (29 component pages, 93 stories
+          under Components, and every entry across the token file), so they need
           updating when the library grows.
         */}
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -103,45 +102,42 @@ export const Welcome: Story = {
           <Stat value="95" label="documented variants" />
         </ul>
         <P>
-          Components are grouped the way the Figma library groups them: Form Elements, Content
-          Presentation, Navigation, and Blocks for the composed pieces built out of the others.
+          Grouped the way the Figma library groups them: Form Elements, Content Presentation,
+          Navigation, and Blocks for the composed pieces built out of the others.
         </P>
       </Group>
 
       <Group name="What it is opinionated about">
         <P>
-          <strong>Colour is never the only signal.</strong> Every error pairs red with words and an
-          icon, every selected row pairs its tint with a tick or an <code>aria-current</code>. If you
-          find yourself relying on a colour alone, the component is being used against its grain.
+          <strong>Colour is never the only signal.</strong> Every error pairs red with words and
+          an icon; every selected row pairs its tint with a tick or an <code>aria-current</code>.
+          Relying on colour alone means the component is being used against its grain.
         </P>
         <P>
-          <strong>Keyboard focus is always visible.</strong> Focus was not a variant in the Figma
-          file, but the focus token was kept there deliberately, so every interactive component
-          implements it.
+          <strong>Keyboard focus is always visible.</strong> Focus is not a variant in the Figma
+          file, but the token is, so every interactive component implements it.
         </P>
         <P>
           <strong>Touch targets are called out, not silently fixed.</strong> Where a control is
-          smaller than the 44px minimum — Button <code>sm</code>, IconButton <code>sm</code> and{' '}
-          <code>md</code> — its page says so, so the choice sits with you rather than being hidden.
+          under the 44px minimum (Button <code>sm</code>, IconButton <code>sm</code> and{' '}
+          <code>md</code>) its page says so, leaving the choice with you.
         </P>
         <P>
-          <strong>Nothing hard-codes a value.</strong> Every component refers to tokens by name, so
-          re-theming the library is one file rather than a search and replace.
+          <strong>Nothing hard-codes a value.</strong> Components refer to tokens by name, so
+          re-theming is one file rather than a search and replace.
         </P>
       </Group>
 
       <Group name="Keeping it honest">
         <P>
-          The two halves drift apart if nobody is watching, so something is. A job runs every Monday,
-          reads the Figma library, compares the colours the components are actually painted against
-          the values in the code, and opens a pull request if they disagree. Nothing changes without
-          somebody approving it.
+          The two halves drift apart if nobody is watching, so something is. Every Monday a job
+          reads the Figma library, compares it against the code, and opens a pull request if they
+          disagree. Nothing changes without somebody approving it.
         </P>
         <P>
-          It watches colour rather than everything, because reading variable definitions needs a
-          Figma plan we do not have. Spacing and type changes still come through a person. The
-          Foundations pages read their values live from the code, so whatever the tokens are right
-          now is what those pages show.
+          It covers colour, type and the dimension scale. Motion is the gap: those values exist
+          only as Figma variables, and reading variables needs a plan we do not have. The
+          Foundations pages read live from the code, so they show whatever the tokens are now.
         </P>
       </Group>
     </Page>

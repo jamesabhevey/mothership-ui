@@ -8,7 +8,7 @@
  * hard-coded hex, a headline number that stopped being true.
  *
  * Each check below exists because that specific thing broke, or could break
- * without anyone noticing. Run after `npm run build-storybook` — several of them
+ * without anyone noticing. Run after `npm run build-storybook`, several of them
  * read the built site.
  *
  *   node scripts/check-contracts.mjs
@@ -21,7 +21,7 @@ const STATIC = 'storybook-static'
 const failures = []
 const notes = []
 const fail = (check, detail) => failures.push({ check, detail })
-const pass = (check, detail) => notes.push(`  ok    ${check}${detail ? ` — ${detail}` : ''}`)
+const pass = (check, detail) => notes.push(`  ok    ${check}${detail ? `, ${detail}` : ''}`)
 
 const walk = (dir, out = []) => {
   for (const name of readdirSync(dir)) {
@@ -65,7 +65,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 // 1b. Every colour token has both modes, and every one is documented.
 //
 // Colour is the only collection with modes. A token added with just a light
-// value would fall back to its light value in dark mode — which renders, looks
+// value would fall back to its light value in dark mode, which renders, looks
 // deliberate, and is wrong. Two tokens were also sitting in the Figma file
 // undocumented on the Colour page before this check existed.
 // ---------------------------------------------------------------------------
@@ -146,7 +146,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 //
 // Motion is tokenised through Tailwind's transition defaults, so a component
 // that writes `duration-200` or an easing literal has stepped outside the scale
-// — and unlike a hard-coded colour it is invisible in review, because the
+//, and unlike a hard-coded colour it is invisible in review, because the
 // difference between 150ms and 200ms cannot be seen in a diff.
 //
 // Arbitrary values referring to a token, `duration-[var(--duration-base)]`, are
@@ -159,7 +159,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
       .split('\n')
       .forEach((line, i) => {
         const literal =
-          // duration-200, delay-75 — Tailwind's numeric scale
+          // duration-200, delay-75, Tailwind's numeric scale
           /\b(?:duration|delay)-\d+/.exec(line) ??
           // a curve written out, or a bare ms/s value in a style prop
           /cubic-bezier\([^)]*\)/.exec(line) ??
@@ -176,7 +176,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 //
 // These links are built from story ids, and a story id is derived from its
 // title. Renaming a title moves the id and leaves the link pointing at nothing
-// — which shows up as a blank page, not an error. This already happened once.
+//, which shows up as a blank page, not an error. This already happened once.
 // ---------------------------------------------------------------------------
 {
   const index = JSON.parse(readFileSync(join(STATIC, 'index.json'), 'utf8')).entries
@@ -262,7 +262,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 // The sidebar and docs chrome are restyled from manager-head.html and
 // preview-head.html, which have to target Storybook's own markup. Those hooks
 // are not API. If an upgrade renames one, the rule stops matching and the
-// styling quietly reverts to Storybook's defaults — no error, no build failure.
+// styling quietly reverts to Storybook's defaults, no error, no build failure.
 //
 // This looks for each hook in the built site, skipping index.html and
 // iframe.html, which is where our own CSS ends up and would match itself.
@@ -324,7 +324,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
   const preview = readFileSync('.storybook/preview.ts', 'utf8')
   if (!/a11y:\s*{[^}]*test:\s*'error'/s.test(preview)) {
     problems.push(
-      "preview.ts does not set a11y `test: 'error'` — violations would be recorded as warnings" +
+      "preview.ts does not set a11y `test: 'error'`, violations would be recorded as warnings" +
         ' and the run would pass',
     )
   }
@@ -332,13 +332,13 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
   const vitest = readFileSync('vitest.config.ts', 'utf8')
   if (!/tailwindcss\(\)/.test(vitest)) {
     problems.push(
-      'vitest.config.ts does not add the Tailwind plugin — stories would render unstyled and' +
+      'vitest.config.ts does not add the Tailwind plugin, stories would render unstyled and' +
         ' colour contrast would go unchecked',
     )
   }
   for (const theme of ['light', 'dark']) {
     if (!vitest.includes(`'${theme}'`)) {
-      problems.push(`vitest.config.ts has no ${theme} project — only one colour mode would be tested`)
+      problems.push(`vitest.config.ts has no ${theme} project, only one colour mode would be tested`)
     }
   }
 
@@ -347,7 +347,7 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
     if (statSync(p).isFile() && readFileSync(p, 'utf8').includes('setProjectAnnotations')) {
       problems.push(
         `${p} calls setProjectAnnotations, so @storybook/addon-vitest will stop applying addon` +
-          " annotations — axe's afterEach among them",
+          " annotations, axe's afterEach among them",
       )
     }
   }

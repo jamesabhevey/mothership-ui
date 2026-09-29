@@ -67,7 +67,7 @@ function Specimen({ figma, cls, stem }: { figma: string; cls: string; stem: stri
         <span className="text-label-md text-text-primary">{figma}</span>
         <span className="font-mono text-caption-md text-text-secondary">{cls}</span>
         <span className="font-mono text-caption-md text-text-muted">
-          {size || '—'} / {lineHeight || '—'} · weight {weight || '—'} · tracking {tracking || '—'}
+          {size || '-'} / {lineHeight || '-'} · weight {weight || '-'} · tracking {tracking || '-'}
         </span>
       </div>
     </li>
@@ -80,7 +80,7 @@ export const Typography: Story = {
       title="Typography"
       intro={
         <>
-          One family — Inter — across five tiers. Sizes, line heights, weights and letter spacing
+          One family, Inter, across five tiers. Sizes, line heights, weights and letter spacing
           are read live from the tokens.
           <br />
           <br />

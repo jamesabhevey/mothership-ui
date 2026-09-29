@@ -17,7 +17,7 @@ export const Glyphs: Story = {
       title="Glyphs"
       intro={
         <>
-          The set is Lucide, drawn on a 24px grid with a 2px round stroke — the same artwork the
+          The set is Lucide, drawn on a 24px grid with a 2px round stroke, the same artwork the
           Figma Icon page is drawn from, used from its source rather than re-exported as SVG.
           <br />
           <br />
@@ -28,7 +28,7 @@ export const Glyphs: Story = {
         </>
       }
     >
-      <Group name={`The set — ${iconNames.length} glyphs`}>
+      <Group name={`The set, ${iconNames.length} glyphs`}>
         <ul className="grid grid-cols-[repeat(auto-fill,minmax(128px,1fr))] gap-3">
           {iconNames.map((name) => (
             <li

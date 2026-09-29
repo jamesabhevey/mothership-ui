@@ -11,7 +11,7 @@
  * light one into the `@theme` block, the dark one into a `[data-theme='dark']`
  * block that redeclares the same custom property. Tailwind v4 utilities compile
  * to `var(--color-…)`, so redeclaring the variable under a selector is all it
- * takes for `bg-surface-default` to follow the mode — no `dark:` variants
+ * takes for `bg-surface-default` to follow the mode, no `dark:` variants
  * anywhere in the components, and anything reading the variable directly
  * follows too.
  *
@@ -27,7 +27,7 @@ const v = (path) => path.replace(/\//g, '-')
 const L = []
 
 L.push('/*')
-L.push(' * Mothership UI design tokens — GENERATED FILE, DO NOT EDIT.')
+L.push(' * Mothership UI design tokens, GENERATED FILE, DO NOT EDIT.')
 L.push(' *')
 L.push(' * Source: tokens/tokens.json, which mirrors the Figma variable collections')
 L.push(' * (Semantic / Dimension / Typography). Regenerate with `npm run tokens`.')
@@ -38,7 +38,7 @@ L.push(' */')
 L.push('')
 L.push('@theme {')
 
-L.push('  /* Colour — light mode. Dark follows the @theme block. */')
+L.push('  /* Colour, light mode. Dark follows the @theme block. */')
 for (const [k, val] of Object.entries(t.color)) L.push(`  --color-${v(k)}: ${val.light};`)
 
 L.push('')
@@ -104,7 +104,7 @@ L.push('')
 L.push('/*')
 L.push(' * Light, restated.')
 L.push(' *')
-L.push(' * The @theme block above already carries these, so this looks redundant —')
+L.push(' * The @theme block above already carries these, so this looks redundant ,')
 L.push(' * but custom properties inherit, which means a subtree inside a dark page')
 L.push(' * has no way back to light without them. With this block, data-theme works')
 L.push(' * in both directions and can be nested: a light island inside a dark page,')
@@ -121,7 +121,7 @@ L.push('/*')
 L.push(' * Dark mode.')
 L.push(' *')
 L.push(' * Set data-theme="dark" on <html> and every colour token switches. Only')
-L.push(' * colour has modes in Figma, so only colour is redeclared here — the type')
+L.push(' * colour has modes in Figma, so only colour is redeclared here, the type')
 L.push(' * scale, spacing, radii and border widths are shared by both.')
 L.push(' *')
 L.push(' * color-scheme tells the browser to render its own furniture dark too:')
@@ -137,7 +137,7 @@ L.push('')
 writeFileSync('src/styles/tokens.css', L.join('\n'))
 
 /*
- * A second copy for Storybook's manager — the sidebar and toolbar.
+ * A second copy for Storybook's manager, the sidebar and toolbar.
  *
  * The manager is a separate document from the preview iframe and does not go
  * through Vite, so it cannot import the stylesheet above; and it could not use
@@ -150,11 +150,11 @@ writeFileSync('src/styles/tokens.css', L.join('\n'))
  * the chrome cannot drift from the components.
  */
 const M = []
-M.push('/* Mothership UI tokens for the Storybook manager — GENERATED, DO NOT EDIT. */')
+M.push('/* Mothership UI tokens for the Storybook manager, GENERATED, DO NOT EDIT. */')
 M.push('')
 M.push('/* Shared by both modes. Radius and motion are here because the chrome is')
-M.push('   shaped and timed from them too — the search field, the sidebar headings,')
-M.push('   the light/dark cross-fade — and a var() that is not declared is not an')
+M.push('   shaped and timed from them too, the search field, the sidebar headings,')
+M.push('   the light/dark cross-fade, and a var() that is not declared is not an')
 M.push('   error: it silently computes to the property\'s initial value, which for a')
 M.push('   radius is a square corner and for a duration is no animation at all. */')
 M.push(':root {')
@@ -177,4 +177,4 @@ const n = Object.keys(t.color).length + Object.keys(t.radius).length + Object.ke
   Object.keys(t.type).length + Object.keys(t.space).length + Object.keys(t.size).length +
   Object.keys(t.borderWidth).length + Object.keys(t.font).length +
   Object.keys(t.duration).length + Object.keys(t.easing).length
-console.log(`src/styles/tokens.css written — ${n} tokens, ${Object.keys(t.color).length} of them in two modes`)
+console.log(`src/styles/tokens.css written, ${n} tokens, ${Object.keys(t.color).length} of them in two modes`)

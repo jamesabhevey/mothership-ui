@@ -7,7 +7,7 @@ export type MenuProps = HTMLAttributes<HTMLDivElement> & {
   /**
    * What the surface is, to assistive technology. A list of actions is a
    * `menu`; a list of values to choose between is a `listbox`, which is what
-   * Select opens. The look is identical either way — the difference is what a
+   * Select opens. The look is identical either way. The difference is what a
    * screen reader announces, and getting it wrong tells someone they are about
    * to run a command when they are picking a value.
    */
@@ -22,7 +22,7 @@ export type MenuProps = HTMLAttributes<HTMLDivElement> & {
  * for lists longer than about ten rows, which need a searchable list.
  *
  * The menu is a single tab stop with arrow keys moving between items, Escape
- * closes it, and focus must return to the trigger — wire that up in the
+ * closes it, and focus must return to the trigger. Wire that up in the
  * component that owns the open state. Position it so it never covers the
  * control that opened it.
  */
@@ -56,8 +56,8 @@ export type MenuItemProps = Omit<HTMLAttributes<HTMLButtonElement>, 'children'> 
   disabled?: boolean
   /**
    * Matches the surface it sits on: `menuitemradio` in a menu, `option` in a
-   * listbox. The two announce selection through different attributes —
-   * aria-checked and aria-selected — so this switches that as well.
+   * listbox. The two announce selection through different attributes,
+   * aria-checked and aria-selected, so this switches that as well.
    */
   role?: 'menuitemradio' | 'menuitem' | 'option'
 }

@@ -53,7 +53,7 @@ function RadiusSample({
       <div className="flex min-w-0 flex-col gap-0.5">
         <span className="text-label-md text-text-primary">{figma}</span>
         <span className="font-mono text-caption-md text-text-secondary">
-          {cls} · {value || '—'}
+          {cls} · {value || '-'}
         </span>
         <span className="text-caption-md text-text-muted">{usedBy}</span>
       </div>
@@ -69,7 +69,7 @@ export const RadiusBorderElevation: Story = {
       intro={
         <>
           Corner radius, stroke width and the three drop shadows. Elevation is a shadow of{' '}
-          <code>color/shadow/default</code>, which is a 16% black — it darkens whatever sits
+          <code>color/shadow/default</code>, which is a 16% black that darkens whatever sits
           beneath rather than assuming a white page.
         </>
       }

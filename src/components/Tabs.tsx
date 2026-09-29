@@ -17,7 +17,7 @@ export type TabsProps = HTMLAttributes<HTMLDivElement> & {
  * views. Not for primary app navigation across unrelated destinations, which
  * belongs in AppBar or a nav shell.
  *
- * Keep exactly one Tab active — never zero, never more than one.
+ * Keep exactly one Tab active: never zero, never more than one.
  */
 export function Tabs({ className, label, children, ...props }: TabsProps) {
   return (

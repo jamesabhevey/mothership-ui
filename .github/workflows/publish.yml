@@ -81,7 +81,7 @@ jobs:
 
       - name: Publish
         # No --access flag: packages here inherit the repository's visibility,
-        # and the repository is private. No provenance attestation either —
+        # and the repository is private. No provenance attestation either,
         # that is an npmjs.com feature and GitHub Packages does not take one.
         run: npm publish
         env:

@@ -29,7 +29,7 @@ export type AvatarProps = Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'
     initials?: string
     /**
      * The person or organisation being represented. Becomes the image alt
-     * text — an avatar is not a substitute for a name.
+     * text. An avatar is not a substitute for a name.
      */
     name?: string
   }

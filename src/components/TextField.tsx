@@ -39,7 +39,7 @@ const input = cva(
 
 export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> &
   Pick<VariantProps<typeof control>, 'size'> & {
-    /** The field name. Never hide it to save space — a placeholder is not a label. */
+    /** The field name. Never hide it to save space; a placeholder is not a label. */
     label?: ReactNode
     /** Sentence of guidance shown under the label. */
     supporting?: ReactNode
@@ -47,7 +47,7 @@ export type TextFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
     helperText?: ReactNode
     /**
      * The validation message. Setting it switches the field to the error
-     * treatment and replaces `helperText` — colour alone is not an error
+     * treatment and replaces `helperText`. Colour alone is not an error
      * message, so say what is wrong and how to fix it.
      */
     error?: ReactNode
