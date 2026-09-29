@@ -37,6 +37,12 @@ jobs:
     name: Review against the design system
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    # The `secrets` context cannot be read from an `if`, at job or step level —
+    # a workflow that tries fails to parse before any job starts. Lifting it
+    # into `env`, which may read secrets, gives the steps below something they
+    # are allowed to test.
+    env:
+      HAS_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@v7
@@ -55,15 +61,17 @@ jobs:
       - name: Install dependencies
         # The review runs the same checks a person would before commenting, so
         # it needs the project installed rather than just the diff.
+        if: env.HAS_KEY == 'true'
         run: npm ci
 
       - name: Install Chromium
+        if: env.HAS_KEY == 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Review
         # Skipped rather than failed when the secret is not set, so the
         # workflow is harmless until somebody adds it.
-        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        if: env.HAS_KEY == 'true'
         env:
           STORYBOOK_DISABLE_TELEMETRY: '1'
         uses: anthropics/claude-code-action@v1
