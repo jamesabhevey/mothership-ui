@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { P, Page } from '../docs/parts'
+import { Badge, type BadgeProps } from '../components/Badge'
 import changelog from '../changelog.json'
 
 const meta = {
@@ -16,6 +17,20 @@ type Story = StoryObj<typeof meta>
 const { repo, commits } = changelog
 
 const commitUrl = (hash: string) => (repo ? `https://github.com/${repo}/commit/${hash}` : null)
+
+/**
+ * Colour per kind of change, using the library's own Badge.
+ *
+ * Removed is neutral rather than danger. Red would read as something having
+ * gone wrong, and most removals here are the opposite — a thing that stopped
+ * earning its place being taken out on purpose.
+ */
+const intents: Record<string, BadgeProps['intent']> = {
+  Added: 'success',
+  Changed: 'info',
+  Fixed: 'brand',
+  Removed: 'neutral',
+}
 
 /**
  * Commit bodies are plain text, but they are written with backticks around
@@ -37,6 +52,7 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
   return (
     <li className="flex flex-col gap-2 border-b border-border-subtle pb-5 last:border-0 last:pb-0">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <Badge intent={intents[commit.kind] ?? 'neutral'}>{commit.kind}</Badge>
         <span className="rounded-sm bg-bg-subtle px-1.5 py-0.5 font-mono text-caption-md text-text-primary">
           {commit.version}
         </span>
@@ -45,20 +61,35 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-caption-md text-text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+            className="text-label-md text-text-link underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
           >
-            {commit.short}
+            View commit
           </a>
-        ) : (
-          <span className="font-mono text-caption-md text-text-muted">{commit.short}</span>
-        )}
+        ) : null}
       </div>
-      <span className="text-label-lg font-semibold text-text-primary">{commit.subject}</span>
-      {commit.body.map((paragraph, i) => (
-        <p key={i} className="max-w-[80ch] text-body-sm text-text-secondary">
-          {withCode(paragraph)}
-        </p>
-      ))}
+      {/*
+        A heading rather than a styled span. Forty entries in a list is exactly
+        the page somebody navigates by heading, and h2 is the right level under
+        the page's own h1.
+      */}
+      <h2 className="text-heading-sm font-semibold text-text-primary">{commit.subject}</h2>
+      {commit.body.map((paragraph, i) =>
+        // A block that kept its line breaks was laid out deliberately in the
+        // commit message — a short column of tokens, usually. Rendered as
+        // written, in mono, rather than rewrapped into a run-on sentence.
+        paragraph.includes('\n') ? (
+          <pre
+            key={i}
+            className="max-w-full overflow-x-auto rounded-sm bg-bg-subtle px-3 py-2 font-mono text-caption-md text-text-secondary"
+          >
+            {paragraph}
+          </pre>
+        ) : (
+          <p key={i} className="max-w-[80ch] text-body-sm text-text-secondary">
+            {withCode(paragraph)}
+          </p>
+        ),
+      )}
     </li>
   )
 }
@@ -81,10 +112,15 @@ export const Changelog: Story = {
           <br />
           <br />
           The name is the day it landed and which change of that day it was, so{' '}
-          <code>2026.09.10.2</code> is the second change that day. Dates rather than numbers like{' '}
-          <code>2.1.0</code> because nothing here is published as a package: there is no install to
-          pin to, so a number counting breaking changes would be describing something that does not
-          exist.
+          <code>10.09.2026.2</code> is the second change that day. Dates rather than numbers like{' '}
+          <code>2.1.0</code> because the Storybook has no release step to hang a number on — every
+          change that lands is what you get. The npm package is separate and is semver.
+          <br />
+          <br />
+          Each entry carries the kind of change it was, read from the verb its description opens
+          with. Only unambiguous verbs are labelled; anything else is <strong>Changed</strong>{' '}
+          rather than guessed at, because a label that is sometimes wrong teaches you to ignore all
+          of them.
         </>
       }
     >

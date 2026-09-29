@@ -36,18 +36,30 @@ const repo = (() => {
  * Commit bodies are hard-wrapped, so a paragraph arrives as several lines.
  * Rejoin them, keep the blank-line breaks, and drop the trailers — the
  * co-author line is noise on a page like this.
+ *
+ * Indented blocks are the exception. A commit message that lays three tokens
+ * out in a column means the column, and rewrapping it produces a run-on line
+ * that reads as nonsense. Those keep their line breaks, and the page renders
+ * them as written.
  */
 const paragraphs = (body) =>
   body
     .split(/\n{2,}/)
-    .map((p) =>
-      p
+    .map((block) => {
+      const lines = block
         .split('\n')
         .filter((line) => !/^(Co-Authored-By|Signed-off-by):/i.test(line.trim()))
-        .join(' ')
-        .replace(/\s+/g, ' ')
-        .trim(),
-    )
+      if (!lines.length) return ''
+
+      const indented = lines.every((line) => /^\s{2,}\S/.test(line))
+      if (indented) {
+        // Strip the common indent, keep the relative one, keep the breaks.
+        const pad = Math.min(...lines.map((l) => l.match(/^\s*/)[0].length))
+        return lines.map((l) => l.slice(pad).trimEnd()).join('\n')
+      }
+
+      return lines.join(' ').replace(/\s+/g, ' ').trim()
+    })
     .filter(Boolean)
 
 let log = ''
@@ -81,15 +93,44 @@ const commits = log
  * a number on.
  *
  * The name is the day it landed plus which change of that day it was, counted
- * from the first — 2026.09.10.2 is the second change that day. Dates rather
- * than 2.1.0 because nothing here is published as a package: there is no
- * install to pin, so a number counting breaking changes would be describing a
- * thing that does not exist.
+ * from the first — 10.09.2026.2 is the second change that day. Dates rather
+ * than 2.1.0 because the Storybook is not versioned as a package: every change
+ * that lands is what you get, so a number counting breaking changes would be
+ * describing a release step that does not happen. The npm package is separate
+ * and is semver.
+ *
+ * Day before month, as it is written here. It costs the property that a version
+ * name sorts as a string, which nothing relied on — the list is ordered by git,
+ * not by parsing these back.
  *
  * The day is taken from the commit's own timezone offset, which is the day the
  * author saw when they made it.
  */
-const dayKey = (iso) => iso.slice(0, 10).replace(/-/g, '.')
+const dayKey = (iso) => {
+  const [y, m, d] = iso.slice(0, 10).split('-')
+  return `${d}.${m}.${y}`
+}
+
+/**
+ * What kind of change this is, from the verb the subject opens with.
+ *
+ * Only verbs that are unambiguous are mapped; everything else is "Changed".
+ * A classifier that guesses eagerly gets some of them wrong, and a changelog
+ * entry labelled "Added" when something was removed is worse than one labelled
+ * with the generic term — the reader stops trusting every label, not just that
+ * one. Which is why "Bring", "Halve" and "Quieten" deliberately fall through.
+ */
+const KINDS = [
+  ['Added', ['add', 'publish', 'introduce', 'create', 'document', 'start', 'give']],
+  ['Removed', ['remove', 'drop', 'delete', 'cut']],
+  ['Fixed', ['fix', 'correct', 'repair', 'restore']],
+]
+
+const kindOf = (subject) => {
+  const verb = subject.trim().split(/\s+/)[0]?.toLowerCase().replace(/[^a-z-]/g, '')
+  for (const [kind, verbs] of KINDS) if (verbs.includes(verb)) return kind
+  return 'Changed'
+}
 
 const seen = new Map()
 // git log is newest first, so count from the oldest to number them in the order
@@ -99,6 +140,7 @@ for (const commit of [...commits].reverse()) {
   const n = (seen.get(day) ?? 0) + 1
   seen.set(day, n)
   commit.version = `${day}.${n}`
+  commit.kind = kindOf(commit.subject)
 }
 
 const out = { repo, generated: new Date().toISOString(), commits }
