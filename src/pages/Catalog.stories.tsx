@@ -325,7 +325,10 @@ const entries: Entry[] = [
     description: 'A bounded group of settings rows, each applying immediately.',
     preview: (
       <SettingsRowGroup label="Notifications">
-        <ListItem title="Push notifications" trailing={<Switch defaultChecked className="py-0" />} />
+        <ListItem
+          title="Push notifications"
+          trailing={<Switch defaultChecked className="py-0" aria-label="Push notifications" />}
+        />
       </SettingsRowGroup>
     ),
   },

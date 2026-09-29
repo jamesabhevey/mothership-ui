@@ -20,6 +20,7 @@
     "tokens:drift": "node scripts/check-figma-drift.mjs",
     "tokens:modes": "node scripts/sync-figma-modes.mjs",
     "check": "node scripts/check-contracts.mjs",
+    "test": "vitest run",
     "barrel": "node scripts/build-barrel.mjs",
     "build:js": "vite build --config vite.lib.config.ts",
     "build:types": "tsc -p tsconfig.build.json",
@@ -35,19 +36,25 @@
   },
   "devDependencies": {
     "@fontsource/inter": "^5.1.0",
+    "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.5.8",
+    "@storybook/addon-vitest": "^10.6.0",
     "@storybook/react-vite": "^10.5.8",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^4.1.11",
+    "@vitest/browser-playwright": "^4.1.11",
+    "playwright": "^1.63.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "storybook": "^10.5.8",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.2",
-    "vite": "^6.0.7"
+    "vite": "^6.0.7",
+    "vitest": "^4.1.11"
   },
   "allowScripts": {
     "esbuild@0.25.12": true

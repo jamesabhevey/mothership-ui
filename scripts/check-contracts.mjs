@@ -300,6 +300,71 @@ const srcFiles = walk('src').filter((f) => ['.tsx', '.ts'].includes(extname(f)))
 }
 
 // ---------------------------------------------------------------------------
+// 10. The accessibility suite can still fail.
+//
+// Every way this suite goes quiet leaves it reporting a full set of passes, so
+// none of them announce themselves:
+//
+//   - addon-a11y defaults to `test: 'todo'`, which records violations as
+//     warnings and lets the run finish green.
+//   - Vitest builds its own Vite config and does not inherit the root one, so
+//     without Tailwind the token stylesheet compiles to nothing, every story
+//     renders unstyled, and axe has no colours to measure.
+//   - since Storybook 10.3 the Vitest addon wires the preview and addon
+//     annotations itself, but backs off if it finds a setup file calling
+//     setProjectAnnotations. Older guides tell you to write that file with the
+//     preview annotations only, which drops axe's afterEach entirely.
+//
+// Each of those was hit while this was being built. This check is the one that
+// would have caught them.
+// ---------------------------------------------------------------------------
+{
+  const problems = []
+
+  const preview = readFileSync('.storybook/preview.ts', 'utf8')
+  if (!/a11y:\s*{[^}]*test:\s*'error'/s.test(preview)) {
+    problems.push(
+      "preview.ts does not set a11y `test: 'error'` — violations would be recorded as warnings" +
+        ' and the run would pass',
+    )
+  }
+
+  const vitest = readFileSync('vitest.config.ts', 'utf8')
+  if (!/tailwindcss\(\)/.test(vitest)) {
+    problems.push(
+      'vitest.config.ts does not add the Tailwind plugin — stories would render unstyled and' +
+        ' colour contrast would go unchecked',
+    )
+  }
+  for (const theme of ['light', 'dark']) {
+    if (!vitest.includes(`'${theme}'`)) {
+      problems.push(`vitest.config.ts has no ${theme} project — only one colour mode would be tested`)
+    }
+  }
+
+  for (const f of readdirSync('.storybook')) {
+    const p = join('.storybook', f)
+    if (statSync(p).isFile() && readFileSync(p, 'utf8').includes('setProjectAnnotations')) {
+      problems.push(
+        `${p} calls setProjectAnnotations, so @storybook/addon-vitest will stop applying addon` +
+          " annotations — axe's afterEach among them",
+      )
+    }
+  }
+
+  const main = readFileSync('.storybook/main.ts', 'utf8')
+  for (const addon of ['@storybook/addon-a11y', '@storybook/addon-vitest']) {
+    if (!main.includes(addon)) problems.push(`${addon} is not registered in main.ts`)
+  }
+
+  if (problems.length) {
+    fail('accessibility failures still fail the build', problems.join('\n         '))
+  } else {
+    pass('accessibility failures still fail the build', "test: 'error', both modes, styles applied")
+  }
+}
+
+// ---------------------------------------------------------------------------
 console.log('\nContract checks\n')
 for (const n of notes) console.log(n)
 if (failures.length) {

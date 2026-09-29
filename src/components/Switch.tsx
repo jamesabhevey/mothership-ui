@@ -1,11 +1,24 @@
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '../lib/cn'
 
-export type SwitchProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> & {
+type SwitchBase = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'> & {
   /** The setting being switched. Label the setting, not the on/off positions. */
   children?: ReactNode
   className?: string
 }
+
+/**
+ * A switch has to be named, one way or another.
+ *
+ * The visible label is the usual way, but a switch in the trailing slot of a
+ * ListItem has no room for one — the row's own title is the label, and the
+ * input is left with no accessible name at all. A screen reader then announces
+ * "switch, on" with nothing to say what is on. That is easy to write and
+ * invisible on screen, so the type makes it impossible instead of leaving it to
+ * be caught later: pass children, `aria-label`, or `aria-labelledby`.
+ */
+export type SwitchProps = SwitchBase &
+  ({ children: ReactNode } | { 'aria-label': string } | { 'aria-labelledby': string })
 
 /**
  * Turns a single setting on or off, taking effect immediately.

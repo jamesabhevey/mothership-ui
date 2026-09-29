@@ -42,6 +42,7 @@ npm run storybook     # the component explorer — the main way to work
 npm run dev           # the older showcase page, superseded by Storybook
 npm run build         # build the publishable package into dist/
 npm run check         # the contract checks, after a build-storybook
+npm test              # axe over every story, in light and dark
 ```
 
 ## Releasing
@@ -519,6 +520,7 @@ happen without anyone noticing:
 | Internal links resolve | a link to a story whose title has been renamed, which renders as a blank page rather than an error |
 | Welcome page counts are current | the component, token and variant counts stated as fact on the Welcome page drifting as the library grows |
 | CSS overrides still target real Storybook markup | a Storybook upgrade renaming an internal that `manager-head.html` or `preview-head.html` hangs a rule off, so the rule silently stops applying |
+| Accessibility failures still fail the build | the a11y suite being downgraded to warnings, losing its stylesheet, or losing axe's hook — each of which leaves it reporting a clean run having checked nothing |
 
 The last one is the important one. The sidebar and docs chrome are restyled by
 targeting Storybook's own markup, which is not a public API, and when one of
@@ -526,8 +528,43 @@ those hooks disappears the styling simply reverts to Storybook's defaults with
 no error anywhere.
 
 What none of them cover is the *value* a rule resolves to — whether a hover is
-our grey or Storybook's purple. That needs a real browser measuring computed
-styles, which would mean adding Playwright.
+our grey or Storybook's purple. The accessibility suite below now runs a real
+browser, so measuring computed styles is no longer out of reach; nothing reads
+them yet.
+
+## Accessibility checks
+
+`npm test`. Every push and pull request runs it, and so does a release.
+
+axe runs against every story, in a real Chromium, in both colour modes. There
+are no test files. Each component already has a story per variant and per
+state, so the stories are the corpus — write a component with stories and it is
+covered, with nothing to remember.
+
+Two runs rather than one because contrast is the failure this catches most
+often, and contrast is exactly what differs between light and dark: a pairing
+that passes on white can fail on near-black. `initialGlobals` pins the theme
+per Vitest project, so each run renders every story in its own mode.
+
+Scoped to axe's WCAG A and AA rule tags, which is the bar the library claims.
+The rest of axe is best practice rather than conformance, and mixing the two
+would mean a red build no longer reads as "this does not meet AA".
+
+It found three real problems on its first honest run, all present in both
+modes: a `Switch` in the trailing slot of a `ListItem` had no accessible name
+at all, in four places; and the changelog's prose link was distinguished from
+the text around it by colour alone, at 1.34:1. The switch case is now a type
+error — `Switch` takes children, `aria-label` or `aria-labelledby`, and will
+not compile without one — which is where that particular mistake belongs, since
+it is invisible on screen and only a screen reader would ever have found it.
+
+Three things about the setup are load-bearing, and all three fail by passing:
+addon-a11y ships `test: 'todo'`, which turns violations into warnings; Vitest
+does not inherit the root Vite config, so without Tailwind every story renders
+unstyled and contrast has nothing to measure; and since Storybook 10.3 the
+Vitest addon stops wiring addon annotations — axe's `afterEach` among them — if
+it finds a setup file calling `setProjectAnnotations`, which is what older
+guides tell you to write. Contract check 10 asserts all three.
 
 ## Where the code departs from the Figma file, and why
 

@@ -2,8 +2,11 @@ import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx)'],
-  // addon-docs is what renders the autodocs pages enabled in preview.ts.
-  addons: ['@storybook/addon-docs'],
+  // addon-docs renders the autodocs pages enabled in preview.ts. addon-a11y
+  // runs axe against the rendered story — in the panel while you work, and in
+  // CI through addon-vitest, which turns every story into a test without a
+  // single test file being written.
+  addons: ['@storybook/addon-docs', '@storybook/addon-a11y', '@storybook/addon-vitest'],
   framework: {
     name: '@storybook/react-vite',
     options: {},

@@ -308,7 +308,7 @@ export function App() {
               <ListItem
                 title="Push notifications"
                 subtitle="On this device"
-                trailing={<Switch defaultChecked className="py-0" />}
+                trailing={<Switch defaultChecked className="py-0" aria-label="Push notifications" />}
               />
               <ListItem as="button" title="Email digest" subtitle="Weekly" trailingIcon={<ChevronRight size={16} strokeWidth={2} />} />
             </SettingsRowGroup>

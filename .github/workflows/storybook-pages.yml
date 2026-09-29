@@ -77,6 +77,19 @@ jobs:
           # No telemetry from CI builds.
           STORYBOOK_DISABLE_TELEMETRY: '1'
 
+      - name: Install Chromium for the accessibility run
+        # Only Chromium, and only its headless shell. The a11y suite renders
+        # every story in a real browser because axe needs computed styles —
+        # contrast cannot be checked against a stylesheet that was never
+        # applied. `--with-deps` pulls the system libraries the runner image
+        # does not ship.
+        run: npx playwright install --with-deps chromium
+
+      - name: Accessibility
+        # axe over every story, in light and dark. No test files: the stories
+        # are the corpus, so a new component is covered as soon as it has one.
+        run: npm test
+
       - name: Contract checks
         # The assumptions this Storybook makes that nothing else would catch —
         # dead internal links, a hand-edited generated stylesheet, a hard-coded

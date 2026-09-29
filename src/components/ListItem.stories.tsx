@@ -50,7 +50,7 @@ export const WithSwitch: Story = {
     subtitle: 'On this device',
     leadingIcon: undefined,
     trailingIcon: undefined,
-    trailing: <Switch defaultChecked className="py-0" />,
+    trailing: <Switch defaultChecked className="py-0" aria-label="Push notifications" />,
   },
 }
 

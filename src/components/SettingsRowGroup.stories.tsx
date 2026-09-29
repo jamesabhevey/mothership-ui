@@ -29,7 +29,7 @@ export const Notifications: Story = {
         <ListItem
           title="Push notifications"
           subtitle="On this device"
-          trailing={<Switch defaultChecked className="py-0" />}
+          trailing={<Switch defaultChecked className="py-0" aria-label="Push notifications" />}
         />
         <ListItem
           as="button"

@@ -1,3 +1,4 @@
+import { createElement } from 'react'
 import type { Preview } from '@storybook/react-vite'
 import { mothershipTheme } from './theme'
 import { applyTheme, themeOf } from './apply-theme'
@@ -63,7 +64,13 @@ const preview: Preview = {
       // has not actually changed — otherwise every story render would flash the
       // switching transition on.
       applyTheme(document.documentElement, themeOf(context.globals))
-      return Story()
+      // createElement rather than Story(): calling it would run the story
+      // function here, in the decorator, and a story whose render is a
+      // component using hooks would then call them outside a React render.
+      // Storybook's own renderer happens to run decorators inside one, so this
+      // works in the browser either way; the Vitest run composes stories
+      // differently and it does not. As an element it is a component in both.
+      return createElement(Story)
     },
   ],
 
@@ -72,6 +79,25 @@ const preview: Preview = {
     // handed to them separately from the manager chrome.
     docs: {
       theme: mothershipTheme,
+    },
+
+    // axe, over every story, in the a11y panel and in `npm test`.
+    //
+    // `test: 'error'` is the whole point of this block. The addon ships with
+    // 'todo', which records violations as warnings and lets the run pass — a
+    // reasonable default for a library retrofitting accessibility, and exactly
+    // wrong for one that has already done the work. Left at 'todo' the suite
+    // reports a clean 224 passes while quietly holding a list of failures.
+    //
+    // Restricted to the WCAG A and AA rule tags, which is the bar this library
+    // actually claims. axe's remaining rules are best practice rather than
+    // conformance; mixing them in means a failing build cannot be read as
+    // "this does not meet AA", which is the one thing it needs to mean.
+    a11y: {
+      test: 'error',
+      options: {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      },
     },
     controls: {
       matchers: {

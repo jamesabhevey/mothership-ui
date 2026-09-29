@@ -113,7 +113,12 @@ export const Changelog: Story = {
                 href={`https://github.com/${repo}/commits/main`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-text-link hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+                // Underlined in its resting state, not just on hover. A link
+                // sitting inside a sentence has to be distinguishable from the
+                // text around it without relying on colour; against body text
+                // this one differs by 1.34:1, well under the 3:1 that would
+                // let colour carry it alone.
+                className="text-text-link underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
               >
                 See the full history on GitHub
               </a>
