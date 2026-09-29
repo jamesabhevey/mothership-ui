@@ -162,8 +162,16 @@ const scaleDiffs = []
 const scaleMissing = []
 let scaleError = null
 
-/** Compare one flat map of Figma names against one of code names. */
-const compareScale = (kind, fromFigma, fromCode) => {
+/**
+ * Compare one flat map of Figma names against one of code names.
+ *
+ * `fields` is explicit rather than taken from whatever keys the Figma side
+ * happens to carry. The dimension reader also returns the section a token was
+ * listed under, which is useful in a report and meaningless as a comparison —
+ * left implicit, it reported every dimension token as drifted because the code
+ * has no section at all.
+ */
+const compareScale = (kind, fields, fromFigma, fromCode) => {
   const codeByKey = new Map(Object.entries(fromCode).map(([n, v]) => [normaliseName(n), [n, v]]))
   const seen = new Set()
 
@@ -176,7 +184,7 @@ const compareScale = (kind, fromFigma, fromCode) => {
       continue
     }
     const [codeName, codeValue] = match
-    for (const field of Object.keys(figmaValue)) {
+    for (const field of fields) {
       if (String(figmaValue[field]) !== String(codeValue[field])) {
         scaleDiffs.push({ kind, name: codeName, field, from: codeValue[field], to: figmaValue[field] })
       }
@@ -190,7 +198,7 @@ const compareScale = (kind, fromFigma, fromCode) => {
 
 try {
   const type = await readTypeStyles({ fileKey: FILE_KEY, token: TOKEN })
-  compareScale('type', type.styles, tokens.type)
+  compareScale('type', ['size', 'lineHeight', 'letterSpacing', 'weight'], type.styles, tokens.type)
 
   const dim = await readDimensions({ fileKey: FILE_KEY, token: TOKEN })
   const codeDimensions = {}
@@ -204,7 +212,7 @@ try {
       codeDimensions[`${prefix}${key}`] = { value }
     }
   }
-  compareScale('dimension', dim.values, codeDimensions)
+  compareScale('dimension', ['value'], dim.values, codeDimensions)
 } catch (error) {
   scaleError = error.message
 }
