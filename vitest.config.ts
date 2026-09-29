@@ -52,6 +52,26 @@ const project = async (theme: 'light' | 'dark') => ({
     await storybookTest({ configDir: '.storybook', initialGlobals: { theme } }),
   ],
   test: { browser: browser(theme) },
+  // One React, for everything in the browser module graph.
+  //
+  // Without this the story files and the renderer can end up on separately
+  // resolved copies of react: react-dom sets the hook dispatcher on its own
+  // copy's internals, a story reads it from the other, finds null, and throws
+  // "Cannot read properties of null (reading 'useState')" — but only for the
+  // stories that call hooks directly, and only when Vite's dependency cache is
+  // cold, which is why it appeared on CI and never locally.
+  resolve: { dedupe: ['react', 'react-dom', 'react/jsx-runtime'] },
+  // Pre-bundle React up front instead of letting Vite discover it mid-run.
+  //
+  // On a cold cache the optimiser finds react part-way through the suite,
+  // re-bundles and reloads, and modules either side of that point end up on
+  // different instances of it — react-dom sets the hook dispatcher on one, a
+  // story reads it from the other and gets null. It only ever hit the pages
+  // that call hooks directly, and only on a cold cache, which is why CI failed
+  // and a second local run never did.
+  optimizeDeps: {
+    include: ['react', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom', 'react-dom/client'],
+  },
 })
 
 export default defineConfig({
