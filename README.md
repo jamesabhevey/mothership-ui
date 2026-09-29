@@ -6,15 +6,44 @@ Every colour, space, radius, border width and type step is read from the Figma
 variable collections (Semantic / Dimension / Typography) rather than eyeballed,
 and the component APIs follow the property names on the Figma component sets.
 
+## Who owns this
+
+YLD owns Mothership UI. James Hevey maintains it, on his own.
+
+Requests and bugs go through GitHub issues. There is no promised turnaround and
+no team behind it — that is the honest position rather than a disclaimer, so
+nobody adopts it expecting support that does not exist. If it becomes something
+several teams depend on, it needs resourcing properly, and that is a
+conversation rather than an assumption.
+
+Published to GitHub Packages, private to the `yldio` organisation. The Storybook
+is public: the design is not secret, the package is simply not offered to
+strangers.
+
 ## Install
 
+The package is private to `yldio`, so npm needs to be told where to look for it
+and who you are. Once per machine, in `~/.npmrc`:
+
+```
+@yldio:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+```
+
+The token is a GitHub personal access token with the `read:packages` scope, and
+it needs to belong to an account in the `yldio` organisation. Build servers use
+the same two lines, with the token from their secrets rather than a file in
+`$HOME`. Projects that would rather keep the registry line in version control
+can put the first line in the repository's own `.npmrc` and leave only the token
+in `$HOME`.
+
 ```bash
-npm install @yld/mothership-ui
+npm install @yldio/mothership-ui
 ```
 
 ```tsx
-import { Button, Card } from '@yld/mothership-ui'
-import '@yld/mothership-ui/styles.css'
+import { Button, Card } from '@yldio/mothership-ui'
+import '@yldio/mothership-ui/styles.css'
 ```
 
 That is the whole setup. **No Tailwind required** — the package ships its own
@@ -25,7 +54,7 @@ Already on Tailwind v4 and want the tokens in your own markup? Import the token
 source instead of, or alongside, the compiled sheet:
 
 ```css
-@import '@yld/mothership-ui/tokens.css';
+@import '@yldio/mothership-ui/tokens.css';
 ```
 
 Dark mode is one attribute, `<html data-theme="dark">`. See **Colour modes**
@@ -54,13 +83,16 @@ npm version minor && git push --follow-tags
 ```
 
 That runs [.github/workflows/publish.yml](.github/workflows/publish.yml), which
-re-runs the type-check and all the contract checks, builds the package and
-publishes it with provenance — so anyone installing can see which workflow run
-and which commit produced the tarball. It refuses to publish if the tag and
-`package.json` disagree.
+re-runs the type-check, the accessibility suite and all the contract checks,
+builds the package and publishes it. It refuses if the tag and `package.json`
+disagree.
+
+Nothing to configure and no token to add: GitHub Packages accepts the
+`GITHUB_TOKEN` minted for each workflow run, which already has permission to
+publish to this repository's own organisation.
 
 Tag-driven rather than automatic on every push, deliberately: once a version is
-on npm it is permanent and somebody's lockfile points at it, so cutting one
+published it is permanent and somebody's lockfile points at it, so cutting one
 should be a decision rather than a side effect of merging.
 
 ## Storybook
@@ -484,7 +516,7 @@ palette, 55 of 55 agreed.
 
 There are two things being versioned, and they are not the same.
 
-**The package is semver.** Consumers pin `@yld/mothership-ui` in a lockfile and
+**The package is semver.** Consumers pin `@yldio/mothership-ui` in a lockfile and
 need to know when an upgrade will break them, which is exactly the question
 semver answers. Releases are cut by tag; see **Releasing** above.
 

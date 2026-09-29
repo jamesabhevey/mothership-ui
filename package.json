@@ -1,5 +1,5 @@
 {
-  "name": "@yld/mothership-ui",
+  "name": "@yldio/mothership-ui",
   "private": false,
   "version": "0.1.0",
   "type": "module",
@@ -89,6 +89,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "sideEffects": [
     "**/*.css"
   ],

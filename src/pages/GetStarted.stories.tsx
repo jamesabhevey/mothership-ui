@@ -43,38 +43,34 @@ export const GetStarted: Story = {
         </P>
       </Group>
 
-      <Group name="Installing">
+      <Group name="Who owns this">
         <P>
-          The library is not published to a package registry. Copy{' '}
-          <code>src/components</code>, <code>src/styles</code> and <code>src/lib</code> into your
-          project, then install what they depend on.
+          YLD owns Mothership UI. James Hevey maintains it, on his own. Requests and bugs go
+          through GitHub issues; there is no promised turnaround and no team behind it. That is
+          the honest position rather than a disclaimer — nobody should adopt this expecting
+          support that does not exist.
         </P>
-        <Code>{`npm install react react-dom class-variance-authority clsx tailwind-merge lucide-react
-npm install -D tailwindcss @tailwindcss/vite`}</Code>
         <P>
-          Tailwind v4 is required rather than optional. The token layer is a Tailwind{' '}
-          <code>@theme</code> block, which is what turns{' '}
-          <code>--color-action-primary-default</code> into the utility{' '}
-          <code>bg-action-primary-default</code>. Add the plugin to your Vite config.
+          The package is private to the <code>yldio</code> organisation. These pages are public:
+          the design is not secret, the code is simply not offered to strangers.
         </P>
-        <Code>{`// vite.config.ts
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-})`}</Code>
       </Group>
 
       <Group name="Install">
         <P>
-          The library is published to npm. Two lines and you are running — no Tailwind, no build
-          configuration, nothing to copy.
+          The library is published to GitHub Packages, private to the <code>yldio</code>{' '}
+          organisation. Tell npm where to find it once per machine, in <code>~/.npmrc</code>, using
+          a GitHub token with the <code>read:packages</code> scope:
         </P>
-        <Code>{`npm install @yld/mothership-ui`}</Code>
-        <Code>{`import { Button, Card } from '@yld/mothership-ui'
-import '@yld/mothership-ui/styles.css'`}</Code>
+        <Code>{`@yldio:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN`}</Code>
+        <P>
+          After that it installs like anything else — no Tailwind, no build configuration, nothing
+          to copy.
+        </P>
+        <Code>{`npm install @yldio/mothership-ui`}</Code>
+        <Code>{`import { Button, Card } from '@yldio/mothership-ui'
+import '@yldio/mothership-ui/styles.css'`}</Code>
         <P>
           The stylesheet is compiled and ships with the package — around 6KB over the wire for
           every component. React 18 or 19 is a peer dependency, so your app keeps its own copy
@@ -82,7 +78,7 @@ import '@yld/mothership-ui/styles.css'`}</Code>
         </P>
         <P>
           Already on Tailwind v4 and want these tokens in your own markup? Import{' '}
-          <code>@yld/mothership-ui/tokens.css</code> as well, and{' '}
+          <code>@yldio/mothership-ui/tokens.css</code> as well, and{' '}
           <code>bg-surface-default</code> and the rest work in your code the same way they do in
           the components.
         </P>

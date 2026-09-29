@@ -27,14 +27,21 @@
  * system at all. Which is why it has none of the ambiguity that sank the old
  * approach: it never has to decide which of seven #ffffff tokens a colour is.
  *
- * Scope is colour, because colour is the only collection with modes and the
- * only one this page exposes. Numbers were deliberately left out of the old
- * check too: small integers recur everywhere in a Figma file, so matching 4px
- * to a radius rather than to an unrelated gap was guesswork that produced false
- * alarms.
+ * It then reads the type scale and the dimension scale, from the Foundations
+ * Typography and Dimension frames. Numbers were left out of the old check for
+ * a good reason — small integers recur everywhere in a Figma file, so matching
+ * 4px to a radius rather than to an unrelated gap was guesswork that produced
+ * false alarms — but that reason does not apply here. Each token has its own
+ * named frame stating its own value, so nothing is inferred from the artwork.
+ *
+ * Only colour is compared in both modes, because colour is the only collection
+ * that has modes. Motion is not compared at all: its durations and curves live
+ * only as Figma variables, with no page to read them from, and variables are
+ * the one thing this plan cannot fetch.
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { readColourModes, readPaintedColours, sameValue } from './lib/figma-colour-modes.mjs'
+import { readTypeStyles, readDimensions, normaliseName } from './lib/figma-foundations.mjs'
 
 const TOKEN = process.env.FIGMA_TOKEN
 const FILE_KEY = process.env.FIGMA_FILE_KEY
@@ -144,7 +151,92 @@ if (hardCoded.length) {
   console.log('Every colour painted in the components is a token. Nothing hard-coded.\n')
 }
 
-const needsAPerson = onlyInFigma.length + onlyInCode.length + incomplete.length + hardCoded.length
+// ------------------------------------------------- type and dimension scales
+//
+// Reported, never written. A colour that has moved is a value to copy across;
+// a type step or a spacing token that has appeared, vanished or changed size is
+// a decision about the scale itself, and the person who made it in Figma is the
+// one who should make it here.
+
+const scaleDiffs = []
+const scaleMissing = []
+let scaleError = null
+
+/** Compare one flat map of Figma names against one of code names. */
+const compareScale = (kind, fromFigma, fromCode) => {
+  const codeByKey = new Map(Object.entries(fromCode).map(([n, v]) => [normaliseName(n), [n, v]]))
+  const seen = new Set()
+
+  for (const [name, figmaValue] of Object.entries(fromFigma)) {
+    const key = normaliseName(name)
+    seen.add(key)
+    const match = codeByKey.get(key)
+    if (!match) {
+      scaleMissing.push({ kind, name, where: 'Figma', value: figmaValue })
+      continue
+    }
+    const [codeName, codeValue] = match
+    for (const field of Object.keys(figmaValue)) {
+      if (String(figmaValue[field]) !== String(codeValue[field])) {
+        scaleDiffs.push({ kind, name: codeName, field, from: codeValue[field], to: figmaValue[field] })
+      }
+    }
+  }
+
+  for (const [key, [codeName, codeValue]] of codeByKey) {
+    if (!seen.has(key)) scaleMissing.push({ kind, name: codeName, where: 'the code', value: codeValue })
+  }
+}
+
+try {
+  const type = await readTypeStyles({ fileKey: FILE_KEY, token: TOKEN })
+  compareScale('type', type.styles, tokens.type)
+
+  const dim = await readDimensions({ fileKey: FILE_KEY, token: TOKEN })
+  const codeDimensions = {}
+  for (const [group, prefix] of [
+    ['space', 'space/'],
+    ['radius', 'radius/'],
+    ['borderWidth', 'border-width/'],
+    ['size', 'size/'],
+  ]) {
+    for (const [key, value] of Object.entries(tokens[group] ?? {})) {
+      codeDimensions[`${prefix}${key}`] = { value }
+    }
+  }
+  compareScale('dimension', dim.values, codeDimensions)
+} catch (error) {
+  scaleError = error.message
+}
+
+if (scaleError) {
+  console.log(`Could not compare the type and dimension scales: ${scaleError}\n`)
+} else if (!scaleDiffs.length && !scaleMissing.length) {
+  console.log('Figma and the code agree on every type step and every dimension token.\n')
+} else {
+  if (scaleDiffs.length) {
+    console.log(`${scaleDiffs.length} value(s) have drifted on the type and dimension scales:\n`)
+    for (const d of scaleDiffs) {
+      console.log(`  ${d.kind.padEnd(9)} ${d.name.padEnd(28)} ${d.field.padEnd(13)} ${d.from ?? '—'} -> ${d.to}`)
+    }
+    console.log()
+  }
+  if (scaleMissing.length) {
+    console.log(
+      `NEEDS A PERSON — ${scaleMissing.length} token(s) exist on one side only. Adding or ` +
+        'removing a step changes the scale, so neither is applied automatically:\n',
+    )
+    for (const m of scaleMissing) {
+      const value = m.value.value ?? m.value.size ?? ''
+      console.log(`  only in ${m.where.padEnd(8)} ${m.kind.padEnd(9)} ${m.name.padEnd(28)} ${value}`)
+    }
+    console.log()
+  }
+}
+
+const scaleNeedsAPerson = scaleMissing.length + scaleDiffs.length + (scaleError ? 1 : 0)
+
+const needsAPerson = onlyInFigma.length + onlyInCode.length + incomplete.length + hardCoded.length + scaleNeedsAPerson
 
 if (!drift.length) {
   if (!needsAPerson) {

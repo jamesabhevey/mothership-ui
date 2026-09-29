@@ -1,11 +1,17 @@
-# Publish to npm when a version tag is pushed.
+# Publish to GitHub Packages when a version tag is pushed.
 #
 #   npm version minor && git push --follow-tags
 #
 # Releases are deliberately tag-driven rather than automatic on every push. Once
-# a version is on npm it is permanent and somebody's lockfile points at it, so
-# cutting one should be a decision rather than a side effect of merging.
-name: Publish to npm
+# a version is published it is permanent and somebody's lockfile points at it,
+# so cutting one should be a decision rather than a side effect of merging.
+#
+# GitHub Packages rather than npmjs.com because the package is YLD-only. It
+# needs no secret at all: GITHUB_TOKEN is minted for each run and already has
+# permission to publish to this repository's own organisation. The scope has to
+# match that organisation exactly, which is why the package is @yldio and not
+# @yld.
+name: Publish to GitHub Packages
 
 on:
   push:
@@ -14,9 +20,8 @@ on:
 
 permissions:
   contents: read
-  # Lets npm attach a provenance attestation, so anyone installing this can see
-  # which workflow run and which commit produced the tarball.
-  id-token: write
+  # Lets GITHUB_TOKEN publish a package belonging to this repository.
+  packages: write
 
 jobs:
   publish:
@@ -33,7 +38,8 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@yldio'
 
       - run: npm ci
 
@@ -74,6 +80,9 @@ jobs:
         run: npm run build
 
       - name: Publish
-        run: npm publish --access public --provenance
+        # No --access flag: packages here inherit the repository's visibility,
+        # and the repository is private. No provenance attestation either —
+        # that is an npmjs.com feature and GitHub Packages does not take one.
+        run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
