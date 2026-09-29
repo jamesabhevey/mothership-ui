@@ -5,9 +5,7 @@
   "type": "module",
   "description": "React implementation of the Mothership UI design system",
   "scripts": {
-    "dev": "vite",
     "build": "npm run barrel && npm run build:js && npm run build:types && npm run build:css",
-    "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
     "changelog": "node scripts/build-changelog.mjs",
     "pretypecheck": "npm run changelog",
@@ -25,7 +23,6 @@
     "build:js": "vite build --config vite.lib.config.ts",
     "build:types": "tsc -p tsconfig.build.json",
     "build:css": "tailwindcss -i src/styles/library.css -o dist/styles.css --minify && cp src/styles/tokens.css dist/tokens.css",
-    "build:app": "vite build",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

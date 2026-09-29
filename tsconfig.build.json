@@ -17,7 +17,5 @@
     "src/pages",
     "src/foundations",
     "src/assets",
-    "src/App.tsx",
-    "src/main.tsx"
   ]
 }

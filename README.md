@@ -68,7 +68,6 @@ Everything is documented, with live examples, at
 ```bash
 npm install
 npm run storybook     # the component explorer — the main way to work
-npm run dev           # the older showcase page, superseded by Storybook
 npm run build         # build the publishable package into dist/
 npm run check         # the contract checks, after a build-storybook
 npm test              # axe over every story, in light and dark
@@ -221,7 +220,7 @@ and `MenuItem` under their parent, mirroring the Figma pages that hold them.
 **Blocks** covers the composed components — the ones built out of the others —
 and takes its name from the Figma page of the same name.
 
-`src/App.tsx` renders all of them, which doubles as the visual reference.
+Storybook renders all of them, which doubles as the visual reference.
 
 ## Tokens
 
@@ -671,11 +670,6 @@ actually use. The mapping:
   container; `CardGrid` reflows on `minCardWidth`.
 - **Tooltip arrows are centred** on the trigger, where Figma gives each
   placement its own arrow geometry pinned near the bubble's leading edge.
-- **`display/md` and `display/sm` are missing.** Their tracking variables exist
-  in the Typography collection, but no readable node binds their size, so they
-  are left out rather than invented. `display/lg` is measured from the cover
-  frame. Add them when the values are to hand.
-
 ## Accessibility carried over from the file
 
 The component descriptions in Figma carry real accessibility constraints, and
@@ -700,5 +694,6 @@ the code enforces the ones it can:
 ## Not built
 
 `Booking / 1–4` on the Examples page are composed screens rather than library
-components, so they are not included. `src/App.tsx` composes a similar screen
-from `NavShell`, `AppBar`, `ListItem` and `Button` to show the pieces fit.
+components, so they are not included. The `Nav Shell` story composes a similar
+screen from `NavShell`, `AppBar`, `ListItem` and `Button` to show the pieces
+fit.
