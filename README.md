@@ -566,6 +566,33 @@ Vitest addon stops wiring addon annotations — axe's `afterEach` among them —
 it finds a setup file calling `setProjectAnnotations`, which is what older
 guides tell you to write. Contract check 10 asserts all three.
 
+## Design review
+
+`.claude/skills/design-review`, run by `.github/workflows/design-review.yml` on
+every pull request.
+
+The checks above decide everything a script can decide. This is the rest: a
+`<button>` with utility classes where `Button` already exists, a control that
+cannot be reached by keyboard, a component shipped with hover and focus but no
+disabled state, a new component with no story and so no documentation and no
+accessibility coverage. None of that fails a build, and all of it is how a
+design system quietly stops being one.
+
+The skill is the standard, written down. The workflow is only the trigger.
+Claude checks the repository out, runs the same checks a reviewer would, and
+comments on the diff — read-only, with no permission to edit the branch.
+
+It is advisory on purpose. Its own workflow, not a required check, and a
+failure blocks nothing. A gate that fails differently on a re-run gets switched
+off within a fortnight and takes the checks that did work with it. It is also
+told to skip anything the automated checks already cover and to stop at five
+findings, because a review of twenty small things gets skimmed and the two that
+mattered go with it.
+
+Dormant until the Claude GitHub App is installed on the repository and
+`ANTHROPIC_API_KEY` is in its secrets. Without the secret the review step is
+skipped rather than failed, so the workflow is harmless in the meantime.
+
 ## Where the code departs from the Figma file, and why
 
 Figma models everything as variants. Some of those axes are states the browser

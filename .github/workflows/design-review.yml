@@ -1,0 +1,74 @@
+# Claude reviews a pull request against the design system.
+#
+# The judgement half of the PR gate. Everything that can be decided by a script
+# — colour and motion literals, a stale barrel, dead links, axe in both colour
+# modes — already runs in storybook-pages.yml and blocks the merge. This covers
+# what a script cannot: whether a component was rebuilt instead of reused,
+# whether a control can be operated by keyboard, whether the thing is finished.
+#
+# Deliberately advisory. It runs as its own workflow, it is not a required
+# check, and a failure here does not block anything. A gate that fails
+# differently on a re-run for reasons nobody can reproduce gets switched off
+# within a fortnight, and takes the checks that did work with it.
+#
+# Needs the Claude GitHub App installed on the repository and ANTHROPIC_API_KEY
+# in its secrets. Until both exist this workflow runs and does nothing, which is
+# why it is skipped outright when the secret is missing rather than failing.
+name: Design review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+# Read the code, write comments. Nothing else — this review never edits the
+# branch it is reviewing.
+permissions:
+  contents: read
+  pull-requests: write
+
+# One review per branch. Pushing three commits in a row should replace the
+# review in progress, not queue three of them.
+concurrency:
+  group: design-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review against the design system
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+        with:
+          # The skill lives in .claude/skills, so it has to be on the runner
+          # before the action starts. History is needed for the Changelog page,
+          # which the build reads from the git log.
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # The review runs the same checks a person would before commenting, so
+        # it needs the project installed rather than just the diff.
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Review
+        # Skipped rather than failed when the secret is not set, so the
+        # workflow is harmless until somebody adds it.
+        if: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+        env:
+          STORYBOOK_DISABLE_TELEMETRY: '1'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: /design-review
+          claude_args: |
+            --allowedTools Read,Grep,Glob,Bash
