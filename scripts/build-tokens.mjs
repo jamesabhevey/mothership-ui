@@ -98,6 +98,14 @@ L.push('')
 for (const [k, val] of Object.entries(t.borderWidth)) L.push(`  --border-width-${v(k)}: ${val};`)
 L.push('')
 for (const [k, val] of Object.entries(t.size)) L.push(`  --size-${v(k)}: ${val};`)
+L.push('')
+L.push('  /*')
+L.push('   * The brand ramp, from the Figma Primitives collection (color/brand/50')
+L.push('   * to 900). One value, no modes. Kept out of @theme on purpose, so there')
+L.push('   * is no bg-brand-500 utility to reach for: components use the semantic')
+L.push('   * tokens, and only MeshGradient reads these directly.')
+L.push('   */')
+for (const [k, val] of Object.entries(t.brand)) L.push(`  --color-brand-${v(k)}: ${val};`)
 L.push('}')
 L.push('')
 
@@ -175,6 +183,6 @@ writeFileSync('public/manager-tokens.css', M.join('\n'))
 
 const n = Object.keys(t.color).length + Object.keys(t.radius).length + Object.keys(t.elevation).length +
   Object.keys(t.type).length + Object.keys(t.space).length + Object.keys(t.size).length +
-  Object.keys(t.borderWidth).length + Object.keys(t.font).length +
+  Object.keys(t.borderWidth).length + Object.keys(t.font).length + Object.keys(t.brand).length +
   Object.keys(t.duration).length + Object.keys(t.easing).length
 console.log(`src/styles/tokens.css written, ${n} tokens, ${Object.keys(t.color).length} of them in two modes`)

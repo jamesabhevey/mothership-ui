@@ -73,6 +73,9 @@ const resolve = (variable, depth = 0) => {
 const route = (name) => {
   const m = (prefix, section) => (name.startsWith(prefix) ? [section, name.slice(prefix.length)] : null)
   return (
+    // The Primitives ramp first: it is single-valued, and would otherwise land
+    // in `color` beside the {light, dark} semantic tokens as a bare string.
+    m('color/brand/', 'brand') ??
     m('color/', 'color') ??
     m('radius/', 'radius') ??
     m('border/width/', 'borderWidth') ??
@@ -85,7 +88,7 @@ const route = (name) => {
 const tokens = JSON.parse(readFileSync('tokens/tokens.json', 'utf8'))
 const changes = []
 const unseen = new Set()
-for (const section of ['color', 'radius', 'borderWidth', 'space', 'size'])
+for (const section of ['color', 'brand', 'radius', 'borderWidth', 'space', 'size'])
   for (const key of Object.keys(tokens[section])) unseen.add(`${section}:${key}`)
 
 const typeSeen = []

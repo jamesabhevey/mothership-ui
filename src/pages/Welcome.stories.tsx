@@ -98,7 +98,7 @@ export const Welcome: Story = {
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Stat value="29" label="components" />
           <Stat value={String(iconNames.length)} label="icons" />
-          <Stat value="111" label="design tokens" />
+          <Stat value="121" label="design tokens" />
           <Stat value="95" label="documented variants" />
         </ul>
         <P>
