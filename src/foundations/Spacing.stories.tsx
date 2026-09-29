@@ -38,7 +38,6 @@ const sizes: Array<[string, string, string]> = [
 
 const icons: Array<[string, string, string]> = [
   ['size/icon/16', '--size-icon-16', 'size-4'],
-  ['size/icon/20', '--size-icon-20', 'size-5'],
   ['size/icon/24', '--size-icon-24', 'size-6'],
   ['size/icon/32', '--size-icon-32', 'size-8'],
 ]

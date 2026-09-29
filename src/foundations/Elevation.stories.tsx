@@ -12,6 +12,7 @@ type Story = StoryObj<typeof meta>
 
 const radii: Array<[string, string, string, string]> = [
   // [figma, css var, tailwind, used by]
+  ['radius/none', '--radius-none', 'rounded-none', 'Square on purpose: Illustration, table cells'],
   ['radius/sm', '--radius-sm', 'rounded-sm', 'Menu items, tooltips, card media'],
   ['radius/md', '--radius-md', 'rounded-md', 'Buttons, inputs, banners, menus'],
   ['radius/lg', '--radius-lg', 'rounded-lg', 'Cards'],
@@ -22,6 +23,7 @@ const radii: Array<[string, string, string, string]> = [
 const borders: Array<[string, string, string]> = [
   ['border/width/sm', '--border-width-sm', 'Default borders and dividers'],
   ['border/width/md', '--border-width-md', 'Error state on inputs, selected radio'],
+  ['border/width/lg', '--border-width-lg', 'Emphasis, where a 2px border would not read'],
 ]
 
 const elevations: Array<[string, string, string]> = [
