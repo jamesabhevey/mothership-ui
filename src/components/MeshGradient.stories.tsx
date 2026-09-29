@@ -24,6 +24,12 @@ export const Subtle: Story = {
   args: { variant: 'subtle' },
 }
 
+/* No content and no height class: the 320px floor is what keeps it visible. */
+export const NoHeight: Story = {
+  name: 'No height given',
+  args: { variant: 'vivid', className: undefined },
+}
+
 /*
  * The two variants carrying content, which is what they are for. On vivid the
  * text follows text/on-brand and the button is secondary: the primary button

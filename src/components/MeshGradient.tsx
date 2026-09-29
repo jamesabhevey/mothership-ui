@@ -56,7 +56,9 @@ const background = ({ base, blobs }: (typeof meshes)['vivid']) => ({
     .join(', '),
 })
 
-const box = cva('relative block w-full overflow-hidden', {
+// A 320px floor on the 4px grid, rather than a height: an empty gradient
+// still shows, and content or a class taller than that wins.
+const box = cva('relative block min-h-80 w-full overflow-hidden', {
   variants: {
     variant: {
       vivid: 'text-text-on-brand',
@@ -89,9 +91,9 @@ export type MeshGradientProps = VariantProps<typeof box> & {
  * dark mode. That is deliberate: it is a brand moment rather than a surface,
  * and the Figma frame binds the same variables.
  *
- * It takes its height from its content, or from a class. With neither it has
- * nothing to fill and collapses to nothing. Corners are square: round it
- * where it sits.
+ * It is at least 320px tall, so `<MeshGradient />` on its own is visible
+ * rather than a box of no height. Content or a class can make it taller;
+ * pass `min-h-0` for a thin band. Corners are square: round it where it sits.
  */
 export const MeshGradient = forwardRef<HTMLDivElement, MeshGradientProps>(function MeshGradient(
   { variant = 'vivid', children, className },
