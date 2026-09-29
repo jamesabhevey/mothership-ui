@@ -118,6 +118,7 @@ const preview: Preview = {
           'Get started',
           'Catalog',
           'Changelog',
+          'Skills',
           'Foundations',
           ['Colour', 'Typography', 'Spacing & Sizing', 'Radius, Border & Elevation', 'Motion'],
           'Assets',
