@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { P, Page } from '../docs/parts'
+import { Group, P, Page, prose } from '../docs/parts'
 import { Badge, type BadgeProps } from '../components/Badge'
 import changelog from '../changelog.json'
 
@@ -50,29 +50,16 @@ function withCode(text: string) {
 function Entry({ commit }: { commit: (typeof commits)[number] }) {
   const url = commitUrl(commit.full)
   return (
-    <li className="flex flex-col gap-2 border-b border-border-subtle pb-5 last:border-0 last:pb-0">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <Badge intent={intents[commit.kind] ?? 'neutral'}>{commit.kind}</Badge>
-        <span className="rounded-sm bg-bg-subtle px-1.5 py-0.5 font-mono text-caption-md text-text-primary">
-          {commit.version}
-        </span>
-        {url ? (
-          <a
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-label-md text-text-link underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
-          >
-            View commit
-          </a>
-        ) : null}
-      </div>
+    <li className="flex flex-col gap-3 border-b border-border-subtle pb-8 last:border-0 last:pb-0">
+      <Badge className="self-start" intent={intents[commit.kind] ?? 'neutral'}>
+        {commit.kind}
+      </Badge>
       {/*
-        A heading rather than a styled span. Forty entries in a list is exactly
-        the page somebody navigates by heading, and h2 is the right level under
-        the page's own h1.
+        h3, under the date's h2, under the page's h1. Forty entries is exactly
+        the page somebody navigates by heading, and the levels are what makes
+        that work.
       */}
-      <h2 className="text-heading-sm font-semibold text-text-primary">{commit.subject}</h2>
+      <h3 className="text-heading-sm font-semibold text-text-primary">{commit.subject}</h3>
       {commit.body.map((paragraph, i) =>
         // A block that kept its line breaks was laid out deliberately in the
         // commit message — a short column of tokens, usually. Rendered as
@@ -85,14 +72,38 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
             {paragraph}
           </pre>
         ) : (
-          <p key={i} className="max-w-[80ch] text-body-sm text-text-secondary">
+          <p key={i} className={`max-w-[80ch] ${prose} text-text-secondary`}>
             {withCode(paragraph)}
           </p>
         ),
       )}
+      {url ? (
+        <a
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-1 text-label-md text-text-link underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+        >
+          View commit
+        </a>
+      ) : null}
     </li>
   )
 }
+
+/**
+ * Newest first, gathered by the day they landed.
+ *
+ * The commits arrive in order, so one pass is enough — no sorting, and no
+ * assumption that a day's changes are contiguous beyond what git already
+ * guarantees.
+ */
+const byDay = commits.reduce<Array<[string, typeof commits]>>((days, commit) => {
+  const last = days[days.length - 1]
+  if (last && last[0] === commit.day) last[1].push(commit)
+  else days.push([commit.day, [commit]])
+  return days
+}, [])
 
 export const Changelog: Story = {
   name: 'Changelog',
@@ -101,20 +112,16 @@ export const Changelog: Story = {
       title="Changelog"
       intro={
         <>
-          Every change to the library, newest first, straight from the commit history. Each entry
-          links to its commit, where you can see exactly what changed and why.
+          Every change to the library, newest first, straight from the commit history, gathered
+          under the day it landed. Each entry links to its commit, where you can see exactly what
+          changed and why.
           <br />
           <br />
-          <strong>What counts as a version.</strong> Every change that lands is one. There is no
-          release step to wait for — a change reaches <code>main</code>, this Storybook redeploys,
-          and that is what you get when you pull the library — so there is no gap between a change
-          being made and it being live to gather several of them into a release.
-          <br />
-          <br />
-          The name is the day it landed and which change of that day it was, so{' '}
-          <code>10.09.2026.2</code> is the second change that day. Dates rather than numbers like{' '}
-          <code>2.1.0</code> because the Storybook has no release step to hang a number on — every
-          change that lands is what you get. The npm package is separate and is semver.
+          <strong>Every change that lands is a version.</strong> There is no release step to wait
+          for — a change reaches <code>main</code>, this Storybook redeploys, and that is what you
+          get when you pull the library. Which is why the date leads here rather than a number
+          like <code>2.1.0</code>: there is nothing to count. The npm package is separate, and is
+          semver.
           <br />
           <br />
           Each entry carries the kind of change it was, read from the verb its description opens
@@ -132,15 +139,19 @@ export const Changelog: Story = {
       ) : (
         <>
           {/*
-            One flat list rather than a heading per day. The version name
-            already carries the date, so a day heading above it was the same
-            date twice.
+            The date leads, and a day's changes sit under it. Group is the same
+            section heading the Foundations pages use, so the spacing between
+            days matches the spacing between sections everywhere else.
           */}
-          <ul className="flex flex-col gap-5 border-t border-border-subtle pt-5">
-            {commits.map((commit) => (
-              <Entry key={commit.full} commit={commit} />
-            ))}
-          </ul>
+          {byDay.map(([day, entries]) => (
+            <Group key={day} name={day}>
+              <ul className="flex flex-col gap-8 border-t border-border-subtle pt-6">
+                {entries.map((commit) => (
+                  <Entry key={commit.full} commit={commit} />
+                ))}
+              </ul>
+            </Group>
+          ))}
 
           {repo ? (
             <P>

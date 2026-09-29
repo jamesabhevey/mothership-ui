@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, P, Page, storyHref } from '../docs/parts'
+import { Group, P, Page, prose, storyHref } from '../docs/parts'
 import { iconNames } from '../components/icons'
 
 const meta = {
@@ -31,7 +31,7 @@ function NavCard({
         >
           {name}
         </a>
-        <p className="text-body-sm text-text-secondary">{children}</p>
+        <p className={`${prose} text-text-secondary`}>{children}</p>
       </div>
     </li>
   )

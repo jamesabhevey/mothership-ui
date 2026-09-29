@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Badge, type BadgeProps } from '../components/Badge'
-import { Code, Group, P, Page } from '../docs/parts'
+import { Code, Group, P, Page, prose } from '../docs/parts'
 
 const meta = {
   title: 'Skills',
@@ -53,7 +53,7 @@ function SkillCard({ skill }: { skill: Skill }) {
       <h2 className="text-heading-sm font-semibold text-text-primary">{skill.name}</h2>
       <p className="max-w-[80ch] text-body-md text-text-primary">{skill.summary}</p>
       {skill.body.map((paragraph, i) => (
-        <p key={i} className="max-w-[80ch] text-body-sm text-text-secondary">
+        <p key={i} className={`max-w-[80ch] ${prose} text-text-secondary`}>
           {paragraph}
         </p>
       ))}

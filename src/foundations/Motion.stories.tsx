@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, P, Page, useToken } from '../docs/parts'
+import { Group, P, Page, prose, useToken } from '../docs/parts'
 import { Button } from '../components/Button'
 import { Switch } from '../components/Switch'
 import { Select } from '../components/Select'
@@ -38,7 +38,7 @@ function Token({ name, css, note }: { name: string; css: string; note: string })
         <span className="font-mono text-caption-md text-text-secondary">{css}</span>
         <span className="font-mono text-caption-md text-text-muted">{value || '—'}</span>
       </div>
-      <p className="text-body-sm text-text-secondary">{note}</p>
+      <p className={`${prose} text-text-secondary`}>{note}</p>
     </li>
   )
 }

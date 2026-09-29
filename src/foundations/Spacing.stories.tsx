@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Group, Page, useToken } from '../docs/parts'
+import { Group, Page, prose, useToken } from '../docs/parts'
 
 const meta = {
   title: 'Foundations/Spacing & Sizing',
@@ -114,7 +114,7 @@ export const SpacingAndSizing: Story = {
             <Box key={css} figma={figma} css={css} note={note} />
           ))}
         </ul>
-        <p className="max-w-[80ch] text-[14px]/6 text-text-primary">
+        <p className={`max-w-[80ch] ${prose} text-text-primary`}>
           Icons only ever render at these four steps. Size comes from the parent slot, never from
           the glyph.
         </p>

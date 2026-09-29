@@ -31,7 +31,7 @@ import {
   Tooltip,
 } from '../components'
 import { ChevronLeft, ChevronRight, EllipsisVertical, Plus, Search, User } from '../components/icons'
-import { Page, storyHref, toStoryId } from '../docs/parts'
+import { Page, prose, storyHref, toStoryId } from '../docs/parts'
 
 const meta = {
   title: 'Catalog',
@@ -436,7 +436,7 @@ function Entry({ entry }: { entry: Entry }) {
         </a>
       </div>
 
-      <p className="text-body-sm text-text-secondary">{entry.description}</p>
+      <p className={`${prose} text-text-secondary`}>{entry.description}</p>
     </li>
   )
 }

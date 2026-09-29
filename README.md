@@ -521,11 +521,16 @@ semver answers. Releases are cut by tag; see **Releasing** above.
 
 **The Storybook is every commit.** It redeploys on each push to `main`, so what
 is documented there is the tip of the branch rather than the last release. The
-Changelog page names those commits calendar-style — the day it landed plus which
-change of that day it was, day before month, so `10.09.2026.2` is the second
-change on 10 September. Each entry also carries the kind of change it was, read
-from the verb its description opens with; only unambiguous verbs are labelled,
-and everything else is Changed rather than guessed at.
+Changelog page lists those commits under the day they landed, newest first,
+which is all the version a continuously deployed site needs — there is nothing
+to count. Each entry carries the kind of change it was, read from the verb its
+description opens with; only unambiguous verbs are labelled, and everything
+else is Changed rather than guessed at.
+
+The generator still names each commit `29.09.2026.9` — the day plus which
+change of that day it was — and that name is in `src/changelog.json` if
+anything ever needs to refer to one. It is not shown on the page: under a date
+heading it was the same date twice.
 
 That split is the honest description of a library that is published on a tag but
 documented continuously. It replaced a simpler story — everything was

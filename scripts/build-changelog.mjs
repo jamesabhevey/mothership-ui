@@ -111,6 +111,25 @@ const dayKey = (iso) => {
   return `${d}.${m}.${y}`
 }
 
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+]
+
+/**
+ * The heading a day's changes are listed under: "29 September 2026".
+ *
+ * Built from the string rather than by constructing a Date. The commit carries
+ * its own timezone offset, and the day the author saw is the day this should
+ * say — handing the timestamp to the browser would re-resolve it in whatever
+ * timezone the reader happens to be in, and quietly move a late-evening commit
+ * to the following morning.
+ */
+const dayLabel = (iso) => {
+  const [y, m, d] = iso.slice(0, 10).split('-')
+  return `${Number(d)} ${MONTHS[Number(m) - 1]} ${y}`
+}
+
 /**
  * What kind of change this is, from the verb the subject opens with.
  *
@@ -141,6 +160,7 @@ for (const commit of [...commits].reverse()) {
   seen.set(day, n)
   commit.version = `${day}.${n}`
   commit.kind = kindOf(commit.subject)
+  commit.day = dayLabel(commit.date)
 }
 
 const out = { repo, generated: new Date().toISOString(), commits }
