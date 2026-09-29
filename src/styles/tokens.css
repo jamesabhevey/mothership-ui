@@ -205,6 +205,23 @@
   --size-button-min-width-sm: 80px;
   --size-button-min-width-md: 96px;
   --size-button-min-width-lg: 112px;
+
+  /*
+   * The brand ramp, from the Figma Primitives collection (color/brand/50
+   * to 900). One value, no modes. Kept out of @theme on purpose, so there
+   * is no bg-brand-500 utility to reach for: components use the semantic
+   * tokens, and only MeshGradient reads these directly.
+   */
+  --color-brand-50: #faf3ff;
+  --color-brand-100: #edd6ff;
+  --color-brand-200: #dbadff;
+  --color-brand-300: #c985ff;
+  --color-brand-400: #a533ff;
+  --color-brand-500: #8429cc;
+  --color-brand-600: #631f99;
+  --color-brand-700: #421466;
+  --color-brand-800: #210a33;
+  --color-brand-900: #100519;
 }
 
 /*
