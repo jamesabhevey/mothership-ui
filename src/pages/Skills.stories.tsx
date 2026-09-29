@@ -45,15 +45,15 @@ const skills: Skill[] = [
 
 function SkillCard({ skill }: { skill: Skill }) {
   return (
-    <li className="flex flex-col gap-3 border-b border-border-subtle pb-6 last:border-0 last:pb-0">
+    <li className="flex flex-col gap-4 border-b border-border-subtle pb-10 last:border-0 last:pb-0">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <Badge intent={intents[skill.status]}>{skill.status}</Badge>
         <span className="font-mono text-caption-md text-text-secondary">{skill.invoked}</span>
       </div>
-      <h2 className="text-heading-sm font-semibold text-text-primary">{skill.name}</h2>
-      <p className="max-w-[80ch] text-body-md text-text-primary">{skill.summary}</p>
+      <h3 className="text-heading-md text-text-primary">{skill.name}</h3>
+      <p className="text-body-md text-text-primary">{skill.summary}</p>
       {skill.body.map((paragraph, i) => (
-        <p key={i} className={`max-w-[80ch] ${prose} text-text-secondary`}>
+        <p key={i} className={`${prose} text-text-secondary`}>
           {paragraph}
         </p>
       ))}
@@ -87,7 +87,7 @@ export const Skills: Story = {
       }
     >
       <Group name="The skills">
-        <ul className="flex flex-col gap-6 border-t border-border-subtle pt-5">
+        <ul className="flex flex-col gap-10 border-t border-border-subtle pt-7">
           {skills.map((skill) => (
             <SkillCard key={skill.name} skill={skill} />
           ))}

@@ -50,7 +50,7 @@ function withCode(text: string) {
 function Entry({ commit }: { commit: (typeof commits)[number] }) {
   const url = commitUrl(commit.full)
   return (
-    <li className="flex flex-col gap-3 border-b border-border-subtle pb-8 last:border-0 last:pb-0">
+    <li className="flex flex-col gap-4 border-b border-border-subtle pb-10 last:border-0 last:pb-0">
       <Badge className="self-start" intent={intents[commit.kind] ?? 'neutral'}>
         {commit.kind}
       </Badge>
@@ -59,7 +59,7 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
         the page somebody navigates by heading, and the levels are what makes
         that work.
       */}
-      <h3 className="text-heading-sm font-semibold text-text-primary">{commit.subject}</h3>
+      <h3 className="text-heading-md text-text-primary">{commit.subject}</h3>
       {commit.body.map((paragraph, i) =>
         // A block that kept its line breaks was laid out deliberately in the
         // commit message — a short column of tokens, usually. Rendered as
@@ -72,7 +72,7 @@ function Entry({ commit }: { commit: (typeof commits)[number] }) {
             {paragraph}
           </pre>
         ) : (
-          <p key={i} className={`max-w-[80ch] ${prose} text-text-secondary`}>
+          <p key={i} className={`${prose} text-text-secondary`}>
             {withCode(paragraph)}
           </p>
         ),
@@ -145,7 +145,7 @@ export const Changelog: Story = {
           */}
           {byDay.map(([day, entries]) => (
             <Group key={day} name={day}>
-              <ul className="flex flex-col gap-8 border-t border-border-subtle pt-6">
+              <ul className="flex flex-col gap-10 border-t border-border-subtle pt-7">
                 {entries.map((commit) => (
                   <Entry key={commit.full} commit={commit} />
                 ))}

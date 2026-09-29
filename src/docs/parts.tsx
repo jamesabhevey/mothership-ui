@@ -1,19 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react'
 
 /**
- * The one prose style for documentation copy: 14px on 22.
+ * The one prose style for documentation copy: `body/md`, 16 on 24.
  *
- * Defined once so it cannot drift a step at a time, which is what had happened
- * — the running copy on these pages was 14/24 while the secondary copy under a
- * heading was body/sm at 14/20, and nothing said which was right.
- *
- * Deliberately not `body/sm`. That is a Figma token and the components use it;
- * these pages are chrome around the library rather than the library, and their
- * headings already sit outside the type scale for the same reason. Changing
- * body/sm to match would mean changing it in Figma and re-checking every
- * component that uses it, which is a different decision from tidying the docs.
+ * A token rather than an arbitrary value, so these pages sit on the same scale
+ * as the components they document. It had been neither — running copy at 14/24
+ * and secondary copy at 14/20, both invented, with nothing recording which was
+ * right.
  */
-export const prose = 'text-[14px]/[22px]'
+export const prose = 'text-body-md'
 
 /**
  * Read a custom property off :root.
@@ -110,7 +105,15 @@ export function useTokenModes(name: string): { light: string; dark: string } {
  * rather than prose.
  */
 const shell = 'px-10 py-16'
-const content = 'mx-auto w-full max-w-[960px]'
+
+/**
+ * One column width for every page, prose and grids alike.
+ *
+ * Paragraphs used to carry their own `max-w-[80ch]` on top of a 960px shell,
+ * so running text stopped well short of the tables and swatch grids beside it
+ * and nothing lined up down the right-hand edge. One width, set here.
+ */
+const content = 'mx-auto w-full max-w-[760px]'
 
 export function Page({
   title,
@@ -123,12 +126,10 @@ export function Page({
 }) {
   return (
     <div className={shell}>
-      <div className={`${content} flex flex-col gap-12`}>
-        <header className="flex flex-col gap-4">
-          <h1 className="text-[32px]/9 font-semibold tracking-[var(--text-display-sm--letter-spacing)] text-text-primary">
-            {title}
-          </h1>
-          {intro ? <div className={`max-w-[80ch] ${prose} text-text-primary`}>{intro}</div> : null}
+      <div className={`${content} flex flex-col gap-14`}>
+        <header className="flex flex-col gap-5">
+          <h1 className="text-display-md text-text-primary">{title}</h1>
+          {intro ? <div className={`${prose} text-text-primary`}>{intro}</div> : null}
         </header>
         {children}
       </div>
@@ -138,10 +139,8 @@ export function Page({
 
 export function Group({ name, children }: { name: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-4">
-      <h2 className="text-[24px]/8 font-semibold tracking-[var(--text-heading-md--letter-spacing)] text-text-primary">
-        {name}
-      </h2>
+    <section className="flex flex-col gap-5">
+      <h2 className="text-heading-lg text-text-primary">{name}</h2>
       {children}
     </section>
   )
@@ -230,7 +229,7 @@ export function Code({ children }: { children: string }) {
 
 /** A body paragraph at the docs measure. */
 export function P({ children }: { children: ReactNode }) {
-  return <p className={`max-w-[80ch] ${prose} text-text-primary`}>{children}</p>
+  return <p className={`${prose} text-text-primary`}>{children}</p>
 }
 
 /** One swatch per row, full width of the content column. */

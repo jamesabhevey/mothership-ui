@@ -117,7 +117,7 @@ export const RadiusBorderElevation: Story = {
             </li>
           ))}
         </ul>
-        <p className={`max-w-[80ch] ${prose} text-text-primary`}>
+        <p className={`${prose} text-text-primary`}>
           Shadow disappears in high contrast mode, so never let it be the only thing separating a
           surface from the page. That is why Card defaults to <code>outlined</code> rather than{' '}
           <code>elevated</code>.

@@ -114,7 +114,7 @@ export const SpacingAndSizing: Story = {
             <Box key={css} figma={figma} css={css} note={note} />
           ))}
         </ul>
-        <p className={`max-w-[80ch] ${prose} text-text-primary`}>
+        <p className={`${prose} text-text-primary`}>
           Icons only ever render at these four steps. Size comes from the parent slot, never from
           the glyph.
         </p>

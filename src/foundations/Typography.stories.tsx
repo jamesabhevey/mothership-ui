@@ -107,7 +107,7 @@ export const Typography: Story = {
       ))}
 
       <Group name="Using the display tier">
-        <p className={`max-w-[80ch] ${prose} text-text-primary`}>
+        <p className={`${prose} text-text-primary`}>
           Per the notes on the Figma styles: <code>display/lg</code> is for marketing heroes and
           empty state headlines, never dense UI. <code>display/md</code> is for page level hero
           headings. <code>display/sm</code> is the smallest display size, for screen titles on wide
